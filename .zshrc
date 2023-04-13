@@ -1,3 +1,5 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -101,10 +103,11 @@ alias vim="nvim"
 
 alias zshconfig="vim ~/.zshrc"
 alias prj="cd ~/Projects/HM/bt-assortment-curation-and-presentation"
-alias vimconfig="vim ~/.config/nvim/init.vim"
+alias vimconfig="vim ~/.config/nvim/"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias cprj="cd ~/Creative/Projects"
 alias pprj="cd ~/Projects/personal"
+alias lprj="cd ~/Projects/learning"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -122,11 +125,25 @@ if type rg &> /dev/null; then
   export FZF_DEFAULT_OPTS='-m --height 50% --border'
 fi
 
-alias python="python3"
-alias pip="pip3"
+# alias python="python3"
+# alias pip="pip3"
 alias greset='git fetch origin && git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)'
 
 # Rust config
 source "$HOME/.cargo/env"
 
 export PATH=/Users/matejko/.local/bin:$PATH
+
+[ -f "/Users/matejko/.ghcup/env" ] && source "/Users/matejko/.ghcup/env" # ghcup-env
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+[[ -s "/Users/matejko/.gvm/scripts/gvm" ]] && source "/Users/matejko/.gvm/scripts/gvm"
