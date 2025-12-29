@@ -1,13 +1,11 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/matejko/.oh-my-zsh"
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
+# load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="lambda"
@@ -72,7 +70,7 @@ ZSH_THEME="lambda"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git dotenv)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,63 +85,71 @@ source $ZSH/oh-my-zsh.sh
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='nvim'
 # fi
 
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# export ARCHFLAGS="-arch $(uname -m)"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias vim="nvim"
+alias config_zsh="nvim ~/.zshrc"
+alias config_nix="nvim /etc/nix-darwin/flake.nix"
+alias config_kitty="nvim ~/.config/kitty/kitty.conf"
+alias config_nvim="nvim ~/.config/nvim/"
 
-alias zshconfig="vim ~/.zshrc"
-alias prj="cd ~/Projects/HM/bt-assortment-curation-and-presentation"
-alias vimconfig="vim ~/.config/nvim/"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias cprj="cd ~/Creative/Projects"
-alias pprj="cd ~/Projects/personal"
-alias lprj="cd ~/Projects/learning"
+alias rshell="exec $SHELL"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Project alias
+alias cdfc="cd ~/Project/framer/FramerCloud/"
+alias cdfs="cd ~/Project/framer/FramerStudio/"
+alias cdf="cd ~/Project/framer"
+alias cdfcc="cd ~/Project/framer/creators/"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 
-#export PATH="$(yarn global bin):$PATH"
+# Go Config
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export GOPRIVATE=github.com/framer
 
+export DOCKER_DEFAULT_PLATFORM="linux/amd64"
 
-export BROWSER=firefox
+GO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
+CGO_LDFLAGS="-L/opt/homebrew/Cellar/brotli/1.1.0/lib"
+
+# export STRIPE_API_KEY=
+# export STRIPE_WEBHOOK_SECRET=
+
+export GIT_EDITOR=nvim
+
+# Add SSH config
+ssh-add --apple-use-keychain ~/.ssh/github-framer
+
+# Volta configuration
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-if type rg &> /dev/null; then
-  export FZF_DEFAULT_COMMAND='rg --files'
-  export FZF_DEFAULT_OPTS='-m --height 50% --border'
-fi
+# Created by `pipx` on 2025-05-01 12:18:19
+export PATH="$PATH:/Users/matejkonrad/.local/bin"
 
-# alias python="python3"
-# alias pip="pip3"
-alias greset='git fetch origin && git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)'
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
+export GOOGLE_CLOUD_PROJECT=framer-gemini-cli
+export VISUAL=nvim
 
-# Rust config
-source "$HOME/.cargo/env"
+# export AVANTE_ANTHROPIC_API_KEY=
 
-export PATH=/Users/matejko/.local/bin:$PATH
-
-[ -f "/Users/matejko/.ghcup/env" ] && source "/Users/matejko/.ghcup/env" # ghcup-env
-
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
-
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-[[ -s "/Users/matejko/.gvm/scripts/gvm" ]] && source "/Users/matejko/.gvm/scripts/gvm"
+# if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+#   export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+#   export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+# else
+#   export VISUAL="nvim"
+#   export EDITOR="nvim"
+# fi
