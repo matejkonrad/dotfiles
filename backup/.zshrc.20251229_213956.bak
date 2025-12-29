@@ -120,12 +120,17 @@ export PATH=$PATH:$GOPATH/bin
 export GOPRIVATE=github.com/framer
 
 export DOCKER_DEFAULT_PLATFORM="linux/amd64"
-#export CGO_CFLAGS="-I/run/current-system/sw/bin/brotli/include"
-#export CGO_LDFLAGS="-L/run/current-system/sw/bin/brotli/lib"
-CGO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
+
+GO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
 CGO_LDFLAGS="-L/opt/homebrew/Cellar/brotli/1.1.0/lib"
 
+# export STRIPE_API_KEY=
+# export STRIPE_WEBHOOK_SECRET=
+
 export GIT_EDITOR=nvim
+
+# Add SSH config
+ssh-add --apple-use-keychain ~/.ssh/github-framer
 
 # Volta configuration
 export VOLTA_HOME="$HOME/.volta"
@@ -138,3 +143,13 @@ export PATH="$PATH:/Users/matejkonrad/.local/bin"
 export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
 export GOOGLE_CLOUD_PROJECT=framer-gemini-cli
 export VISUAL=nvim
+
+# export AVANTE_ANTHROPIC_API_KEY=
+
+# if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+#   export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+#   export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+# else
+#   export VISUAL="nvim"
+#   export EDITOR="nvim"
+# fi

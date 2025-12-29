@@ -1,5 +1,5 @@
 return {
-  "nvim-mini/mini.diff",
+  "echasnovski/mini.diff",
   config = function()
     local diff = require("mini.diff")
     diff.setup({
