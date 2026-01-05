@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8:foldmethod=marker
 
 # BEGIN_KITTY_THEME
-# Arthur
+# Black Metal
 include current-theme.conf
 # END_KITTY_THEME
 
@@ -15,10 +15,6 @@ include current-theme.conf
 # bold_font        auto
 # italic_font      auto
 # bold_italic_font auto
-# font_family JetBrainsMono Nerd Font
-# bold_font auto
-# italic_font auto
-# bold_italic_font auto
 
 #: You can specify different fonts for the bold/italic/bold-italic
 #: variants. The easiest way to select fonts is to run the `kitten
@@ -29,7 +25,7 @@ include current-theme.conf
 #: <https://sw.kovidgoyal.net/kitty/kittens/choose-fonts/#font-spec-
 #: syntax>.
 
-font_size 14.0
+# font_size 11.0
 
 #: Font size (in pts).
 
@@ -869,7 +865,7 @@ font_size 14.0
 #: suffix of "c" on the width/height values to have them interpreted
 #: as number of cells instead of pixels.
 
-enabled_layouts grid
+# enabled_layouts *
 
 #: The enabled window layouts. A comma separated list of layout names.
 #: The special value all means all layouts. The first listed layout
@@ -2139,7 +2135,7 @@ enabled_layouts grid
 #: New window
 
 # map kitty_mod+enter new_window
-map cmd+enter       new_window_with_cwd
+# map cmd+enter       new_window
 
 #::  You can open a new kitty window running an arbitrary program, for
 #::  example::
@@ -2290,7 +2286,7 @@ map cmd+enter       new_window_with_cwd
 #: New tab
 
 # map kitty_mod+t new_tab
-map cmd+t       new_tab_with_cwd
+# map cmd+t       new_tab
 
 #: Close tab
 
@@ -2322,13 +2318,8 @@ map cmd+t       new_tab_with_cwd
 #: tab and any number less than the number of previously used tabs in
 #: the history goes to the oldest previously used tab in the history::
 
-map cmd+1 goto_tab 1
-map cmd+2 goto_tab 2
-map cmd+3 goto_tab 3
-map cmd+4 goto_tab 4
-map cmd+5 goto_tab 5
-map cmd+6 goto_tab 6
-map cmd+7 goto_tab 7
+#:     map ctrl+alt+1 goto_tab 1
+#:     map ctrl+alt+2 goto_tab 2
 
 #: Just as with new_window above, you can also pass the name of
 #: arbitrary commands to run when using new_tab and new_tab_with_cwd.
@@ -2691,30 +2682,3 @@ map super+backspace send_text all \x15
 ## delete word works by default via opt+backspace
 ## undo (doesn't work in zsh, works in nushell with ctrl-z and ⌘-z in both):
 map super+z send_text all \x1A
-
-
-
-# Remap to VIM like config for tabs
-# Remap next tab to ctrl+shift+h
-map ctrl+shift+l next_tab
-
-# Optionally, remap previous tab to ctrl+shift+l for consistency
-map ctrl+shift+h previous_tab
-
-# Remap to VIM like config for tabs
-map cmd+shift+l next_window
-
-# Remap previous tab to ctrl+shift+h
-map cmd+shift+h next_window
-
-# Unbind the default keybindings
-map ctrl+shift+right no_op
-map ctrl+shift+left no_op
-
-
-# BEGIN_KITTY_FONTS
-font_family      family="JetBrainsMono Nerd Font Mono"
-bold_font        auto
-italic_font      auto
-bold_italic_font auto
-# END_KITTY_FONTS
