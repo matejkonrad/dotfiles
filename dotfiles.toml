@@ -37,3 +37,8 @@ target = "~/.cursor/mcp.json"
 [hypr]
 source = "config/hypr"
 target = "~/.config/hypr"
+
+[qmk_udev]
+source = "config/udev/50-qmk.rules"
+target = "/etc/udev/rules.d/50-qmk.rules"
+postinstall = "sudo udevadm control --reload-rules && sudo udevadm trigger"

@@ -14,7 +14,7 @@ parse_config() {
 
     if [[ "$line" =~ ^\[([^]]+)\]$ ]]; then
       current_name="${BASH_REMATCH[1]}"
-    elif [[ -n "$current_name" && "$line" =~ ^(source|target)[[:space:]]*=[[:space:]]*\"(.+)\"$ ]]; then
+    elif [[ -n "$current_name" && "$line" =~ ^(source|target|postinstall)[[:space:]]*=[[:space:]]*\"(.+)\"$ ]]; then
       local key="${BASH_REMATCH[1]}"
       local val="${BASH_REMATCH[2]}"
       eval "cfg_${current_name}_${key}=\"${val}\""
@@ -27,8 +27,21 @@ parse_config() {
 
 get_source() { eval "echo \"\$cfg_${1}_source\""; }
 get_target() { eval "echo \"\$cfg_${1}_target\""; }
+get_postinstall() { eval "echo \"\$cfg_${1}_postinstall\""; }
 
 resolve() { echo "${1/#\~/$HOME}"; }
+
+# Run a command with sudo if the target's parent directory isn't writable
+maybe_sudo() {
+  local target="$1"; shift
+  local target_dir
+  target_dir="$(dirname "$target")"
+  if [[ -w "$target_dir" ]]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
 
 # --- Commands ---
 
@@ -49,7 +62,7 @@ cmd_install() {
         continue
       else
         echo "  [relink] $name — symlink points to $current, relinking"
-        rm "$target"
+        maybe_sudo "$target" rm "$target"
       fi
     elif [[ -e "$target" ]]; then
       # Source doesn't exist in repo yet — copy it in first
@@ -98,7 +111,7 @@ cmd_install() {
           esac
         done
       fi
-      rm -rf "$target"
+      maybe_sudo "$target" rm -rf "$target"
     fi
 
     if [[ ! -e "$source" ]]; then
@@ -106,9 +119,16 @@ cmd_install() {
       continue
     fi
 
-    mkdir -p "$(dirname "$target")"
-    ln -s "$source" "$target"
+    maybe_sudo "$target" mkdir -p "$(dirname "$target")"
+    maybe_sudo "$target" ln -s "$source" "$target"
     echo "  [link]   $name — $target -> $source"
+
+    local postinstall
+    postinstall="$(get_postinstall "$name")"
+    if [[ -n "$postinstall" ]]; then
+      echo "  [run]    $name — $postinstall"
+      eval "$postinstall"
+    fi
   done
 
   echo ""
@@ -202,12 +222,12 @@ cmd_uninstall() {
       local current
       current="$(readlink "$target")"
       if [[ "$current" == "$source" ]]; then
-        rm "$target"
+        maybe_sudo "$target" rm "$target"
         # Copy the file back so the program still works
         if [[ -d "$source" ]]; then
-          cp -r "$source" "$target"
+          maybe_sudo "$target" cp -r "$source" "$target"
         else
-          cp "$source" "$target"
+          maybe_sudo "$target" cp "$source" "$target"
         fi
         echo "  [restored] $name"
       else
