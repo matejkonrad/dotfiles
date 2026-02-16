@@ -17,3 +17,17 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "VimResized" }, {
     vim.cmd("redraw")
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  pattern = { ".env*" },
+  callback = function()
+    vim.diagnostic.enable(false, { bufnr = 0 })
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown" },
+  callback = function()
+    vim.diagnostic.enable(false, { bufnr = 0 })
+  end,
+})

@@ -1,0 +1,35 @@
+[zshrc]
+source = ".zshrc"
+target = "~/.zshrc"
+
+[nvim]
+source = "config/nvim"
+target = "~/.config/nvim"
+
+[kitty]
+source = "config/kitty"
+target = "~/.config/kitty"
+
+[zed]
+source = "config/zed"
+target = "~/.config/zed"
+
+[git]
+source = "config/git"
+target = "~/.config/git"
+
+[ghostty]
+source = "config/ghostty"
+target = "~/.config/ghostty"
+
+[zellij]
+source = "config/zellij"
+target = "~/.config/zellij"
+
+[claude]
+source = "claude/settings.json"
+target = "~/.claude/settings.json"
+
+[cursor]
+source = "cursor/mcp.json"
+target = "~/.cursor/mcp.json"

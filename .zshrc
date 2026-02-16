@@ -100,6 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+alias cfg="cd ~/Project/self/dotfiles && nvim"
 alias config_zsh="nvim ~/.zshrc"
 alias config_nix="nvim /etc/nix-darwin/flake.nix"
 alias config_kitty="nvim ~/.config/kitty/kitty.conf"

@@ -1,0 +1,15 @@
+{
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": false,
+    "lua-lsp@claude-plugins-official": true,
+    "javascript-typescript@claude-code-workflows": true,
+    "code-refactoring@claude-code-workflows": true,
+    "frontend-excellence@dotclaude-plugins": true,
+    "compound-engineering@every-marketplace": true,
+    "frontend-design@claude-code-plugins": false,
+    "pr-review-toolkit@claude-code-plugins": false,
+    "explanatory-output-style@claude-code-plugins": false,
+    "frontend-design@claude-plugins-official": false
+  }
+}

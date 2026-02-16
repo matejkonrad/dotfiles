@@ -7,6 +7,7 @@ return {
       "biome", -- biome CLI
       "prettierd", -- fast daemon for Prettier
       "eslint_d", -- optional (Prettier projects w/ ESLint)
+      "some-sass-language-server",
     })
   end,
 }
