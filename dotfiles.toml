@@ -33,3 +33,7 @@ target = "~/.claude/settings.json"
 [cursor]
 source = "cursor/mcp.json"
 target = "~/.cursor/mcp.json"
+
+[hypr]
+source = "config/hypr"
+target = "~/.config/hypr"

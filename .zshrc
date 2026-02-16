@@ -100,7 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias cfg="cd ~/Project/self/dotfiles && nvim"
+alias cfg="cd ~/Projects/self/dotfiles && nvim"
 alias config_zsh="nvim ~/.zshrc"
 alias config_nix="nvim /etc/nix-darwin/flake.nix"
 alias config_kitty="nvim ~/.config/kitty/kitty.conf"
@@ -118,7 +118,7 @@ alias cdfcc="cd ~/Project/framer/creators/"
 # Go Config
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-export GOPRIVATE=github.com/framer
+# export GOPRIVATE=github.com/framer
 
 export DOCKER_DEFAULT_PLATFORM="linux/amd64"
 #export CGO_CFLAGS="-I/run/current-system/sw/bin/brotli/include"
@@ -133,7 +133,7 @@ export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 # Created by `pipx` on 2025-05-01 12:18:19
-export PATH="$PATH:/Users/matejkonrad/.local/bin"
+# export PATH="$PATH:/Users/matejkonrad/.local/bin"
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
