@@ -61,6 +61,42 @@ cmd_install() {
         else
           cp "$target" "$source"
         fi
+      else
+        # Both exist — ask which to keep
+        echo "  [conflict] $name — both repo and local versions exist"
+        if diff -q "$source" "$target" &>/dev/null || \
+           diff -rq "$source" "$target" &>/dev/null; then
+          echo "             (files are identical)"
+        else
+          echo "             (files differ)"
+        fi
+        while true; do
+          read -rp "  Keep [r]epo, [l]ocal, [d]iff, or [s]kip? " choice
+          case "$choice" in
+            r|repo)
+              echo "  → keeping repo version"
+              break
+              ;;
+            l|local)
+              echo "  → keeping local version"
+              rm -rf "$source"
+              if [[ -d "$target" ]]; then
+                cp -r "$target" "$source"
+              else
+                cp "$target" "$source"
+              fi
+              break
+              ;;
+            d|diff)
+              diff -ru "$source" "$target" || true
+              ;;
+            s|skip)
+              echo "  [skip]   $name"
+              continue 2
+              ;;
+            *) echo "  Invalid choice. Enter r, l, d, or s." ;;
+          esac
+        done
       fi
       rm -rf "$target"
     fi
