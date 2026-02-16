@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# SSH agent (systemd user service)
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -132,8 +135,8 @@ export GIT_EDITOR=nvim
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-# Created by `pipx` on 2025-05-01 12:18:19
-# export PATH="$PATH:/Users/matejkonrad/.local/bin"
+# Local binaries
+export PATH="$HOME/.local/bin:$PATH"
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
