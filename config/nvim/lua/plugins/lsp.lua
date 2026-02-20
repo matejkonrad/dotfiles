@@ -4,8 +4,14 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- SCSS go-to-definition, references, hover, completions
-        somesass_ls = {},
+        -- CSS Modules go-to-definition from JS/TS to .module.scss
+        cssmodules_ls = {},
+        -- SCSS hover, completions, diagnostics
+        somesass_ls = {
+          on_attach = function(client, bufnr)
+            client.server_capabilities.definitionProvider = false
+          end,
+        },
         -- Only enable biome LSP in projects that have a biome config
         biome = {
           root_dir = function(fname)

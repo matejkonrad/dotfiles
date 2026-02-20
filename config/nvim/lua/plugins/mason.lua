@@ -8,6 +8,7 @@ return {
       "prettierd", -- fast daemon for Prettier
       "eslint_d", -- optional (Prettier projects w/ ESLint)
       "some-sass-language-server",
+      "cssmodules-language-server",
     })
   end,
 }
