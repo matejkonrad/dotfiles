@@ -138,4 +138,5 @@ export PATH="$PATH:/Users/matejkonrad/.local/bin"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
 export GOOGLE_CLOUD_PROJECT=framer-gemini-cli
+export EDITOR=nvim
 export VISUAL=nvim

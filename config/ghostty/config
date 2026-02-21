@@ -7,7 +7,7 @@ theme = Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 13
 
-macos-titlebar-style = hidden
+# macos-titlebar-style = native
 
 # Unbind keys so they will be forwarded to Zellij
 keybind = cmd+t=unbind
