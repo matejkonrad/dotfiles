@@ -14,6 +14,15 @@ alias config_kitty="nvim ~/.config/kitty/kitty.conf"
 alias config_nvim="nvim ~/.config/nvim/"
 alias rshell="exec $SHELL"
 
+# Yazi wrapper — cd to last dir on quit (q), stay on Q
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
 # Go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
