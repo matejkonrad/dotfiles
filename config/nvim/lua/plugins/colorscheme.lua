@@ -127,6 +127,10 @@ return {
           hl(0, "WhichKeyGroup", { fg = sage })
           hl(0, "WhichKeyDesc", { fg = muted_fg })
 
+          -- Render Markdown - code block backgrounds
+          hl(0, "RenderMarkdownCode", { bg = bg })
+          hl(0, "RenderMarkdownCodeInline", { bg = bg })
+
           -- Flash.nvim - high contrast labels for easy jumping
           hl(0, "FlashLabel", { fg = bg, bg = tan, bold = true, nocombine = true })
           hl(0, "FlashMatch", { fg = cream, bg = "#2a2a2a", nocombine = true })
