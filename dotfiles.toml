@@ -44,6 +44,15 @@ source = ".zshrc.darwin"
 target = "~/.zshrc.darwin"
 os = "darwin"
 
+[waybar]
+source = "config/waybar"
+target = "~/.config/waybar"
+os = "linux"
+
+[wallpapers]
+source = "Wallpapers"
+target = "~/Wallpapers"
+
 [hypr]
 source = "config/hypr"
 target = "~/.config/hypr"

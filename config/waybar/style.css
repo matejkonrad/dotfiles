@@ -1,0 +1,84 @@
+* {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(16, 16, 16, 0.8);
+    border-radius: 8px;
+    border: 1px solid #232323;
+    color: #A0A0A0;
+    box-shadow: 0 1px 2px rgba(255, 255, 255, 0.05), 0 2px 4px rgba(255, 255, 255, 0.08);
+}
+
+/* All modules */
+#workspaces,
+#clock,
+#pulseaudio,
+#cpu,
+#memory,
+#network,
+#tray {
+    padding: 0 14px;
+}
+
+/* Separators between right modules */
+#pulseaudio,
+#cpu,
+#memory,
+#network {
+    border-left: 1px solid #232323;
+}
+
+/* Workspaces */
+#workspaces {
+    padding: 0 6px;
+}
+
+#workspaces button {
+    color: #505050;
+    padding: 4px 10px;
+    margin: 3px 2px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+}
+
+#workspaces button.active {
+    color: #101010;
+    background: #ffffff;
+    font-weight: bold;
+}
+
+#workspaces button:hover {
+    color: #ffffff;
+    background: #232323;
+}
+
+/* Center clock */
+#clock {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Right side */
+#pulseaudio,
+#cpu,
+#memory,
+#network {
+    color: #707070;
+}
+
+#tray {
+    padding: 0 10px;
+    border-left: 1px solid #232323;
+}
+
+/* Tooltip */
+tooltip {
+    background: #161616;
+    border: 1px solid #282828;
+    border-radius: 8px;
+    color: #A0A0A0;
+}
