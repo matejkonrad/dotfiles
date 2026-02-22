@@ -34,11 +34,23 @@ target = "~/.claude/settings.json"
 source = "cursor/mcp.json"
 target = "~/.cursor/mcp.json"
 
+[zshrc_linux]
+source = ".zshrc.linux"
+target = "~/.zshrc.linux"
+os = "linux"
+
+[zshrc_darwin]
+source = ".zshrc.darwin"
+target = "~/.zshrc.darwin"
+os = "darwin"
+
 [hypr]
 source = "config/hypr"
 target = "~/.config/hypr"
+os = "linux"
 
 [qmk_udev]
 source = "config/udev/50-qmk.rules"
 target = "/etc/udev/rules.d/50-qmk.rules"
 postinstall = "sudo udevadm control --reload-rules && sudo udevadm trigger"
+os = "linux"

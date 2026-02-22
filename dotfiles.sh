@@ -3,6 +3,8 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="$DOTFILES_DIR/dotfiles.toml"
+CURRENT_OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+CURRENT_HOST="$(uname -n | tr '[:upper:]' '[:lower:]')"
 
 # --- TOML parser (handles simple [section] / key = "value" format) ---
 parse_config() {
@@ -14,7 +16,7 @@ parse_config() {
 
     if [[ "$line" =~ ^\[([^]]+)\]$ ]]; then
       current_name="${BASH_REMATCH[1]}"
-    elif [[ -n "$current_name" && "$line" =~ ^(source|target|postinstall)[[:space:]]*=[[:space:]]*\"(.+)\"$ ]]; then
+    elif [[ -n "$current_name" && "$line" =~ ^(source|target|postinstall|os|hostname)[[:space:]]*=[[:space:]]*\"(.+)\"$ ]]; then
       local key="${BASH_REMATCH[1]}"
       local val="${BASH_REMATCH[2]}"
       eval "cfg_${current_name}_${key}=\"${val}\""
@@ -28,6 +30,36 @@ parse_config() {
 get_source() { eval "echo \"\$cfg_${1}_source\""; }
 get_target() { eval "echo \"\$cfg_${1}_target\""; }
 get_postinstall() { eval "echo \"\$cfg_${1}_postinstall\""; }
+get_os() { eval "echo \"\$cfg_${1}_os\""; }
+get_hostname() { eval "echo \"\$cfg_${1}_hostname\""; }
+
+# Check if a config entry should be skipped on this machine
+skip_for_machine() {
+  local entry_os entry_host
+  entry_os="$(get_os "$1")"
+  entry_host="$(get_hostname "$1")"
+  if [[ -n "$entry_os" && "$entry_os" != "$CURRENT_OS" ]]; then
+    return 0
+  fi
+  if [[ -n "$entry_host" && "$entry_host" != "$CURRENT_HOST" ]]; then
+    return 0
+  fi
+  return 1
+}
+
+skip_reason() {
+  local entry_os entry_host
+  entry_os="$(get_os "$1")"
+  entry_host="$(get_hostname "$1")"
+  local reasons=()
+  if [[ -n "$entry_os" && "$entry_os" != "$CURRENT_OS" ]]; then
+    reasons+=("os=$entry_os")
+  fi
+  if [[ -n "$entry_host" && "$entry_host" != "$CURRENT_HOST" ]]; then
+    reasons+=("host=$entry_host")
+  fi
+  echo "${reasons[*]}"
+}
 
 resolve() { echo "${1/#\~/$HOME}"; }
 
@@ -49,6 +81,11 @@ cmd_install() {
   echo "Installing dotfiles..."
 
   for name in "${cfg_names[@]}"; do
+    if skip_for_machine "$name"; then
+      echo "  [skip]   $name — $(skip_reason "$name")"
+      continue
+    fi
+
     local source="$DOTFILES_DIR/$(get_source "$name")"
     local target
     target="$(resolve "$(get_target "$name")")"
@@ -137,6 +174,11 @@ cmd_install() {
 
 cmd_status() {
   for name in "${cfg_names[@]}"; do
+    if skip_for_machine "$name"; then
+      echo "  [skip]     $name — $(skip_reason "$name")"
+      continue
+    fi
+
     local source="$DOTFILES_DIR/$(get_source "$name")"
     local target
     target="$(resolve "$(get_target "$name")")"

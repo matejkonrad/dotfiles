@@ -1,0 +1,21 @@
+# Nix-darwin
+alias config_nix="nvim /etc/nix-darwin/flake.nix"
+
+# Project aliases
+alias cdfc="cd ~/Project/framer/FramerCloud/"
+alias cdfs="cd ~/Project/framer/FramerStudio/"
+alias cdf="cd ~/Project/framer"
+alias cdfcc="cd ~/Project/framer/creators/"
+
+# Docker (Apple Silicon → amd64)
+export DOCKER_DEFAULT_PLATFORM="linux/amd64"
+
+# Brotli (Homebrew)
+CGO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
+CGO_LDFLAGS="-L/opt/homebrew/Cellar/brotli/1.1.0/lib"
+
+# LM Studio
+export PATH="$PATH:/Users/matejkonrad/.lmstudio/bin"
+
+# GCP
+export GOOGLE_CLOUD_PROJECT=framer-gemini-cli
