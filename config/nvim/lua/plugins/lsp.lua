@@ -4,6 +4,8 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        -- WGSL language server
+        wgsl_analyzer = {},
         -- CSS Modules go-to-definition from JS/TS to .module.scss
         cssmodules_ls = {},
         -- SCSS hover, completions, diagnostics

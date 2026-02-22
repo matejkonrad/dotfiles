@@ -9,7 +9,7 @@
 
     "modules-left": ["hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "cpu", "memory", "network", "tray"],
+    "modules-right": ["pulseaudio", "cpu", "memory", "custom/gpu", "network", "tray"],
 
     "hyprland/workspaces": {
         "format": "{id}",
@@ -35,6 +35,12 @@
 
     "memory": {
         "format": "Mem {percentage}%",
+        "interval": 5
+    },
+
+    "custom/gpu": {
+        "exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits",
+        "format": "GPU {}%",
         "interval": 5
     },
 

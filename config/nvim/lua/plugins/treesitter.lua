@@ -6,6 +6,7 @@ return {
         "go",
         "rust",
         "typescript",
+        "wgsl",
       })
     end,
   },
