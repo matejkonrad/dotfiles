@@ -1,3 +1,8 @@
+# Auto-start zellij
+if [[ -z "$ZELLIJ" ]]; then
+    zellij attach -c default
+fi
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
