@@ -5,6 +5,7 @@ target = "~/.zshrc"
 [nvim]
 source = "config/nvim"
 target = "~/.config/nvim"
+config/opencode
 
 [kitty]
 source = "config/kitty"
@@ -63,3 +64,7 @@ source = "config/udev/50-qmk.rules"
 target = "/etc/udev/rules.d/50-qmk.rules"
 postinstall = "sudo udevadm control --reload-rules && sudo udevadm trigger"
 os = "linux"
+
+[opencode]
+source = "config/opencode/opencode.json"
+target = "~/.config/opencode/opencode.json"

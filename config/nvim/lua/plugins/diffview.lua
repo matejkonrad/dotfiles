@@ -2,18 +2,45 @@ return {
   "sindrets/diffview.nvim",
   cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
   keys = {
-    -- Compare working tree against HEAD (unstaged + staged changes)
-    { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diff Working Tree" },
-    -- Compare current branch against origin (what will be pushed)
-    { "<leader>gG", "<cmd>DiffviewOpen origin/HEAD...HEAD<cr>", desc = "Diff vs Origin" },
-    -- File history for current file
-    { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
-    -- File history for entire repo
-    { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo History" },
-    -- Current commit details
-    { "<leader>gc", "<cmd>DiffviewOpen HEAD~1...HEAD<cr>", desc = "Current Commit Diff" },
-    -- Close diffview
+    { "<leader>gad", "<cmd>DiffviewOpen<cr>", desc = "Diff Working Tree" },
+    { "<leader>gag", "<cmd>DiffviewOpen origin/main<cr>", desc = "Diff vs Origin Main" },
+    { "<leader>gau", "<cmd>DiffviewOpen @{u}<cr>", desc = "Diff vs Upstream" },
+    { "<leader>gah", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
+    { "<leader>gaH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo History" },
+    { "<leader>gac", "<cmd>DiffviewOpen HEAD~1...HEAD<cr>", desc = "Current Commit Diff" },
     { "<leader>gq", "<cmd>DiffviewClose<cr>", desc = "Close Diffview" },
+    {
+      "<leader>gar",
+      function()
+        vim.ui.input({ prompt = "PR number: " }, function(pr)
+          if not pr or pr == "" then return end
+          vim.notify("Checking out PR #" .. pr .. "...", vim.log.levels.INFO)
+          vim.fn.jobstart("gh pr checkout " .. pr, {
+            on_exit = function(_, code)
+              vim.schedule(function()
+                if code ~= 0 then
+                  vim.notify("Failed to checkout PR #" .. pr, vim.log.levels.ERROR)
+                  return
+                end
+                -- Get the base branch of the PR
+                vim.fn.jobstart("gh pr view " .. pr .. " --json baseRefName -q .baseRefName", {
+                  stdout_buffered = true,
+                  on_stdout = function(_, data)
+                    vim.schedule(function()
+                      local base = data[1] and data[1]:gsub("%s+", "") or "main"
+                      if base == "" then base = "main" end
+                      vim.cmd("DiffviewOpen origin/" .. base .. "...HEAD")
+                      vim.notify("Reviewing PR #" .. pr .. " against " .. base, vim.log.levels.INFO)
+                    end)
+                  end,
+                })
+              end)
+            end,
+          })
+        end)
+      end,
+      desc = "Review PR (checkout + diffview)",
+    },
   },
   opts = {
     diff_binaries = false,

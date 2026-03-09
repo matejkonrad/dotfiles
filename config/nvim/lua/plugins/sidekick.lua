@@ -92,5 +92,20 @@ return {
       end,
       desc = "Sidekick Toggle Claude",
     },
+    -- Opencode integration
+    {
+      "<leader>ao",
+      function()
+        require("sidekick.cli").toggle({ name = "opencode", focus = true })
+      end,
+      desc = "Sidekick Toggle Opencode",
+      mode = { "n", "t", "i", "x" },
+    },
+    -- Open diffview to review opencode changes (working tree vs HEAD)
+    {
+      "<leader>aod",
+      "<cmd>DiffviewOpen<cr>",
+      desc = "Review Opencode Changes (Diffview)",
+    },
   },
 }
