@@ -131,6 +131,19 @@ return {
           hl(0, "RenderMarkdownCode", { bg = bg })
           hl(0, "RenderMarkdownCodeInline", { bg = bg })
 
+          -- Diff highlights - bg only so treesitter syntax colors show through
+          hl(0, "DiffAdd", { bg = "#1a2e1a" }) -- subtle green tint
+          hl(0, "DiffDelete", { bg = "#2e1a1a" }) -- subtle red tint
+          hl(0, "DiffChange", { bg = "#1a1a2e" }) -- subtle blue tint
+          hl(0, "DiffText", { bg = "#2a2a40" }) -- brighter blue for changed text
+          hl(0, "Added", { fg = sage })
+          hl(0, "Removed", { fg = "#c47070" })
+          hl(0, "Changed", { fg = "#7090c4" })
+
+          -- Diffview specific
+          hl(0, "DiffviewDiffAddAsDelete", { bg = "#2e1a1a" })
+          hl(0, "DiffviewDiffDelete", { fg = "#3a3a3a" }) -- filler lines (the -----)
+
           -- Flash.nvim - high contrast labels for easy jumping
           hl(0, "FlashLabel", { fg = bg, bg = tan, bold = true, nocombine = true })
           hl(0, "FlashMatch", { fg = cream, bg = "#2a2a2a", nocombine = true })
