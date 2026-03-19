@@ -122,6 +122,23 @@ return {
           hl(0, "SidekickLocFile", { fg = tan })
           hl(0, "SidekickLocNum", { fg = dim })
 
+          -- Avante
+          hl(0, "AvanteSidebarNormal", { bg = bg })
+          hl(0, "AvanteSidebarWinSeparator", { fg = dim, bg = bg })
+          hl(0, "AvanteSidebarWinHorizontalSeparator", { fg = dim, bg = bg })
+          hl(0, "AvanteTitle", { fg = bg, bg = tan })
+          hl(0, "AvanteReversedTitle", { fg = tan, bg = bg })
+          hl(0, "AvanteSubtitle", { fg = bg, bg = sage })
+          hl(0, "AvanteReversedSubtitle", { fg = sage, bg = bg })
+          hl(0, "AvanteThirdTitle", { fg = muted_fg, bg = bg_selection })
+          hl(0, "AvanteReversedThirdTitle", { fg = bg_selection, bg = bg })
+          hl(0, "AvanteInlineHint", { fg = dim, italic = true })
+          hl(0, "AvantePopupHint", { fg = dim, bg = bg })
+          hl(0, "AvantePromptInput", { bg = bg })
+          hl(0, "AvantePromptInputBorder", { fg = dim, bg = bg })
+          hl(0, "AvanteConflictCurrent", { bg = "#1a2e1a" })
+          hl(0, "AvanteConflictIncoming", { bg = "#1a1a2e" })
+
           -- WhichKey
           hl(0, "WhichKey", { fg = tan })
           hl(0, "WhichKeyGroup", { fg = sage })

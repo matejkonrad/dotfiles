@@ -65,6 +65,11 @@ target = "/etc/udev/rules.d/50-qmk.rules"
 postinstall = "sudo udevadm control --reload-rules && sudo udevadm trigger"
 os = "linux"
 
+[aerospace]
+source = ".aerospace.toml"
+target = "~/.aerospace.toml"
+os = "darwin"
+
 [opencode]
 source = "config/opencode/opencode.json"
 target = "~/.config/opencode/opencode.json"
