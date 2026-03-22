@@ -133,3 +133,4 @@ _host="$(uname -n | tr '[:upper:]' '[:lower:]')"
 [[ -f "$HOME/.zshrc.${_os}" ]] && source "$HOME/.zshrc.${_os}"
 [[ -f "$HOME/.zshrc.${_host}" ]] && source "$HOME/.zshrc.${_host}"
 unset _os _host
+export NPM_TOKEN=$(sed -nE "s/\/\/registry.(yarnpkg.com|npmjs.org)\/:_authToken=//p" $HOME/.npmrc)
