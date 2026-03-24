@@ -29,7 +29,7 @@ function worktree() {
 		local branch="$2"
 		local base_dir
 		base_dir="$(git rev-parse --show-toplevel)"
-		local worktree_dir="../$(basename "$base_dir")-$branch"
+		local worktree_dir="../$(basename "$base_dir")-worktree/$branch"
 
 		git worktree add -b "$branch" "$worktree_dir"
 		cd "$worktree_dir"

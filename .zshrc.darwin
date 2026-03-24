@@ -8,7 +8,7 @@ alias cdf="cd ~/Project/framer"
 alias cdfcc="cd ~/Project/framer/creators/"
 
 # Docker (Apple Silicon → amd64)
-export DOCKER_DEFAULT_PLATFORM="linux/amd64"
+# export DOCKER_DEFAULT_PLATFORM="linux/amd64"
 
 # Brotli (Homebrew)
 CGO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
