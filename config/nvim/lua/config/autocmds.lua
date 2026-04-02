@@ -9,14 +9,14 @@
 
 -- Workaround for Neovim 0.11 terminal reflow rendering bug
 -- Force redraws only on events that commonly trigger the bug
-local redraw_group = vim.api.nvim_create_augroup("fix_reflow_rendering", { clear = true })
+-- local redraw_group = vim.api.nvim_create_augroup("fix_reflow_rendering", { clear = true })
 
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "VimResized" }, {
-  group = redraw_group,
-  callback = function()
-    vim.cmd("redraw")
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "VimResized" }, {
+--   group = redraw_group,
+--   callback = function()
+--     vim.cmd("redraw")
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
   pattern = { ".env*" },

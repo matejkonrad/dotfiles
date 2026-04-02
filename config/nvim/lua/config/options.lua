@@ -10,6 +10,6 @@ vim.o.background = "dark"
 
 -- Workaround for Neovim 0.11 terminal reflow rendering bug
 -- https://github.com/neovim/neovim/issues/33133
-vim.opt.scrollback = 1000 -- Reduce scrollback to minimize reflow impact
-vim.opt.lazyredraw = false -- Force immediate redraws
-vim.opt.redrawtime = 5000 -- Increase redraw timeout
+-- vim.opt.scrollback = 1000 -- Reduce scrollback to minimize reflow impact
+-- vim.opt.lazyredraw = false -- Force immediate redraws
+-- vim.opt.redrawtime = 5000 -- Increase redraw timeout

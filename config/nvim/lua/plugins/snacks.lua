@@ -19,6 +19,13 @@ return {
                   end
                 end,
               },
+              git_status = {
+                desc = "Git Status (changed files)",
+                action = function(picker)
+                  picker:close()
+                  Snacks.picker.git_status()
+                end,
+              },
               grug_far_in_dir = {
                 desc = "Search & Replace in Directory (grug-far)",
                 action = function(picker, item)
@@ -33,6 +40,7 @@ return {
             win = {
               list = {
                 keys = {
+                  ["<leader>gs"] = "git_status",
                   ["<leader>/"] = "grep_in_dir",
                   ["<leader>sr"] = "grug_far_in_dir",
                 },
