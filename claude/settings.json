@@ -1,4 +1,28 @@
 {
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Waiting for input in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ]; then tmux select-window -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" 2>/dev/null; tmux select-pane -t \"$TMUX_PANE\" 2>/dev/null; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Finished in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ]; then tmux select-window -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" 2>/dev/null; tmux select-pane -t \"$TMUX_PANE\" 2>/dev/null; fi"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,

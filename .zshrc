@@ -13,6 +13,7 @@ alias config_zsh="nvim ~/.zshrc"
 alias config_kitty="nvim ~/.config/kitty/kitty.conf"
 alias config_nvim="nvim ~/.config/nvim/"
 alias rshell="exec $SHELL"
+alias nvim-reset="rm -rf ~/.local/share/nvim/site/queries ~/.local/state/nvim/lazy && echo 'Cleaned nvim cache'"
 
 # Git worktree helpers
 #   worktree new <branch>   — create worktree, copy .env files, install deps

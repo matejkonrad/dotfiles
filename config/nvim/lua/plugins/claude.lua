@@ -2,7 +2,7 @@
 -- Works alongside sidekick.nvim which handles the terminal/UI
 return {
   "coder/claudecode.nvim",
-  enabled = false,
+  enabled = true,
   opts = {
     auto_start = true,
     diff_opts = {

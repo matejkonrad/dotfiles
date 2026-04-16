@@ -1,6 +1,6 @@
 return {
   "yetone/avante.nvim",
-  enabled = true,
+  enabled = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
@@ -15,6 +15,10 @@ return {
       },
       ft = { "markdown", "Avante" },
     },
+  },
+  -- LazyVim Avante extra uses lazy.nvim `keys` (not mappings.toggle).
+  keys = {
+    { "<C-.>", "<cmd>AvanteToggle<CR>", desc = "Toggle Avante" },
   },
   opts = {
     provider = "cursor",

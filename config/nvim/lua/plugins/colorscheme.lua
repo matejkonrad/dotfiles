@@ -15,6 +15,7 @@ return {
   },
   {
     "datsfilipe/vesper.nvim",
+    enabled = false,
     lazy = false,
     priority = 1000,
     config = function()
@@ -161,6 +162,10 @@ return {
           hl(0, "DiffviewDiffAddAsDelete", { bg = "#2e1a1a" })
           hl(0, "DiffviewDiffDelete", { fg = "#3a3a3a" }) -- filler lines (the -----)
 
+          -- Copilot inline suggestions - very subtle ghost text
+          hl(0, "CopilotSuggestion", { fg = "#404040", italic = true })
+          hl(0, "CopilotAnnotation", { fg = "#404040", italic = true })
+
           -- Flash.nvim - high contrast labels for easy jumping
           hl(0, "FlashLabel", { fg = bg, bg = tan, bold = true, nocombine = true })
           hl(0, "FlashMatch", { fg = cream, bg = "#2a2a2a", nocombine = true })
@@ -172,56 +177,12 @@ return {
       })
     end,
   },
-  { "EdenEast/nightfox.nvim" }, -- lazy,
-  {
-    "metalelf0/black-metal-theme-neovim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require("black-metal").setup({
-        -- optional configuration here
-        -- theme = "dark-funeral",
-        theme = "windir",
-      })
-      -- require("black-metal").load()
-
-      -- Fix inverted diff colors in immortal theme
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "immortal",
-        callback = function()
-          local added = vim.api.nvim_get_hl(0, { name = "Added" })
-          local removed = vim.api.nvim_get_hl(0, { name = "Removed" })
-          local diff_add = vim.api.nvim_get_hl(0, { name = "DiffAdd" })
-          local diff_delete = vim.api.nvim_get_hl(0, { name = "DiffDelete" })
-
-          vim.api.nvim_set_hl(0, "Added", { fg = removed.fg })
-          vim.api.nvim_set_hl(0, "Removed", { fg = added.fg })
-          vim.api.nvim_set_hl(0, "DiffAdd", { bg = diff_delete.bg })
-          vim.api.nvim_set_hl(0, "DiffDelete", { bg = diff_add.bg })
-        end,
-      })
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "windir",
-        callback = function()
-          local added = vim.api.nvim_get_hl(0, { name = "Added" })
-          local removed = vim.api.nvim_get_hl(0, { name = "Removed" })
-          local diff_add = vim.api.nvim_get_hl(0, { name = "DiffAdd" })
-          local diff_delete = vim.api.nvim_get_hl(0, { name = "DiffDelete" })
-
-          vim.api.nvim_set_hl(0, "Added", { fg = removed.fg })
-          vim.api.nvim_set_hl(0, "Removed", { fg = added.fg })
-          vim.api.nvim_set_hl(0, "DiffAdd", { bg = diff_delete.bg })
-          vim.api.nvim_set_hl(0, "DiffDelete", { bg = diff_add.bg })
-          vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#ffffff", bold = false })
-        end,
-      })
-    end,
-  },
+  { "EdenEast/nightfox.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
       -- colorscheme = "lackluster-hack",
-      colorscheme = "vesper",
+      colorscheme = "carbonfox",
     },
   },
 }

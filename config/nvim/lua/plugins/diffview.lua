@@ -8,7 +8,7 @@ return {
     { "<leader>gah", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
     { "<leader>gaH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo History" },
     { "<leader>gac", "<cmd>DiffviewOpen HEAD~1...HEAD<cr>", desc = "Current Commit Diff" },
-    { "<leader>gq", "<cmd>DiffviewClose<cr>", desc = "Close Diffview" },
+    { "<leader>gax", "<cmd>DiffviewClose<cr>", desc = "Close Diffview" },
     {
       "<leader>gar",
       function()
