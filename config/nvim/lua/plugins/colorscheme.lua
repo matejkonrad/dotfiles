@@ -15,7 +15,7 @@ return {
   },
   {
     "datsfilipe/vesper.nvim",
-    enabled = false,
+    enabled = true,
     lazy = false,
     priority = 1000,
     config = function()
@@ -177,12 +177,12 @@ return {
       })
     end,
   },
-  { "EdenEast/nightfox.nvim" },
+  { "EdenEast/nightfox.nvim", enabled = false },
   {
     "LazyVim/LazyVim",
     opts = {
       -- colorscheme = "lackluster-hack",
-      colorscheme = "carbonfox",
+      colorscheme = "vesper",
     },
   },
 }

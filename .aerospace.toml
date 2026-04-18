@@ -209,10 +209,6 @@ if.app-id = 'com.apple.Music'
 run = "move-node-to-workspace M"
 
 [[on-window-detected]]
-if.app-id = 'dev.warp.Warp-Stable'
-run = "move-node-to-workspace E"
-
-[[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace A"
 
@@ -248,3 +244,7 @@ run = ["layout floating"]
 [[on-window-detected]]
 if.app-id = "com.apple.systempreferences"
 run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = "com.1password.1password"
+run = ['layout floating']
