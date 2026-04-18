@@ -37,7 +37,9 @@ return {
               return require("snacks.picker.source.explorer").explorer(opts, ctx)
             end,
             transform = function(item, ctx)
-              if not git_filter_enabled then return true end
+              if not git_filter_enabled then
+                return true
+              end
               return is_git_item(item, ctx.picker.git_nodes)
             end,
             actions = {
@@ -95,20 +97,59 @@ return {
       {
         "<leader>fd",
         function()
-          vim.ui.input({ prompt = "Search in dir: ", default = vim.fn.getcwd() .. "/", completion = "dir" }, function(dir)
-            if dir then
-              Snacks.picker.grep({ dirs = { dir } })
+          vim.ui.input(
+            { prompt = "Search in dir: ", default = vim.fn.getcwd() .. "/", completion = "dir" },
+            function(dir)
+              if dir then
+                Snacks.picker.grep({ dirs = { dir } })
+              end
             end
-          end)
+          )
         end,
         desc = "Live Grep in Directory",
       },
-      { "<leader>fh", function() Snacks.picker.files({ hidden = true, ignored = true }) end, desc = "Find Files (hidden + ignored)" },
-      { "<leader>f/", function() Snacks.picker.search_history() end, desc = "Search History" },
-      { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "List Issues" },
-      { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "List Issues (All)" },
-      { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "List PRs" },
-      { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "List PRs (All)" },
+      {
+        "<leader>fh",
+        function()
+          Snacks.picker.files({ hidden = true, ignored = true })
+        end,
+        desc = "Find Files (hidden + ignored)",
+      },
+      {
+        "<leader>f/",
+        function()
+          Snacks.picker.search_history()
+        end,
+        desc = "Search History",
+      },
+      {
+        "<leader>gi",
+        function()
+          Snacks.picker.gh_issue()
+        end,
+        desc = "List Issues",
+      },
+      {
+        "<leader>gI",
+        function()
+          Snacks.picker.gh_issue({ state = "all" })
+        end,
+        desc = "List Issues (All)",
+      },
+      {
+        "<leader>gp",
+        function()
+          Snacks.picker.gh_pr()
+        end,
+        desc = "List PRs",
+      },
+      {
+        "<leader>gP",
+        function()
+          Snacks.picker.gh_pr({ state = "all" })
+        end,
+        desc = "List PRs (All)",
+      },
     },
   },
 }

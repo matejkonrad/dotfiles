@@ -3,7 +3,7 @@
 -- Add any additional options here
 
 -- Enable Copilot LSP for sidekick.nvim NES (Next Edit Suggestions)
-vim.lsp.enable("copilot")
+-- vim.lsp.enable("copilot")
 
 -- Explicitly set background to prevent detection issues in terminal multiplexers (Zellij/tmux)
 vim.o.background = "dark"
