@@ -7,8 +7,12 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+
+# Config path
+CFG_PATH="$HOME/Projects/self/dotfiles"
+
 # Aliases
-alias cfg="cd ~/Project/self/dotfiles && nvim"
+alias cfg="cd $CFG_PATH && nvim"
 alias config_zsh="nvim ~/.zshrc"
 alias config_kitty="nvim ~/.config/kitty/kitty.conf"
 alias config_nvim="nvim ~/.config/nvim/"
