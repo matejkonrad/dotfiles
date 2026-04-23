@@ -8,8 +8,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 
-# Config path
-CFG_PATH="$HOME/Projects/self/dotfiles"
+# CFG_PATH is exported from .zshenv (per-OS) so non-interactive shells see it too.
 
 # Aliases
 alias cfg="cd $CFG_PATH && nvim"
@@ -20,9 +19,10 @@ alias rshell="exec $SHELL"
 alias nvim-reset="rm -rf ~/.local/share/nvim/site/queries ~/.local/state/nvim/lazy && echo 'Cleaned nvim cache'"
 
 # Git worktree helpers
-#   worktree new <branch>   — create worktree, copy .env files, install deps
-#   worktree install         — fix up current worktree (copy .env files, install deps)
-#   worktree switch          — pick a worktree to cd into
+#   worktree new <branch>         — create worktree, copy .env files, install deps
+#   worktree install              — fix up current worktree (copy .env files, install deps)
+#   worktree switch               — fzf-pick a worktree to cd into
+#   worktree delete [--force|-f]  — fzf-pick worktrees to remove (Tab to multi-select)
 function worktree() {
 	case "$1" in
 	new)
@@ -69,39 +69,60 @@ function worktree() {
 		fi
 		;;
 	switch)
-		local paths=()
-		local labels=()
-		while IFS= read -r line; do
-			local wt_path="${line%% *}"
-			local wt_branch="${line##*\[}"
-			wt_branch="${wt_branch%%\]*}"
-			paths+=("$wt_path")
-			labels+=("$wt_branch  $wt_path")
-		done < <(git worktree list)
-
-		if [ ${#paths[@]} -le 1 ]; then
-			echo "No other worktrees."
-			return 1
+		local selection
+		selection=$(git worktree list | fzf \
+			--prompt="Switch to> " \
+			--header="↑↓ navigate · Enter: switch" \
+			--height=40% --reverse --border)
+		[ -z "$selection" ] && return 1
+		cd "${selection%% *}"
+		;;
+	delete)
+		local force=""
+		if [ "$2" = "--force" ] || [ "$2" = "-f" ]; then
+			force="--force"
 		fi
 
-		local i=1
-		for label in "${labels[@]}"; do
-			echo "  $i) $label"
-			((i++))
+		local base_dir
+		base_dir="$(git worktree list --porcelain | head -1 | sed 's/^worktree //')"
+
+		local selection
+		selection=$(git worktree list | awk -v base="$base_dir" '$1 != base' | fzf \
+			--multi \
+			--prompt="Delete> " \
+			--header="↑↓ navigate · Tab: multi-select · Enter: confirm" \
+			--height=40% --reverse --border)
+		[ -z "$selection" ] && return 1
+
+		local paths=()
+		while IFS= read -r line; do
+			paths+=("${line%% *}")
+		done <<< "$selection"
+
+		echo "Will remove${force:+ (forced)}:"
+		for p in "${paths[@]}"; do
+			echo "  $p"
 		done
-
-		echo ""
-		read -r "choice?Switch to: "
-
-		if [[ "$choice" -ge 1 && "$choice" -le ${#paths[@]} ]] 2>/dev/null; then
-			cd "${paths[$choice]}"
+		if read -q "?Proceed? [y/N] "; then
+			echo
+			local failed=0
+			for p in "${paths[@]}"; do
+				echo "→ Removing $p..."
+				if git worktree remove $force "$p"; then
+					echo "  ✓ Removed"
+				else
+					echo "  ✗ Failed (try with --force if dirty or locked)"
+					((failed++))
+				fi
+			done
+			echo "Done. ${#paths[@]} selected, $((${#paths[@]} - failed)) removed, $failed failed."
 		else
-			echo "Invalid selection."
-			return 1
+			echo
+			echo "Cancelled."
 		fi
 		;;
 	*)
-		echo "Usage: worktree <new|install|switch>"
+		echo "Usage: worktree <new|install|switch|delete>"
 		return 1
 		;;
 	esac

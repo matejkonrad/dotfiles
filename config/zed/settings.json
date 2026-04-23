@@ -7,6 +7,30 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "proxy": "",
+  "agent_servers": {
+    "gemini": {
+      "type": "registry",
+    },
+    "codex-acp": {
+      "type": "registry",
+    },
+    "claude-acp": {
+      "type": "registry",
+    },
+  },
+  "project_panel": {
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "git_panel": {
+    "dock": "left",
+  },
   "ui_font_weight": 450.0,
   "unnecessary_code_fade": 0.4,
   "ui_font_family": ".ZedSans",
@@ -14,16 +38,20 @@
   "buffer_font_weight": 400.0,
   "buffer_font_family": "JetBrains Mono",
   "agent": {
-    "always_allow_tool_actions": true,
+    "tool_permissions": {
+      "default": "allow",
+    },
+    "single_file_review": true,
+    "dock": "right",
     "default_profile": "write",
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5"
+      "model": "claude-sonnet-4.5",
     },
-    "model_parameters": []
+    "model_parameters": [],
   },
   "auto_update_extensions": {
-    "biome": false
+    "biome": false,
   },
   "vim_mode": true,
   "base_keymap": "Cursor",
@@ -33,34 +61,34 @@
   "theme": {
     "mode": "system",
     "light": "Hami Melon Light",
-    "dark": "Hami Melon Dark"
+    "dark": "Hami Melon Dark",
   },
   "relative_line_numbers": "enabled",
   "languages": {
     "JSONC": {
       "code_actions_on_format": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
       },
-      "language_servers": ["!biome", "..."]
+      "language_servers": ["!biome", "..."],
     },
     "JSON": {
       "code_actions_on_format": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
       },
-      "language_servers": ["!biome", "..."]
+      "language_servers": ["!biome", "..."],
     },
     "TypeScript": {
       "code_actions_on_format": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
       },
-      "language_servers": ["!biome", "..."]
+      "language_servers": ["!biome", "..."],
     },
     "TSX": {
       "code_actions_on_format": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
       },
-      "language_servers": ["!biome", "..."]
-    }
+      "language_servers": ["!biome", "..."],
+    },
   },
-  "file_scan_exclusions": ["**/.yarn/*"]
+  "file_scan_exclusions": ["**/.yarn/*"],
 }

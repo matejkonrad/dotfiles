@@ -1,3 +1,7 @@
+[zshenv]
+source = ".zshenv"
+target = "~/.zshenv"
+
 [zshrc]
 source = ".zshrc"
 target = "~/.zshrc"

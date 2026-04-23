@@ -7,8 +7,38 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "buffer_font_family": ".ZedMono",
+  "agent_servers": {
+    "gemini": {
+      "type": "registry"
+    },
+    "codex-acp": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "ui_font_weight": 450.0,
+  "unnecessary_code_fade": 0.4,
+  "ui_font_family": ".ZedSans",
+  "buffer_line_height": "comfortable",
+  "buffer_font_weight": 400.0,
+  "buffer_font_family": "JetBrains Mono",
   "agent": {
+    "single_file_review": true,
+    "dock": "right",
     "always_allow_tool_actions": true,
     "default_profile": "write",
     "default_model": {
@@ -23,14 +53,14 @@
   "vim_mode": true,
   "base_keymap": "Cursor",
   "icon_theme": "Zed (Default)",
-  "ui_font_size": 13,
+  "ui_font_size": 12.0,
   "buffer_font_size": 12.0,
   "theme": {
-    "mode": "dark",
-    "light": "One Light",
+    "mode": "system",
+    "light": "Hami Melon Light",
     "dark": "Hami Melon Dark"
   },
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
   "languages": {
     "JSONC": {
       "code_actions_on_format": {
