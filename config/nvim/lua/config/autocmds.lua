@@ -31,3 +31,22 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.diagnostic.enable(false, { bufnr = 0 })
   end,
 })
+
+-- Auto-wipe unnamed empty buffers when they become hidden (avoids the stray
+-- "[No Name]" buffers that linger after creating/opening new files).
+vim.api.nvim_create_autocmd("BufHidden", {
+  callback = function(args)
+    local buf = args.buf
+    if not vim.api.nvim_buf_is_valid(buf) then return end
+    if vim.api.nvim_buf_get_name(buf) ~= "" then return end
+    if vim.bo[buf].buftype ~= "" then return end
+    if vim.bo[buf].modified then return end
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+    if #lines > 1 or (lines[1] and lines[1] ~= "") then return end
+    vim.schedule(function()
+      if vim.api.nvim_buf_is_valid(buf) then
+        pcall(vim.api.nvim_buf_delete, buf, { force = false })
+      end
+    end)
+  end,
+})

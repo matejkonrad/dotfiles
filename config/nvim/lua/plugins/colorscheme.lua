@@ -166,6 +166,43 @@ return {
           hl(0, "CopilotSuggestion", { fg = "#404040", italic = true })
           hl(0, "CopilotAnnotation", { fg = "#404040", italic = true })
 
+          -- Neo-tree: strip italic from all its highlight groups.
+          local function strip_italic(group)
+            local cur = vim.api.nvim_get_hl(0, { name = group, link = false })
+            if cur and next(cur) ~= nil then
+              cur.italic = false
+              vim.api.nvim_set_hl(0, group, cur)
+            end
+          end
+          for _, g in ipairs({
+            "NeoTreeDotfile",
+            "NeoTreeFileName",
+            "NeoTreeFileNameOpened",
+            "NeoTreeGitIgnored",
+            "NeoTreeGitUntracked",
+            "NeoTreeGitModified",
+            "NeoTreeGitAdded",
+            "NeoTreeGitConflict",
+            "NeoTreeGitDeleted",
+            "NeoTreeGitRenamed",
+            "NeoTreeGitStaged",
+            "NeoTreeGitUnstaged",
+            "NeoTreeHiddenByName",
+            "NeoTreeDimText",
+            "NeoTreeMessage",
+            "NeoTreeTitleBar",
+            "NeoTreeWinBar",
+            "NeoTreeRootName",
+            "NeoTreeDirectoryName",
+            "NeoTreeFloatTitle",
+            "NeoTreeTabActive",
+            "NeoTreeTabInactive",
+            "NeoTreeTabSeparatorActive",
+            "NeoTreeTabSeparatorInactive",
+          }) do
+            strip_italic(g)
+          end
+
           -- Flash.nvim - high contrast labels for easy jumping
           hl(0, "FlashLabel", { fg = bg, bg = tan, bold = true, nocombine = true })
           hl(0, "FlashMatch", { fg = cream, bg = "#2a2a2a", nocombine = true })

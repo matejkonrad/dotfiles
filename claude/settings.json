@@ -39,5 +39,6 @@
     "pr-review-toolkit@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
   },
-  "tui": "default"
+  "tui": "fullscreen",
+  "editorMode": "vim"
 }

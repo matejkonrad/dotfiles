@@ -1,0 +1,42 @@
+return {
+  {
+    "daliusd/ghlite.nvim",
+    cmd = {
+      "GHLitePRSelect",
+      "GHLitePRCheckout",
+      "GHLitePRView",
+      "GHLitePRLoadComments",
+      "GHLitePRDiff",
+      "GHLitePRDiffview",
+      "GHLitePRAddComment",
+      "GHLitePRUpdateComment",
+      "GHLitePRDeleteComment",
+      "GHLitePROpenComment",
+      "GHLitePRApprove",
+      "GHLitePRMerge",
+    },
+    keys = {
+      { "<leader>grs", "<cmd>GHLitePRSelect<cr>",        desc = "GH: select PR" },
+      { "<leader>gro", "<cmd>GHLitePRCheckout<cr>",      desc = "GH: checkout PR" },
+      { "<leader>grv", "<cmd>GHLitePRView<cr>",          desc = "GH: view PR" },
+      { "<leader>gru", "<cmd>GHLitePRLoadComments<cr>",  desc = "GH: load PR comments" },
+      { "<leader>grp", "<cmd>GHLitePRDiff<cr>",          desc = "GH: PR diff (quick)" },
+      { "<leader>grl", "<cmd>GHLitePRDiffview<cr>",      desc = "GH: PR diffview" },
+      { "<leader>gra", "<cmd>GHLitePRAddComment<cr>",    desc = "GH: add PR comment" },
+      { "<leader>grc", "<cmd>GHLitePRUpdateComment<cr>", desc = "GH: update comment" },
+      { "<leader>grd", "<cmd>GHLitePRDeleteComment<cr>", desc = "GH: delete comment" },
+      { "<leader>grg", "<cmd>GHLitePROpenComment<cr>",   desc = "GH: open comment in browser" },
+    },
+    opts = {
+      diff_tool = "diffview",
+      view_split = "vsplit",
+      diff_split = "vsplit",
+      comment_split = "split",
+      merge = {
+        approved = "--squash",
+        nonapproved = "--auto --squash",
+      },
+    },
+  },
+  { "pwntester/octo.nvim", enabled = false },
+}

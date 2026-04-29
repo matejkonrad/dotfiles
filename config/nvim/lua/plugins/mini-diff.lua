@@ -58,7 +58,10 @@ return {
       "<leader>gmr",
       function()
         diff_branch = nil
-        MiniDiff.set_ref_text(0, nil)
+        local buf = vim.api.nvim_get_current_buf()
+        -- Disable + re-enable so mini.diff re-attaches the default git source.
+        pcall(MiniDiff.disable, buf)
+        pcall(MiniDiff.enable, buf)
         vim.notify("mini.diff: reset to index")
       end,
       desc = "Diff reset to index",

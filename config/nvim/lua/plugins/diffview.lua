@@ -1,9 +1,38 @@
+-- Resolve the remote's default branch name (main, master, or whatever
+-- `origin/HEAD` points at). Falls back to probing origin/main then
+-- origin/master so it works even when `git remote set-head` was never run.
+local function default_remote_branch()
+  local head = vim.fn.system("git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null")
+  if vim.v.shell_error == 0 then
+    local branch = head:gsub("^origin/", ""):gsub("%s+", "")
+    if branch ~= "" then
+      return branch
+    end
+  end
+  vim.fn.system("git rev-parse --verify origin/main 2>/dev/null")
+  if vim.v.shell_error == 0 then
+    return "main"
+  end
+  vim.fn.system("git rev-parse --verify origin/master 2>/dev/null")
+  if vim.v.shell_error == 0 then
+    return "master"
+  end
+  return "main"
+end
+
 return {
-  "sindrets/diffview.nvim",
+  "dlyongemallo/diffview.nvim",
+  version = "*",
   cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
   keys = {
     { "<leader>gad", "<cmd>DiffviewOpen<cr>", desc = "Diff Working Tree" },
-    { "<leader>gag", "<cmd>DiffviewOpen origin/main<cr>", desc = "Diff vs Origin Main" },
+    {
+      "<leader>gag",
+      function()
+        vim.cmd("DiffviewOpen origin/" .. default_remote_branch())
+      end,
+      desc = "Diff vs Origin Default Branch",
+    },
     { "<leader>gau", "<cmd>DiffviewOpen @{u}<cr>", desc = "Diff vs Upstream" },
     { "<leader>gah", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
     { "<leader>gaH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo History" },
