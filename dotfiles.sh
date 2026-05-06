@@ -283,6 +283,22 @@ cmd_uninstall() {
   echo "Done."
 }
 
+cmd_sync_sddm() {
+  local astronaut="/usr/share/sddm/themes/sddm-astronaut-theme"
+  local src="$DOTFILES_DIR/config/sddm-theme"
+
+  if [[ ! -d "$astronaut" ]]; then
+    echo "Error: $astronaut not found. Install sddm-astronaut-theme first."
+    exit 1
+  fi
+
+  echo "Syncing SDDM mono theme..."
+  sudo cp "$src/mono.conf" "$astronaut/Themes/mono.conf"
+  sudo cp "$src/mono-black.png" "$astronaut/Backgrounds/mono-black.png"
+  sudo sed -i 's|^ConfigFile=.*|ConfigFile=Themes/mono.conf|' "$astronaut/metadata.desktop"
+  echo "Done. Preview: sddm-greeter-qt6 --test-mode --theme $astronaut"
+}
+
 # --- Main ---
 
 cfg_names=()
@@ -293,6 +309,7 @@ case "${1:-}" in
   status)    cmd_status ;;
   add)       cmd_add "$2" "$3" ;;
   uninstall) cmd_uninstall ;;
+  sync-sddm) cmd_sync_sddm ;;
   *)
     echo "Usage: dotfiles.sh <command>"
     echo ""
@@ -301,5 +318,6 @@ case "${1:-}" in
     echo "  status      Show the state of all tracked dotfiles"
     echo "  add <name> <path>  Import a file/dir and start tracking it"
     echo "  uninstall   Remove all symlinks (copies files back)"
+    echo "  sync-sddm   Copy mono SDDM theme into /usr/share/sddm/themes"
     ;;
 esac
