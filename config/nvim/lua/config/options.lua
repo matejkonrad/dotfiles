@@ -17,6 +17,9 @@ vim.o.smoothscroll = true
 -- Show relative line numbers
 vim.o.relativenumber = true
 
--- LSP server to use for TypeScript. Flip to "vtsls" to switch back.
----@type "vtsls" | "tsgo"
-vim.g.lazyvim_ts_lsp = "tsgo"
+-- LSP server to use for TypeScript. Auto-pick per project: tsgo if the project
+-- has `@typescript/native-preview` installed locally, otherwise vtsls.
+-- Evaluated once at nvim startup against the launch cwd's nearest package.json.
+local pkg = vim.fs.find("package.json", { upward = true, path = vim.fn.getcwd(), type = "file" })[1]
+local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
+vim.g.lazyvim_ts_lsp = vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 and "tsgo" or "vtsls"
