@@ -16,3 +16,7 @@ vim.o.smoothscroll = true
 
 -- Show relative line numbers
 vim.o.relativenumber = true
+
+-- LSP server to use for TypeScript. Flip to "vtsls" to switch back.
+---@type "vtsls" | "tsgo"
+vim.g.lazyvim_ts_lsp = "tsgo"

@@ -1,6 +1,7 @@
 return {
   "yetone/avante.nvim",
   version = false,
+  enabled = false,
   build = "make",
   cmd = {
     "AvanteAsk",

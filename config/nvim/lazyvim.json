@@ -23,6 +23,7 @@
     "lazyvim.plugins.extras.lang.toml",
     "lazyvim.plugins.extras.lang.typescript",
     "lazyvim.plugins.extras.lang.typescript.oxc",
+    "lazyvim.plugins.extras.lang.typescript.tsgo",
     "lazyvim.plugins.extras.util.mini-hipatterns"
   ],
   "install_version": 8,

@@ -9,7 +9,7 @@ return {
       "eslint_d", -- optional (Prettier projects w/ ESLint)
       "some-sass-language-server",
       "cssmodules-language-server",
-      "stylelint-lsp",
+      "stylelint-language-server",
       "wgsl-analyzer",
     })
   end,

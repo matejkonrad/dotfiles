@@ -5,7 +5,46 @@ return {
     opts = {
       servers = {
         -- TypeScript / JavaScript
-        vtsls = {},
+        vtsls = {
+          settings = {
+            typescript = {
+              tsserver = {
+                maxTsServerMemory = 12288,
+                useSyntaxServer = "auto",
+              },
+              preferences = {
+                includePackageJsonAutoImports = "off",
+              },
+              inlayHints = {
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = false },
+                variableTypes = { enabled = false },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = false },
+                enumMemberValues = { enabled = true },
+              },
+            },
+            javascript = {
+              inlayHints = {
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = false },
+                variableTypes = { enabled = false },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = false },
+                enumMemberValues = { enabled = true },
+              },
+            },
+            vtsls = {
+              experimental = {
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                  entriesLimit = 50,
+                },
+                maxInlayHintLength = 30,
+              },
+            },
+          },
+        },
         -- WGSL language server
         wgsl_analyzer = {},
         -- CSS Modules go-to-definition from JS/TS to .module.scss
