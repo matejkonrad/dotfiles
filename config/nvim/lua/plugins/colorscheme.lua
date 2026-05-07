@@ -84,6 +84,12 @@ return {
           hl(0, "SnacksPickerToggleOff", { fg = dim })
           hl(0, "SnacksPickerGitStatus", { fg = tan })
           hl(0, "SnacksPickerGitStatusStaged", { fg = sage })
+          hl(0, "SnacksPickerGitStatusUntracked", { fg = cream })
+          hl(0, "SnacksPickerGitStatusAdded", { fg = sage })
+          hl(0, "SnacksPickerGitStatusModified", { fg = tan })
+          hl(0, "SnacksPickerGitStatusRenamed", { fg = tan })
+          hl(0, "SnacksPickerGitStatusDeleted", { fg = "#c47070" })
+          hl(0, "SnacksPickerGitStatusIgnored", { fg = dim })
           hl(0, "SnacksPickerGitBranch", { fg = cream })
           hl(0, "SnacksPickerGitBranchCurrent", { fg = tan })
 

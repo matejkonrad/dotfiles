@@ -54,7 +54,7 @@
   "auto_update_extensions": {
     "biome": false,
   },
-  "base_keymap": "Cursor",
+  "base_keymap": "VSCode",
   "icon_theme": "Zed (Default)",
   "ui_font_size": 12.0,
   "buffer_font_size": 12.0,
