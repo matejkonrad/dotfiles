@@ -17,6 +17,12 @@ vim.o.smoothscroll = true
 -- Show relative line numbers
 vim.o.relativenumber = true
 
+-- Bordered diagnostic floats and LSP hovers
+vim.diagnostic.config({
+  float = { border = "rounded", source = true },
+})
+vim.o.winborder = "rounded"
+
 -- LSP server to use for TypeScript. Auto-pick per project: tsgo if the project
 -- has `@typescript/native-preview` installed locally, otherwise vtsls.
 -- Evaluated once at nvim startup against the launch cwd's nearest package.json.

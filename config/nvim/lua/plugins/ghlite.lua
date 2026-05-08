@@ -1,6 +1,8 @@
 return {
   {
     "daliusd/ghlite.nvim",
+    enabled = true,
+    dependencies = { "esmuellert/codediff.nvim" },
     cmd = {
       "GHLitePRSelect",
       "GHLitePRCheckout",
@@ -16,22 +18,23 @@ return {
       "GHLitePRMerge",
     },
     keys = {
-      { "<leader>grs", "<cmd>GHLitePRSelect<cr>",        desc = "GH: select PR" },
-      { "<leader>gro", "<cmd>GHLitePRCheckout<cr>",      desc = "GH: checkout PR" },
-      { "<leader>grv", "<cmd>GHLitePRView<cr>",          desc = "GH: view PR" },
-      { "<leader>gru", "<cmd>GHLitePRLoadComments<cr>",  desc = "GH: load PR comments" },
-      { "<leader>grp", "<cmd>GHLitePRDiff<cr>",          desc = "GH: PR diff (quick)" },
-      { "<leader>grl", "<cmd>GHLitePRDiffview<cr>",      desc = "GH: PR diffview" },
-      { "<leader>gra", "<cmd>GHLitePRAddComment<cr>",    desc = "GH: add PR comment" },
+      { "<leader>grs", "<cmd>GHLitePRSelect<cr>", desc = "GH: select PR" },
+      { "<leader>gro", "<cmd>GHLitePRCheckout<cr>", desc = "GH: checkout PR" },
+      { "<leader>grv", "<cmd>GHLitePRView<cr>", desc = "GH: view PR" },
+      { "<leader>gru", "<cmd>GHLitePRLoadComments<cr>", desc = "GH: load PR comments" },
+      { "<leader>grp", "<cmd>GHLitePRDiff<cr>", desc = "GH: PR diff (quick)" },
+      { "<leader>grl", "<cmd>GHLitePRDiffview<cr>", desc = "GH: PR diffview" },
+      { "<leader>gra", "<cmd>GHLitePRAddComment<cr>", desc = "GH: add PR comment" },
       { "<leader>grc", "<cmd>GHLitePRUpdateComment<cr>", desc = "GH: update comment" },
       { "<leader>grd", "<cmd>GHLitePRDeleteComment<cr>", desc = "GH: delete comment" },
-      { "<leader>grg", "<cmd>GHLitePROpenComment<cr>",   desc = "GH: open comment in browser" },
+      { "<leader>grg", "<cmd>GHLitePROpenComment<cr>", desc = "GH: open comment in browser" },
     },
     opts = {
-      diff_tool = "diffview",
+      diff_tool = "codediff",
       view_split = "vsplit",
       diff_split = "vsplit",
       comment_split = "split",
+      html_comments_command = { "lynx", "-stdin", "-dump" },
       merge = {
         approved = "--squash",
         nonapproved = "--auto --squash",

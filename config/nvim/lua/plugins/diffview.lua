@@ -22,6 +22,7 @@ end
 
 return {
   "dlyongemallo/diffview.nvim",
+  enabled = false,
   version = "*",
   cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
   keys = {
