@@ -1,0 +1,30 @@
+;;; -*- coding: utf-8; mode: lisp-data -*-
+(("/home/matej/Projects/self/dotfiles/config/"
+  (dired-filename . "/home/matej/Projects/self/dotfiles/config/emacs"))
+ ("/home/matej/tmp/sddm-austronaut-theme/README.md" . 279)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/"
+  (dired-filename
+   . "/home/matej/Projects/self/dotfiles/config/emacs/auto-save-list"))
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/ai.el"
+  . 654)
+ ("/home/matej/.config/emacs/.cache/treemacs-persist" . 59)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/appearance.el"
+  . 877)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/evil-config.el"
+  . 4356)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/#init.el#" . 135)
+ ("/home/matej/Projects/self/dotfiles/config/waybar/config.jsonc"
+  . 1098)
+ ("/home/matej/Projects/self/dotfiles/cursor/mcp.json" . 29)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/terminal-emu.el"
+  . 90)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/uitjes.el"
+  . 822)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/defaults.el"
+  . 412)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/keybinds.el"
+  . 361)
+ ("/usr/share/emacs/30.2/lisp/window.el.gz" . 235024)
+ ("/home/matej/Projects/self/dotfiles/config/emacs/modules/langs.el"
+  . 1287)
+ ("/usr/share/emacs/30.2/etc/COPYING" . 48))
