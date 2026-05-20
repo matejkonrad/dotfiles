@@ -7,9 +7,15 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "cli_default_open_behavior": "existing_window",
+  "agent_buffer_font_size": 13.0,
+  "helix_mode": false,
   "vim_mode": true,
   "proxy": "",
   "agent_servers": {
+    "cursor": {
+      "type": "registry"
+    },
     "gemini": {
       "type": "registry",
     },
@@ -30,6 +36,7 @@
     "dock": "left",
   },
   "git_panel": {
+    "tree_view": true,
     "dock": "left",
   },
   "ui_font_weight": 450.0,
@@ -55,13 +62,17 @@
     "biome": false,
   },
   "base_keymap": "VSCode",
-  "icon_theme": "Zed (Default)",
-  "ui_font_size": 12.0,
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "ui_font_size": 13.0,
   "buffer_font_size": 12.0,
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "Hami Melon Light",
-    "dark": "Hami Melon Dark",
+    "dark": "Rich Vesper",
   },
   "relative_line_numbers": "enabled",
   "languages": {

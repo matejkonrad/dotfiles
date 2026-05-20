@@ -85,3 +85,7 @@ target = "~/.config/tmux/tmux.conf"
 source = "config/karabiner/karabiner.json"
 target = "~/.config/karabiner/karabiner.json"
 os = "darwin"
+
+[op_env]
+source = "scripts/op-env"
+target = "~/.local/bin/op-env"

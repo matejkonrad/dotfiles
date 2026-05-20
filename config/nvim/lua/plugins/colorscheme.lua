@@ -168,9 +168,8 @@ return {
           hl(0, "DiffviewDiffAddAsDelete", { bg = "#2e1a1a" })
           hl(0, "DiffviewDiffDelete", { fg = "#3a3a3a" }) -- filler lines (the -----)
 
-          -- Copilot inline suggestions - very subtle ghost text
-          hl(0, "CopilotSuggestion", { fg = "#404040", italic = true })
-          hl(0, "CopilotAnnotation", { fg = "#404040", italic = true })
+          -- LSP inline completion (copilot-native uses ComplHint, not CopilotSuggestion)
+          hl(0, "ComplHint", { fg = "#a08770", italic = true })
 
           -- Neo-tree: strip italic from all its highlight groups.
           local function strip_italic(group)

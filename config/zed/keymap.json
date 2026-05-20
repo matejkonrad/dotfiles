@@ -18,5 +18,35 @@
       "ctrl-r": "editor::OpenContextMenu"
       // "j k": ["workspace::SendKeystrokes", "escape"]
     }
+  },
+  // Vim-style leader (space) panel toggles — only active in normal mode
+  {
+    "context": "vim_mode == normal",
+    "bindings": {
+      "space space": "file_finder::Toggle",
+      "space e": "project_panel::ToggleFocus",
+      "space t": "terminal_panel::ToggleFocus",
+      "space g": "git_panel::ToggleFocus",
+      "space a": "agent::ToggleFocus",
+      "space o": "outline_panel::ToggleFocus",
+      "space d": "diagnostics::Deploy",
+      "space p": "command_palette::Toggle"
+    }
+  },
+  // Vim-style pane navigation
+  {
+    "context": "Dock || Editor || Pane",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select || vim_mode == normal || vim_mode == visual) && !menu",
+    "bindings": {
+      "s": "vim::HelixJumpToWord"
+    }
   }
 ]

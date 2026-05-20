@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+# op-env — map human-readable names to 1Password Environment IDs.
+#
+# 1Password Environments only accepts opaque IDs (e.g. blgexucrwfr2dtsxe2q4uu7dp4)
+# in `op environment read` / `op run --environment`. This wraps that with a
+# name → ID map stored as a Secure Note in 1Password itself, so the map
+# syncs across machines and there's only one source of truth.
+#
+# Storage:
+#   1Password Secure Note. Body is `name=id` lines (comments start with #).
+#   Reference: $OP_ENV_REF  (default op://Personal/op-env-map/notesPlain)
+#
+# Local cache:
+#   ~/.cache/op-env/mapping, refreshed after $OP_ENV_CACHE_TTL seconds
+#   (default 300). IDs aren't secret, so caching them is fine.
+
+set -e
+
+OP_ENV_REF="${OP_ENV_REF:-op://Personal/op-env-map/notesPlain}"
+OP_ENV_CACHE_TTL="${OP_ENV_CACHE_TTL:-300}"
+CACHE_FILE="${OP_ENV_CACHE:-$HOME/.cache/op-env/mapping}"
+
+# Parse op://VAULT/ITEM/FIELD into its parts.
+parse_ref() {
+  local ref="${OP_ENV_REF#op://}"
+  OP_VAULT="${ref%%/*}"; ref="${ref#*/}"
+  OP_ITEM="${ref%%/*}"
+  OP_FIELD="${ref##*/}"
+}
+
+require_op() {
+  command -v op >/dev/null 2>&1 || {
+    echo "op-env: 1Password CLI ('op') not found in PATH" >&2
+    return 1
+  }
+}
+
+cache_fresh() {
+  [[ -f "$CACHE_FILE" ]] || return 1
+  local age now mtime
+  now="$(date +%s)"
+  mtime="$(stat -f %m "$CACHE_FILE" 2>/dev/null || stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)"
+  age=$((now - mtime))
+  [[ "$age" -lt "$OP_ENV_CACHE_TTL" ]]
+}
+
+# Pull the mapping body from 1Password into the local cache.
+refresh_cache() {
+  require_op
+  mkdir -p "$(dirname "$CACHE_FILE")"
+  local tmp; tmp="$(mktemp)"
+  if ! op read "$OP_ENV_REF" > "$tmp" 2>/dev/null; then
+    rm -f "$tmp"
+    echo "op-env: failed to read $OP_ENV_REF — does the item exist?" >&2
+    echo "       run 'op-env init' to create it" >&2
+    return 1
+  fi
+  mv "$tmp" "$CACHE_FILE"
+}
+
+# Read the current mapping body, refreshing the cache if stale.
+read_mapping() {
+  cache_fresh || refresh_cache
+  cat "$CACHE_FILE"
+}
+
+# Push a new mapping body up to 1Password and refresh the cache.
+write_mapping() {
+  require_op
+  parse_ref
+  local content="$1"
+  # `op item edit` reads multiline values fine when quoted.
+  op item edit "$OP_ITEM" --vault "$OP_VAULT" "${OP_FIELD}=$content" >/dev/null
+  mkdir -p "$(dirname "$CACHE_FILE")"
+  printf '%s' "$content" > "$CACHE_FILE"
+}
+
+lookup_id() {
+  local name="$1"
+  local line
+  line="$(read_mapping | grep -E "^${name}=" | head -1 || true)"
+  if [[ -z "$line" ]]; then
+    echo "op-env: no mapping for '$name'" >&2
+    local known
+    known="$(read_mapping | awk -F= '!/^#/ && NF { print $1 }' | paste -sd, - 2>/dev/null)"
+    [[ -n "$known" ]] && echo "       known: $known" >&2
+    return 1
+  fi
+  echo "${line#*=}"
+}
+
+cmd_init() {
+  require_op
+  parse_ref
+  if op item get "$OP_ITEM" --vault "$OP_VAULT" >/dev/null 2>&1; then
+    echo "op-env: item '$OP_ITEM' already exists in vault '$OP_VAULT'"
+    return 0
+  fi
+  op item create \
+    --category="Secure Note" \
+    --vault="$OP_VAULT" \
+    --title="$OP_ITEM" \
+    "${OP_FIELD}=# op-env mapping — one 'name=id' per line" >/dev/null
+  echo "created $OP_ENV_REF"
+}
+
+cmd_list() {
+  local body; body="$(read_mapping)"
+  if ! grep -qE '^[^#]' <<<"$body"; then
+    echo "no mappings yet — add one with: op-env set <name> <id>"
+    return 0
+  fi
+  awk -F= '!/^#/ && NF { printf "  %-30s  %s\n", $1, $2 }' <<<"$body"
+}
+
+cmd_set() {
+  local name="$1" id="$2"
+  if [[ -z "$name" || -z "$id" ]]; then
+    echo "usage: op-env set <name> <id>" >&2
+    return 1
+  fi
+  local body new
+  body="$(read_mapping)"
+  new="$(grep -vE "^${name}=" <<<"$body" || true)"
+  new="${new%$'\n'}"
+  [[ -n "$new" ]] && new="${new}"$'\n'
+  new="${new}${name}=${id}"
+  write_mapping "$new"
+  echo "set $name = $id"
+}
+
+cmd_unset() {
+  local name="$1"
+  if [[ -z "$name" ]]; then
+    echo "usage: op-env unset <name>" >&2
+    return 1
+  fi
+  local body new
+  body="$(read_mapping)"
+  if ! grep -qE "^${name}=" <<<"$body"; then
+    echo "op-env: no mapping for '$name'" >&2
+    return 1
+  fi
+  new="$(grep -vE "^${name}=" <<<"$body" || true)"
+  write_mapping "$new"
+  echo "removed $name"
+}
+
+cmd_id() {
+  local name="$1"
+  [[ -z "$name" ]] && { echo "usage: op-env id <name>" >&2; return 1; }
+  lookup_id "$name"
+}
+
+cmd_read() {
+  local name="$1"
+  [[ -z "$name" ]] && { echo "usage: op-env read <name>" >&2; return 1; }
+  require_op
+  local id; id="$(lookup_id "$name")" || return 1
+  op environment read "$id"
+}
+
+cmd_run() {
+  local name="${1:-}"; shift || true
+  if [[ -z "$name" ]]; then
+    echo "usage: op-env run <name> [--] <cmd> [args...]" >&2
+    return 1
+  fi
+  [[ "${1:-}" == "--" ]] && shift
+  if [[ $# -eq 0 ]]; then
+    echo "usage: op-env run <name> [--] <cmd> [args...]" >&2
+    return 1
+  fi
+  require_op
+  local id; id="$(lookup_id "$name")" || return 1
+  exec op run --environment "$id" -- "$@"
+}
+
+cmd_sync() {
+  refresh_cache
+  echo "cache refreshed from $OP_ENV_REF"
+}
+
+cmd_edit() {
+  require_op
+  local body tmp before after
+  body="$(read_mapping)"
+  tmp="$(mktemp -t op-env.XXXXXX)"
+  printf '%s\n' "$body" > "$tmp"
+  before="$(shasum "$tmp" | awk '{print $1}')"
+  "${EDITOR:-vi}" "$tmp"
+  after="$(shasum "$tmp" | awk '{print $1}')"
+  if [[ "$before" == "$after" ]]; then
+    echo "no changes"
+    rm -f "$tmp"
+    return 0
+  fi
+  write_mapping "$(cat "$tmp")"
+  rm -f "$tmp"
+  echo "saved"
+}
+
+cmd_help() {
+  cat <<EOF
+op-env — map names to 1Password Environment IDs
+
+Commands:
+  init                          Create the 1Password backing item
+  list                          List all name → ID mappings
+  set <name> <id>               Add or update a mapping
+  unset <name>                  Remove a mapping
+  id <name>                     Print the ID for a name
+  read <name>                   Read variables (op environment read)
+  run <name> [--] <cmd> [args]  Run a command with that env's vars
+  sync                          Force refresh local cache
+  edit                          Edit the mapping in \$EDITOR
+
+Config (override with env vars):
+  OP_ENV_REF        $OP_ENV_REF
+  OP_ENV_CACHE_TTL  $OP_ENV_CACHE_TTL  (seconds)
+  OP_ENV_CACHE      $CACHE_FILE
+EOF
+}
+
+case "${1:-}" in
+  init)                cmd_init ;;
+  list|ls)             cmd_list ;;
+  set|add)             shift; cmd_set "$@" ;;
+  unset|rm|remove)     shift; cmd_unset "$@" ;;
+  id)                  shift; cmd_id "$@" ;;
+  read|cat)            shift; cmd_read "$@" ;;
+  run|exec)            shift; cmd_run "$@" ;;
+  sync|refresh)        cmd_sync ;;
+  edit)                cmd_edit ;;
+  ""|help|-h|--help)   cmd_help ;;
+  *)
+    echo "op-env: unknown command '$1'" >&2
+    echo >&2
+    cmd_help >&2
+    exit 1
+    ;;
+esac
