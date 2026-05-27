@@ -1,6 +1,40 @@
 return {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
+  keys = {
+    {
+      "<leader>gmo",
+      function()
+        local gs = require("gitsigns")
+        vim.fn.system("git rev-parse --verify origin/main 2>/dev/null")
+        local ref = vim.v.shell_error == 0 and "origin/main" or "origin/master"
+        gs.change_base(ref, true)
+        vim.notify("gitsigns: vs " .. ref)
+      end,
+      desc = "Diff against origin main",
+    },
+    {
+      "<leader>gmb",
+      function()
+        local gs = require("gitsigns")
+        vim.ui.input({ prompt = "Branch: " }, function(branch)
+          if not branch or branch == "" then return end
+          gs.change_base(branch, true)
+          vim.notify("gitsigns: vs " .. branch)
+        end)
+      end,
+      desc = "Diff against branch",
+    },
+    {
+      "<leader>gmr",
+      function()
+        local gs = require("gitsigns")
+        gs.change_base(nil, true)
+        vim.notify("gitsigns: reset to index")
+      end,
+      desc = "Diff reset to index",
+    },
+  },
   opts = {
     signs = {
       add          = { text = "▎" },
@@ -66,27 +100,6 @@ return {
 
       -- Hunk text object
       map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Inside hunk")
-
-      -- Diff base (replaces the old mini.diff <leader>gm* bindings)
-      map("n", "<leader>gmo", function()
-        local base = vim.fn.system("git rev-parse --verify origin/main 2>/dev/null")
-        local ref = vim.v.shell_error == 0 and "origin/main" or "origin/master"
-        gs.change_base(ref, true)
-        vim.notify("gitsigns: vs " .. ref)
-      end, "Diff against origin main")
-
-      map("n", "<leader>gmb", function()
-        vim.ui.input({ prompt = "Branch: " }, function(branch)
-          if not branch or branch == "" then return end
-          gs.change_base(branch, true)
-          vim.notify("gitsigns: vs " .. branch)
-        end)
-      end, "Diff against branch")
-
-      map("n", "<leader>gmr", function()
-        gs.change_base(nil, true)
-        vim.notify("gitsigns: reset to index")
-      end, "Diff reset to index")
     end,
   },
 }

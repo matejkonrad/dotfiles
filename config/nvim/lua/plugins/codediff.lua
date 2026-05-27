@@ -37,6 +37,69 @@ return {
     { "<leader>gah", "<cmd>CodeDiff history %<cr>", desc = "File History" },
     { "<leader>gaH", "<cmd>CodeDiff history<cr>", desc = "Repo History" },
     { "<leader>gac", "<cmd>CodeDiff HEAD~1 HEAD<cr>", desc = "Current Commit Diff" },
+    {
+      "<leader>gap",
+      function()
+        Snacks.picker.git_log({
+          confirm = function(picker, item)
+            picker:close()
+            if item and item.commit then
+              vim.cmd("CodeDiff " .. item.commit .. "~1 " .. item.commit)
+            end
+          end,
+        })
+      end,
+      desc = "Pick commit → Diff",
+    },
+    {
+      "<leader>gaF",
+      function()
+        Snacks.picker.git_log_file({
+          confirm = function(picker, item)
+            picker:close()
+            if item and item.commit then
+              vim.cmd("CodeDiff " .. item.commit .. "~1 " .. item.commit)
+            end
+          end,
+        })
+      end,
+      desc = "Pick commit (current file) → Diff",
+    },
+    {
+      "<leader>gam",
+      function()
+        Snacks.picker.git_log({
+          title = "Tab to multi-select, Enter to diff range",
+          confirm = function(picker, _)
+            local selected = picker:selected({ fallback = true })
+            picker:close()
+            if not selected or #selected == 0 then return end
+
+            if #selected == 1 then
+              local c = selected[1].commit
+              vim.cmd("CodeDiff " .. c .. "~1 " .. c)
+              return
+            end
+
+            -- git log is newest-first, so last selected is oldest
+            local newest = selected[1].commit
+            local oldest = selected[#selected].commit
+            vim.cmd("CodeDiff " .. oldest .. "~1 " .. newest)
+          end,
+        })
+      end,
+      desc = "Multi-select commits → Diff range",
+    },
+    {
+      "<leader>gaS",
+      function()
+        vim.ui.input({ prompt = "Git revspec: " }, function(spec)
+          if not spec or spec == "" then return end
+          vim.cmd("CodeDiff " .. spec)
+        end)
+      end,
+      desc = "Diff arbitrary revspec",
+    },
     { "<leader>gax", "<cmd>tabclose<cr>", desc = "Close Diff Tab" },
     {
       "<leader>gar",

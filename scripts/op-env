@@ -173,7 +173,18 @@ cmd_run() {
   fi
   require_op
   local id; id="$(lookup_id "$name")" || return 1
-  exec op run --environment "$id" -- "$@"
+
+  # op run pipes stdout/stderr through itself to mask secrets, which makes
+  # programs think they aren't on a terminal and disables colored output.
+  # Instead, have op resolve the environment's variables once, capture them,
+  # then exec the command directly so it inherits our real TTY (colors stay).
+  local assignments
+  assignments="$(op run --no-masking --environment "$id" -- sh -c 'export -p')" || {
+    echo "op-env: failed to resolve environment '$name'" >&2
+    return 1
+  }
+  eval "$assignments"
+  exec "$@"
 }
 
 cmd_sync() {

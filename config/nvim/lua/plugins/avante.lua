@@ -47,16 +47,26 @@ return {
     provider = "claude-code",
     providers = {
       copilot = {
-        model = "claude-sonnet-4",
+        endpoint = "https://api.githubcopilot.com",
+        model = "claude-sonnet-4.5",
+        proxy = nil,
+        allow_insecure = false,
+        timeout = 30000,
+        context_window = 64000,
+        extra_request_body = {
+          temperature = 0,
+          max_completion_tokens = 8192,
+        },
       },
     },
     acp_providers = {
       ["claude-code"] = {
         command = "npx",
-        args = { "@zed-industries/claude-code-acp" },
+        args = { "-y", "@zed-industries/claude-code-acp" },
         env = {
           NODE_NO_WARNINGS = "1",
           ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY"),
+          ACP_PERMISSION_MODE = "bypassPermissions",
         },
       },
       ["gemini-cli"] = {
@@ -69,15 +79,18 @@ return {
       },
       ["codex"] = {
         command = "npx",
-        args = { "@zed-industries/codex-acp" },
+        args = { "-y", "@zed-industries/codex-acp" },
         env = {
           NODE_NO_WARNINGS = "1",
           OPENAI_API_KEY = os.getenv("OPENAI_API_KEY"),
         },
       },
-      ["goose"] = {
-        command = "goose",
-        args = { "acp" },
+      ["cursor"] = {
+        command = "npx",
+        args = { "-y", "cursor-acp" },
+        env = {
+          NODE_NO_WARNINGS = "1",
+        },
       },
     },
     behaviour = {

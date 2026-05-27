@@ -23,6 +23,14 @@ vim.diagnostic.config({
 })
 vim.o.winborder = "rounded"
 
+-- Bordered LSP signature help (winborder doesn't apply to gK by default)
+local orig_signature_help = vim.lsp.buf.signature_help
+vim.lsp.buf.signature_help = function(config)
+  return orig_signature_help(vim.tbl_extend("keep", config or {}, {
+    border = "rounded",
+  }))
+end
+
 -- LSP server to use for TypeScript. Auto-pick per project: tsgo if the project
 -- has `@typescript/native-preview` installed locally, otherwise vtsls.
 -- Evaluated once at nvim startup against the launch cwd's nearest package.json.
