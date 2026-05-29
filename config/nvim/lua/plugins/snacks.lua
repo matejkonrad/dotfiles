@@ -25,6 +25,7 @@ return {
     "snacks.nvim",
     opts = {
       scroll = { enabled = false },
+      gh = {},
       dashboard = {
         preset = {
           header = [[
@@ -40,6 +41,8 @@ return {
           files = {
             hidden = true,
           },
+          gh_issue = {},
+          gh_pr = {},
           explorer = {
             finder = function(opts, ctx)
               if git_filter_enabled then

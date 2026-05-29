@@ -22,7 +22,7 @@ end
 
 return {
   "dlyongemallo/diffview.nvim",
-  enabled = false,
+  enabled = true,
   version = "*",
   cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
   keys = {
@@ -42,34 +42,29 @@ return {
     {
       "<leader>gar",
       function()
-        vim.ui.input({ prompt = "PR number: " }, function(pr)
-          if not pr or pr == "" then return end
-          vim.notify("Checking out PR #" .. pr .. "...", vim.log.levels.INFO)
-          vim.fn.jobstart("gh pr checkout " .. pr, {
-            on_exit = function(_, code)
-              vim.schedule(function()
-                if code ~= 0 then
-                  vim.notify("Failed to checkout PR #" .. pr, vim.log.levels.ERROR)
-                  return
-                end
-                -- Get the base branch of the PR
-                vim.fn.jobstart("gh pr view " .. pr .. " --json baseRefName -q .baseRefName", {
-                  stdout_buffered = true,
-                  on_stdout = function(_, data)
-                    vim.schedule(function()
-                      local base = data[1] and data[1]:gsub("%s+", "") or "main"
-                      if base == "" then base = "main" end
-                      vim.cmd("DiffviewOpen origin/" .. base .. "...HEAD")
-                      vim.notify("Reviewing PR #" .. pr .. " against " .. base, vim.log.levels.INFO)
-                    end)
-                  end,
-                })
-              end)
-            end,
-          })
-        end)
+        Snacks.picker.gh_pr({
+          confirm = function(picker, item)
+            picker:close()
+            local pr = item.gh_item or item
+            local number = pr.number
+            local base = pr.baseRefName or "main"
+            vim.notify("Checking out PR #" .. number .. "...", vim.log.levels.INFO)
+            vim.fn.jobstart({ "gh", "pr", "checkout", tostring(number) }, {
+              on_exit = function(_, code)
+                vim.schedule(function()
+                  if code ~= 0 then
+                    vim.notify("Failed to checkout PR #" .. number, vim.log.levels.ERROR)
+                    return
+                  end
+                  vim.cmd("DiffviewOpen origin/" .. base .. "...HEAD")
+                  vim.notify("Reviewing PR #" .. number .. " against " .. base, vim.log.levels.INFO)
+                end)
+              end,
+            })
+          end,
+        })
       end,
-      desc = "Review PR (checkout + diffview)",
+      desc = "Review PR (snacks → diffview)",
     },
   },
   opts = {

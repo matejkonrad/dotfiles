@@ -22,7 +22,7 @@ end
 
 return {
   "esmuellert/codediff.nvim",
-  enabled = true,
+  enabled = false,
   cmd = "CodeDiff",
   keys = {
     { "<leader>gad", "<cmd>CodeDiff<cr>", desc = "Diff Working Tree" },
