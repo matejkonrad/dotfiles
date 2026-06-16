@@ -89,3 +89,13 @@ os = "darwin"
 [op_env]
 source = "scripts/op-env"
 target = "~/.local/bin/op-env"
+
+[lazygit_darwin]
+source = "config/lazygit/config.yml"
+target = "~/Library/Application Support/lazygit/config.yml"
+os = "darwin"
+
+[lazygit_linux]
+source = "config/lazygit/config.yml"
+target = "~/.config/lazygit/config.yml"
+os = "linux"

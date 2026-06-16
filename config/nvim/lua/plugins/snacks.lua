@@ -25,6 +25,15 @@ return {
     "snacks.nvim",
     opts = {
       scroll = { enabled = false },
+      -- lazygit (<leader>gg) fills the whole editor instead of a centered float.
+      -- In snacks.win, width/height of 0 means "full size" (win.lua:1283).
+      styles = {
+        lazygit = {
+          width = 0,
+          height = 0,
+          border = "none",
+        },
+      },
       gh = {},
       dashboard = {
         preset = {
