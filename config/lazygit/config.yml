@@ -1,3 +1,10 @@
+gui:
+  # Side panels (status/files-tree/branches/commits) take 20% instead of the
+  # default 1/3, so the main diff panel gets ~80% for reading changes.
+  # NOTE: this only affects 'normal' screen mode. The '+'/'_' keys cycle
+  # normal -> half -> full; 'half' always splits 50/50 (focused panel gets
+  # half) regardless of this, so use 'normal' for diffs and 'full' to maximize.
+  sidePanelWidth: 0.2
 git:
   pagers:
     - colorArg: always
