@@ -38,6 +38,20 @@ return {
     { "<leader>gah", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
     { "<leader>gaH", "<cmd>DiffviewFileHistory<cr>", desc = "Repo History" },
     { "<leader>gac", "<cmd>DiffviewOpen HEAD~1...HEAD<cr>", desc = "Current Commit Diff" },
+    {
+      "<leader>gl",
+      function()
+        Snacks.picker.git_log({
+          confirm = function(picker, item)
+            picker:close()
+            if item and item.commit then
+              vim.cmd("DiffviewOpen " .. item.commit .. "^!")
+            end
+          end,
+        })
+      end,
+      desc = "Git Log → Diff commit",
+    },
     { "<leader>gax", "<cmd>DiffviewClose<cr>", desc = "Close Diffview" },
     {
       "<leader>gar",

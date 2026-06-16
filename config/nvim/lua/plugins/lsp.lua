@@ -13,15 +13,17 @@ return {
                 useSyntaxServer = "auto",
               },
               preferences = {
-                includePackageJsonAutoImports = "off",
+                -- "auto" (not "off") so auto-import finds components/types from
+                -- package.json + workspace packages. "off" blocks those.
+                includePackageJsonAutoImports = "auto",
               },
               inlayHints = {
-                parameterNames = { enabled = "literals" },
-                parameterTypes = { enabled = false },
-                variableTypes = { enabled = false },
-                propertyDeclarationTypes = { enabled = true },
-                functionLikeReturnTypes = { enabled = false },
-                enumMemberValues = { enabled = true },
+                -- parameterNames = { enabled = "literals" },
+                -- parameterTypes = { enabled = false },
+                -- variableTypes = { enabled = false },
+                -- propertyDeclarationTypes = { enabled = true },
+                -- functionLikeReturnTypes = { enabled = false },
+                -- enumMemberValues = { enabled = true },
               },
             },
             javascript = {

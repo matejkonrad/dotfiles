@@ -11,6 +11,7 @@ return {
     { "<leader>gng", "<cmd>Neogit<cr>", desc = "Show Neogit UI" },
   },
   opts = {
+    treesitter_diff_highlight = true,
     integrations = {
       diffview = true,
     },

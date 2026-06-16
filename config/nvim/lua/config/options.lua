@@ -31,9 +31,12 @@ vim.lsp.buf.signature_help = function(config)
   }))
 end
 
--- LSP server to use for TypeScript. Auto-pick per project: tsgo if the project
--- has `@typescript/native-preview` installed locally, otherwise vtsls.
--- Evaluated once at nvim startup against the launch cwd's nearest package.json.
-local pkg = vim.fs.find("package.json", { upward = true, path = vim.fn.getcwd(), type = "file" })[1]
-local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
-vim.g.lazyvim_ts_lsp = vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 and "tsgo" or "vtsls"
+-- LSP server to use for TypeScript. Forcing vtsls: tsgo (TS native preview)
+-- still lacks the add-missing-import code action (typescript-go #3318), so
+-- <leader>ca couldn't auto-import. vtsls is slower/heavier but has full code
+-- actions. To go back to auto-picking tsgo when a project ships it locally,
+-- delete the last line and restore the three commented ones.
+-- local pkg = vim.fs.find("package.json", { upward = true, path = vim.fn.getcwd(), type = "file" })[1]
+-- local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
+-- vim.g.lazyvim_ts_lsp = vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 and "tsgo" or "vtsls"
+vim.g.lazyvim_ts_lsp = "vtsls"
