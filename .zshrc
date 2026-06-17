@@ -7,6 +7,33 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# ---------------------------------------------------------------------
+# Tab / window title = git repo name (falls back to the folder name).
+# Re-asserted on every prompt AND before every command, so it overrides
+# Oh My Zsh's default of showing the running command — tabs stop saying
+# "nvim", "claude", etc. To use just the folder name instead of the repo
+# name, replace the function body with:  print -n "\e]1;%1~\a\e]2;%1~\a"
+# (and drop the git lookup).
+# ---------------------------------------------------------------------
+DISABLE_AUTO_TITLE="true"
+autoload -Uz add-zsh-hook
+
+function _tab_title {
+	local root name
+	root=$(command git rev-parse --show-toplevel 2>/dev/null)
+	if [[ -n $root ]]; then
+		name=${root:t}    # git repo name
+	else
+		name=${PWD:t}     # current folder name
+	fi
+	print -n "\e]1;${name}\a\e]2;${name}\a"
+}
+add-zsh-hook precmd _tab_title
+add-zsh-hook preexec _tab_title
+
+# Stop Claude Code from overriding the tab title with "claude code".
+export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+
 
 # CFG_PATH is exported from .zshenv (per-OS) so non-interactive shells see it too.
 

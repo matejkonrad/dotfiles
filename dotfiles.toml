@@ -86,6 +86,11 @@ source = "config/karabiner/karabiner.json"
 target = "~/.config/karabiner/karabiner.json"
 os = "darwin"
 
+[hammerspoon]
+source = "config/hammerspoon/init.lua"
+target = "~/.hammerspoon/init.lua"
+os = "darwin"
+
 [op_env]
 source = "scripts/op-env"
 target = "~/.local/bin/op-env"

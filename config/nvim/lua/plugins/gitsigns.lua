@@ -1,3 +1,15 @@
+-- Word-level diff highlights (used by :Gitsigns toggle_word_diff). gitsigns
+-- defaults these to TermCursor (reverse video), and the DiffText group is way
+-- too bright -- so use subtle dark background tints instead. Tweak the hex to
+-- taste. Re-applied on ColorScheme so it survives theme swaps.
+local function set_diff_inline_hl()
+  vim.api.nvim_set_hl(0, "GitSignsAddInline", { bg = "#26352b" })
+  vim.api.nvim_set_hl(0, "GitSignsChangeInline", { bg = "#2b3040" })
+  vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { bg = "#3a2730" })
+end
+vim.api.nvim_create_autocmd("ColorScheme", { callback = set_diff_inline_hl })
+set_diff_inline_hl()
+
 return {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
@@ -93,6 +105,8 @@ return {
       map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo stage hunk")
       map("n", "<leader>ghR", gs.reset_buffer, "Reset buffer")
       map("n", "<leader>ghp", gs.preview_hunk, "Preview hunk")
+      map("n", "<leader>ghi", gs.preview_hunk_inline, "Preview hunk inline (expand)")
+      map("n", "<leader>go", gs.toggle_deleted, "Toggle diff overlay (deleted lines)")
       map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame line")
       map("n", "<leader>ghd", gs.diffthis, "Diff this")
       map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff this ~")

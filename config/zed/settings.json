@@ -7,6 +7,9 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "terminal": {
+    "font_size": 14.0
+  },
   "which_key": {
     "enabled": true
   },
@@ -70,12 +73,12 @@
     "light": "Zed (Default)",
     "dark": "Zed (Default)"
   },
-  "ui_font_size": 13.0,
-  "buffer_font_size": 12.0,
+  "ui_font_size": 14.0,
+  "buffer_font_size": 14.0,
   "theme": {
     "mode": "dark",
     "light": "Hami Melon Light",
-    "dark": "Hami Melon Dark",
+    "dark": "Rich Vesper",
   },
   "relative_line_numbers": "enabled",
   "languages": {
