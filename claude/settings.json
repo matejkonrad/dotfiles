@@ -113,5 +113,6 @@
   },
   "effortLevel": "xhigh",
   "tui": "fullscreen",
-  "editorMode": "vim"
+  "editorMode": "vim",
+  "agentPushNotifEnabled": true
 }

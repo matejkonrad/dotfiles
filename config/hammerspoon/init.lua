@@ -100,6 +100,52 @@ bind("h", function()
 	cycle(-1)
 end) -- previous
 
+-- Cycle through the windows of the *frontmost* app (like cmd+` / cmd+shift+`).
+-- Done natively rather than by synthesizing cmd+`: while Hyper is held, hyperTap
+-- stamps cmd+ctrl+alt onto every key, so a synthetic cmd+` would arrive as
+-- cmd+ctrl+alt+` and miss.
+local function cycleWindows(dir)
+	local app = hs.application.frontmostApplication()
+	if not app then
+		return
+	end
+
+	-- Standard, on-screen windows only (drops palettes, dialogs, minimized).
+	local wins = {}
+	for _, w in ipairs(app:visibleWindows()) do
+		if w:isStandard() then
+			table.insert(wins, w)
+		end
+	end
+	if #wins < 2 then
+		return
+	end
+
+	-- Stable ordering by window id so direction is consistent run-to-run.
+	table.sort(wins, function(a, b)
+		return a:id() < b:id()
+	end)
+
+	local focused = app:focusedWindow()
+	local idx = 1
+	for i, w in ipairs(wins) do
+		if focused and w:id() == focused:id() then
+			idx = i
+			break
+		end
+	end
+
+	local nextIdx = ((idx - 1 + dir) % #wins) + 1
+	wins[nextIdx]:focus()
+end
+
+bind("j", function()
+	cycleWindows(1)
+end) -- next window
+bind("k", function()
+	cycleWindows(-1)
+end) -- previous window
+
 -- Disable Cmd+H (hide window): swallow the keystroke before any app sees it.
 disableCmdH = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(e)
 	local f = e:getFlags()
