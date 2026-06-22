@@ -8,7 +8,8 @@ font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 14
 adjust-cell-height = 15%
 
-# macos-titlebar-style = native
+macos-titlebar-style = tabs 
+window-theme = ghostty
 macos-option-as-alt = true
 
 # =====================================================================
