@@ -7,105 +7,112 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "terminal": {
-    "font_size": 14.0,
-  },
-  "which_key": {
-    "enabled": true,
-  },
-  "cli_default_open_behavior": "existing_window",
-  "agent_buffer_font_size": 13.0,
-  "helix_mode": false,
-  "vim_mode": true,
-  "proxy": "",
-  "agent_servers": {
-    "cursor": {
-      "type": "registry",
-    },
-    "gemini": {
-      "type": "registry",
-    },
-    "codex-acp": {
-      "type": "registry",
-    },
-    "claude-acp": {
-      "type": "registry",
-    },
-  },
-  "project_panel": {
-    "dock": "left",
-  },
-  "outline_panel": {
-    "dock": "left",
-  },
-  "collaboration_panel": {
-    "dock": "left",
-  },
-  "git_panel": {
-    "tree_view": true,
-    "dock": "left",
-  },
-  "ui_font_weight": 450.0,
-  "unnecessary_code_fade": 0.4,
-  "ui_font_family": ".ZedSans",
-  "buffer_line_height": "comfortable",
-  "buffer_font_weight": 400.0,
-  "buffer_font_family": "JetBrains Mono",
-  "agent": {
-    "tool_permissions": {
-      "default": "allow",
-    },
-    "single_file_review": true,
-    "dock": "right",
-    "default_profile": "write",
-    "default_model": {
-      "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5",
-    },
-    "model_parameters": [],
-  },
-  "auto_update_extensions": {
-    "biome": false,
-  },
-  "base_keymap": "VSCode",
-  "icon_theme": {
-    "mode": "dark",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)",
-  },
-  "ui_font_size": 14.0,
-  "buffer_font_size": 14.0,
-  "theme": {
-    "mode": "dark",
-    "light": "Hami Melon Light",
-    "dark": "Rich Vesper",
-  },
-  "relative_line_numbers": "enabled",
-  "languages": {
-    "JSONC": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-      },
-      "language_servers": ["!biome", "..."],
-    },
-    "JSON": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-      },
-      "language_servers": ["!biome", "..."],
-    },
-    "TypeScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-      },
-      "language_servers": ["!biome", "..."],
-    },
-    "TSX": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-      },
-      "language_servers": ["!biome", "..."],
-    },
-  },
-  "file_scan_exclusions": ["**/.yarn/*"],
+	"terminal": {
+		"font_size": 14.0,
+	},
+	"which_key": {
+		"enabled": true,
+	},
+	"cli_default_open_behavior": "existing_window",
+	"agent_buffer_font_size": 13.0,
+	"helix_mode": false,
+	"vim_mode": true,
+	"proxy": "",
+	"agent_servers": {
+		"cursor": {
+			"default_config_options": {
+    "mode": "plan"
+   },
+   "type": "registry",
+		},
+		"gemini": {
+			"type": "registry",
+		},
+		"codex-acp": {
+			"default_config_options": {
+    "mode": "full-access"
+   },
+   "type": "registry",
+		},
+		"claude-acp": {
+			"type": "registry",
+		},
+	},
+	"project_panel": {
+		"dock": "left",
+	},
+	"outline_panel": {
+		"dock": "left",
+	},
+	"collaboration_panel": {
+		"dock": "left",
+	},
+	"git_panel": {
+		"tree_view": true,
+		"dock": "left",
+	},
+	"ui_font_weight": 450.0,
+	"unnecessary_code_fade": 0.4,
+	"ui_font_family": ".ZedSans",
+	"buffer_line_height": "comfortable",
+	"buffer_font_weight": 400.0,
+	"buffer_font_family": "JetBrains Mono",
+	"agent": {
+		"tool_permissions": {
+			"default": "allow",
+		},
+		"single_file_review": true,
+		"dock": "right",
+		"default_profile": "write",
+		"default_model": {
+			"provider": "copilot_chat",
+			"model": "claude-sonnet-4.5",
+		},
+		"model_parameters": [],
+	},
+	"auto_update_extensions": {
+		"biome": false,
+	},
+	"base_keymap": "VSCode",
+	"icon_theme": {
+		"mode": "dark",
+		"light": "Zed (Default)",
+		"dark": "Zed (Default)",
+	},
+	"ui_font_size": 14.0,
+	"buffer_font_size": 14.0,
+	"theme": {
+		"mode": "dark",
+		"light": "Hami Melon Light",
+		"dark": "Fesper",
+	},
+	"relative_line_numbers": "enabled",
+	"hard_tabs": true,
+	"languages": {
+		"TypeScript": {
+			"hard_tabs": true,
+			"tab_size": 4,
+			"formatter": {
+				"external": {
+					"command": "/Users/matejkonrad/.volta/bin/yarn",
+					"arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"],
+				},
+			},
+			"format_on_save": "on",
+			"language_servers": ["!biome", "..."],
+		},
+		"TSX": {
+			"hard_tabs": true,
+			"tab_size": 4,
+			"formatter": {
+				"external": {
+					"command": "/Users/matejkonrad/.volta/bin/yarn",
+					"arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"],
+				},
+			},
+			"format_on_save": "on",
+			"language_servers": ["!biome", "..."],
+		},
+	},
+	"file_scan_exclusions": ["**/.yarn/*"],
 }

@@ -6,6 +6,7 @@ window-padding-y = 4
 theme = Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 14
+adjust-cell-height = 15%
 
 # macos-titlebar-style = native
 macos-option-as-alt = true
@@ -34,15 +35,6 @@ keybind = alt+j=goto_split:down
 keybind = alt+k=goto_split:up
 keybind = alt+l=goto_split:right
 
-# Create splits — Ctrl+b then d (down) / r (right)
-keybind = ctrl+b>d=new_split:down
-keybind = ctrl+b>r=new_split:right
-
-# Zoom: focus one pane, hide the rest (= tmux prefix+f / Zellij fullscreen)
-keybind = alt+slash=toggle_split_zoom
-keybind = ctrl+b>f=toggle_split_zoom
-keybind = ctrl+b>z=toggle_split_zoom
-
 # Resize — Alt+Shift+hjkl (4-way, mirrors the focus keys); Alt+= equalizes
 keybind = alt+shift+h=resize_split:left,40
 keybind = alt+shift+j=resize_split:down,40
@@ -50,16 +42,15 @@ keybind = alt+shift+k=resize_split:up,40
 keybind = alt+shift+l=resize_split:right,40
 keybind = alt+equal=equalize_splits
 
-# Close pane — Ctrl+b then x
-keybind = ctrl+b>x=close_surface
 
-# Tabs — Alt n/p or Alt [ ] switch; Alt 1..9 jump; Alt i/o reorder
+# Tabs — Alt n/p or Alt [ ] switch; Alt 1..9 jump; Alt i/o reorder; Alt r rename
 keybind = alt+n=next_tab
 keybind = alt+p=previous_tab
 keybind = alt+bracket_left=previous_tab
 keybind = alt+bracket_right=next_tab
 keybind = alt+i=move_tab:-1
 keybind = alt+o=move_tab:1
+keybind = alt+r=prompt_tab_title
 keybind = ctrl+b>c=new_tab
 keybind = alt+one=goto_tab:1
 keybind = alt+two=goto_tab:2
