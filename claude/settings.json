@@ -114,5 +114,7 @@
   "effortLevel": "xhigh",
   "tui": "fullscreen",
   "editorMode": "vim",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skipWorkflowUsageWarning": false
 }
+
