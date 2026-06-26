@@ -95,6 +95,10 @@ os = "darwin"
 source = "scripts/op-env"
 target = "~/.local/bin/op-env"
 
+[codex_notify]
+source = "scripts/codex-notify"
+target = "~/.local/bin/codex-notify"
+
 [lazygit_darwin]
 source = "config/lazygit/config.yml"
 target = "~/Library/Application Support/lazygit/config.yml"

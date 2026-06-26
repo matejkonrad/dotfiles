@@ -32,6 +32,7 @@ brew "pkgconf"
 brew "rename"
 brew "ruby"
 brew "syncthing", link: false
+brew "terminal-notifier"
 brew "tree-sitter"
 brew "tree-sitter-cli"
 brew "zellij"

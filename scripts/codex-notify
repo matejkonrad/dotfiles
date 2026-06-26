@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Codex → native macOS desktop notification, for Ghostty + tmux.
+#
+# Wired via ~/.codex/config.toml:
+#     notify = ["/Users/matejkonrad/.local/bin/codex-notify"]
+#
+# Why native (terminal-notifier) instead of codex's built-in TUI notification:
+# codex's built-in notifications use terminal escape sequences (OSC 9 / bell),
+# which tmux intercepts — so they never reach Ghostty when running inside tmux
+# (see ghostty-org/ghostty discussion #10387). A native notification doesn't go
+# through the terminal at all, so tmux can't swallow it. This mirrors the Claude
+# Code hook in claude/settings.json.
+#
+# Codex invokes this with a single JSON argument and currently only fires the
+# "agent-turn-complete" event. Payload fields: type, thread-id, turn-id, cwd,
+# input-messages[], last-assistant-message.
+
+payload="${1:-}"
+[ -n "$payload" ] || exit 0
+
+type=""; cwd=""; msg=""
+if command -v jq >/dev/null 2>&1; then
+	type=$(printf '%s' "$payload" | jq -r '.type // empty' 2>/dev/null)
+	cwd=$(printf '%s' "$payload" | jq -r '.cwd // empty' 2>/dev/null)
+	msg=$(printf '%s' "$payload" | jq -r '."last-assistant-message" // empty' 2>/dev/null)
+	# codex only emits agent-turn-complete today; ignore anything else.
+	[ -z "$type" ] || [ "$type" = "agent-turn-complete" ] || exit 0
+fi
+
+project=""
+[ -n "$cwd" ] && project=$(basename "$cwd")
+title="Codex"
+[ -n "$project" ] && title="Codex — $project"
+[ -n "$msg" ] || msg="Turn complete"
+# Collapse newlines and cap length so it fits a notification banner.
+msg=$(printf '%s' "$msg" | tr '\n' ' ' | cut -c1-200)
+
+if command -v terminal-notifier >/dev/null 2>&1; then
+	terminal-notifier -title "$title" -message "$msg" -sound Frog \
+		-activate com.mitchellh.ghostty >/dev/null 2>&1 &
+fi
+
+# Jump tmux to the pane that finished (mirrors the Claude Code hook).
+if [ -n "${TMUX_PANE:-}" ] && command -v tmux >/dev/null 2>&1; then
+	win=$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}' 2>/dev/null)
+	[ -n "$win" ] && tmux select-window -t "$win" 2>/dev/null
+	tmux select-pane -t "$TMUX_PANE" 2>/dev/null
+fi
+
+exit 0
