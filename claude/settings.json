@@ -113,8 +113,8 @@
   },
   "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "skipWorkflowUsageWarning": false,
   "editorMode": "vim",
   "agentPushNotifEnabled": true,
-  "skipWorkflowUsageWarning": false
+  "model": "opus[1m]"
 }
-

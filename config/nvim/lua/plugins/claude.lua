@@ -10,7 +10,7 @@ return {
       layout = "vertical",
     },
   },
-  -- Talks to an EXTERNAL Claude Code (running in a Ghostty split) over the
+  -- Talks to an EXTERNAL Claude Code (running in a tmux pane) over the
   -- WebSocket IDE protocol. Kept under <leader>ac so it doesn't clash with
   -- sidekick's <leader>a* keys, which drive sidekick's own embedded terminal.
   keys = {

@@ -9,6 +9,7 @@
   {
     "context": "Workspace",
     "bindings": {
+      "cmd-shift-b": "multi_workspace::ToggleWorkspaceSidebar"
       // "shift shift": "file_finder::Toggle"
     }
   },
@@ -17,6 +18,9 @@
     "bindings": {
       "ctrl-r": "editor::OpenContextMenu"
       // "j k": ["workspace::SendKeystrokes", "escape"]
+    },
+    "unbind": {
+      "cmd-shift-b": "editor::GoToTypeDefinition"
     }
   },
   // Vim-style leader (space) panel toggles — only active in normal mode
@@ -33,6 +37,16 @@
       "space p": "command_palette::Toggle"
     }
   },
+  // Thread sidebar actions
+  {
+    "context": "ThreadsSidebar && not_searching && !Editor",
+    "bindings": {
+      "shift-j": "multi_workspace::NextThread",
+      "shift-k": "multi_workspace::PreviousThread",
+      "ctrl-l": "menu::Confirm",
+      "shift-a": "agent::ArchiveSelectedThread"
+    }
+  },
   // Vim-style pane navigation
   {
     "context": "Dock || Editor || Pane",
@@ -47,6 +61,14 @@
     "context": "(vim_mode == helix_normal || vim_mode == helix_select || vim_mode == normal || vim_mode == visual) && !menu",
     "bindings": {
       "s": "vim::HelixJumpToWord"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-cmd-b": "workspace::ToggleRightDock",
+      "cmd-shift-b": "outline_panel::ToggleFocus",
+      "cmd-alt-j": "multi_workspace::ToggleWorkspaceSidebar"
     }
   }
 ]

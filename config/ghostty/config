@@ -2,10 +2,13 @@ mouse-scroll-multiplier = 1
 
 window-padding-x = 4
 window-padding-y = 4
+# Split leftover sub-cell space evenly across all edges instead of dumping it
+# all at the bottom — kills the big "chin" below the tmux status bar.
+window-padding-balance = true
 
 theme = Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
-font-size = 14
+font-size = 12
 adjust-cell-height = 15%
 
 macos-titlebar-style = tabs 
@@ -13,74 +16,22 @@ window-theme = ghostty
 macos-option-as-alt = true
 
 # =====================================================================
-# SPLIT / PANE MODE TOGGLE
+# HYBRID: Ghostty owns project tabs, tmux owns everything inside
 # ---------------------------------------------------------------------
-# Currently active: NATIVE GHOSTTY SPLITS (block A below).
-# To go back to tmux/zellij:
-#   1. Comment out block A  (NATIVE GHOSTTY SPLITS)
-#   2. Uncomment block B    (MULTIPLEXER PASSTHROUGH) at the bottom
+# Ghostty handles ONLY top-level tabs — one tab per project:
+#   cmd+t   new tab (new project)
+#   cmd+[   previous tab
+#   cmd+]   next tab
+#
+# Everything else — panes, windows, splits, resize, zoom, scroll — is
+# handled by tmux running inside Ghostty. Ghostty deliberately binds no
+# Alt+* or Ctrl+b keys, so:
+#   - macos-option-as-alt (above) sends Alt+hjkl etc. straight to tmux
+#   - Ctrl+b reaches tmux untouched as its prefix
+# cmd+* keys never reach the terminal, so there's no tmux conflict.
 # Reload after editing: Cmd+Shift+, (or quit + reopen Ghostty).
 # =====================================================================
 
-# ---------------------------------------------------------------------
-# BLOCK A — NATIVE GHOSTTY SPLITS   (ACTIVE)
-# Alt = terminal-level nav, no prefix.   Ctrl+b = tmux-style prefix.
-# Ctrl+hjkl is intentionally NOT bound here -> it stays nvim-only
-# (vim-tmux-navigator). Ghostty can't do tmux's per-key is-vim check,
-# so use Alt+hjkl to cross between Ghostty splits.
-# ---------------------------------------------------------------------
-
-# Split focus — Alt+hjkl, no prefix (like Zellij locked mode)
-keybind = alt+h=goto_split:left
-keybind = alt+j=goto_split:down
-keybind = alt+k=goto_split:up
-keybind = alt+l=goto_split:right
-
-# Zoom: focus one pane, hide the rest (= tmux prefix+f / Zellij fullscreen)
-keybind = alt+slash=toggle_split_zoom
-keybind = ctrl+b>f=toggle_split_zoom
-keybind = ctrl+b>z=toggle_split_zoom
-
-# Resize — Alt+Shift+hjkl (4-way, mirrors the focus keys); Alt+= equalizes
-keybind = alt+shift+h=resize_split:left,40
-keybind = alt+shift+j=resize_split:down,40
-keybind = alt+shift+k=resize_split:up,40
-keybind = alt+shift+l=resize_split:right,40
-keybind = alt+equal=equalize_splits
-
-
-# Tabs — Alt n/p or Alt [ ] switch; Alt 1..9 jump; Alt i/o reorder; Alt r rename
-keybind = alt+n=next_tab
-keybind = alt+p=previous_tab
-keybind = alt+bracket_left=previous_tab
-keybind = alt+bracket_right=next_tab
-keybind = alt+i=move_tab:-1
-keybind = alt+o=move_tab:1
-keybind = alt+r=prompt_tab_title
-keybind = ctrl+b>c=new_tab
-keybind = alt+one=goto_tab:1
-keybind = alt+two=goto_tab:2
-keybind = alt+three=goto_tab:3
-keybind = alt+four=goto_tab:4
-keybind = alt+five=goto_tab:5
-keybind = alt+six=goto_tab:6
-keybind = alt+seven=goto_tab:7
-keybind = alt+eight=goto_tab:8
-keybind = alt+nine=goto_tab:9
-
-# ---------------------------------------------------------------------
-# BLOCK B — MULTIPLEXER PASSTHROUGH (tmux / zellij)   (DISABLED)
-# Uncomment this whole block AND comment out block A above to hand
-# these keys back to a multiplexer running inside Ghostty.
-# ---------------------------------------------------------------------
-# keybind = cmd+t=unbind
-# keybind = cmd+n=unbind
-# keybind = cmd+c=unbind
-# keybind = cmd+w=unbind
-# keybind = cmd+opt+left=unbind
-# keybind = cmd+opt+right=unbind
-# keybind = alt+h=unbind
-# keybind = alt+j=unbind
-# keybind = alt+k=unbind
-# keybind = alt+l=unbind
-# keybind = alt+f=unbind
+keybind = cmd+t=new_tab
+keybind = cmd+bracket_left=previous_tab
+keybind = cmd+bracket_right=next_tab

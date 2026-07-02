@@ -80,7 +80,7 @@
 		"dark": "Zed (Default)",
 	},
 	"ui_font_size": 14.0,
-	"buffer_font_size": 14.0,
+	"buffer_font_size": 13.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
