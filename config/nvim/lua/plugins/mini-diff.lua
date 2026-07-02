@@ -33,7 +33,7 @@ return {
     {
       "<leader>gmo",
       function()
-        local base = vim.fn.system("git rev-parse --verify origin/main 2>/dev/null")
+        vim.fn.system("git rev-parse --verify origin/main 2>/dev/null")
         diff_branch = vim.v.shell_error == 0 and "origin/main" or "origin/master"
         apply_ref(0)
         vim.notify("mini.diff: vs " .. diff_branch)
