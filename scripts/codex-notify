@@ -40,11 +40,18 @@ if command -v terminal-notifier >/dev/null 2>&1; then
 		-activate com.mitchellh.ghostty >/dev/null 2>&1 &
 fi
 
-# Jump tmux to the pane that finished (mirrors the Claude Code hook).
+# Flag the tmux window with a red dot instead of stealing focus.
+# Skip only if you're actually looking at this pane: its window is the
+# session's active window AND that session's client has terminal focus.
+# (With side-by-side Ghostty splits, a background session's window is still
+# "active" in its own session, so window_active alone isn't enough — we also
+# require the client to be focused.)
 if [ -n "${TMUX_PANE:-}" ] && command -v tmux >/dev/null 2>&1; then
-	win=$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}' 2>/dev/null)
-	[ -n "$win" ] && tmux select-window -t "$win" 2>/dev/null
-	tmux select-pane -t "$TMUX_PANE" 2>/dev/null
+	if [ "$(tmux display-message -p -t "$TMUX_PANE" '#{window_active}' 2>/dev/null)" != "1" ] \
+		|| ! tmux list-clients -t "$TMUX_PANE" -F '#{client_flags}' 2>/dev/null | grep -q focused; then
+		win=$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}' 2>/dev/null)
+		[ -n "$win" ] && tmux set-option -w -t "$win" @notify 1 2>/dev/null
+	fi
 fi
 
 exit 0

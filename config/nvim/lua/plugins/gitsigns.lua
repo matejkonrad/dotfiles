@@ -12,6 +12,7 @@ set_diff_inline_hl()
 
 return {
   "lewis6991/gitsigns.nvim",
+  enabled = false,
   event = { "BufReadPre", "BufNewFile" },
   keys = {
     {
@@ -30,7 +31,9 @@ return {
       function()
         local gs = require("gitsigns")
         vim.ui.input({ prompt = "Branch: " }, function(branch)
-          if not branch or branch == "" then return end
+          if not branch or branch == "" then
+            return
+          end
           gs.change_base(branch, true)
           vim.notify("gitsigns: vs " .. branch)
         end)
@@ -49,18 +52,18 @@ return {
   },
   opts = {
     signs = {
-      add          = { text = "▎" },
-      change       = { text = "▎" },
-      delete       = { text = "" },
-      topdelete    = { text = "" },
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
       changedelete = { text = "▎" },
-      untracked    = { text = "▎" },
+      untracked = { text = "▎" },
     },
     signs_staged = {
-      add          = { text = "▎" },
-      change       = { text = "▎" },
-      delete       = { text = "" },
-      topdelete    = { text = "" },
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
       changedelete = { text = "▎" },
     },
     signcolumn = true,
@@ -107,9 +110,13 @@ return {
       map("n", "<leader>ghp", gs.preview_hunk, "Preview hunk")
       map("n", "<leader>ghi", gs.preview_hunk_inline, "Preview hunk inline (expand)")
       map("n", "<leader>go", gs.toggle_deleted, "Toggle diff overlay (deleted lines)")
-      map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame line")
+      map("n", "<leader>ghb", function()
+        gs.blame_line({ full = true })
+      end, "Blame line")
       map("n", "<leader>ghd", gs.diffthis, "Diff this")
-      map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff this ~")
+      map("n", "<leader>ghD", function()
+        gs.diffthis("~")
+      end, "Diff this ~")
       map("n", "<leader>ght", gs.toggle_current_line_blame, "Toggle line blame")
 
       -- Hunk text object
