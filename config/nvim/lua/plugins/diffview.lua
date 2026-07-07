@@ -28,6 +28,20 @@ return {
   keys = {
     { "<leader>gad", "<cmd>DiffviewOpen<cr>", desc = "Diff Working Tree" },
     {
+      "<leader>gat",
+      function()
+        -- Quick toggle: close if any diffview/file-history view is open
+        -- (returns you to where you were), otherwise open the working tree.
+        local lib = require("diffview.lib")
+        if next(lib.views) then
+          vim.cmd("DiffviewClose")
+        else
+          vim.cmd("DiffviewOpen")
+        end
+      end,
+      desc = "Toggle Diffview",
+    },
+    {
       "<leader>gag",
       function()
         vim.cmd("DiffviewOpen origin/" .. default_remote_branch())
@@ -137,6 +151,15 @@ return {
       view = {
         { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close" } },
         { "n", "<leader>e", "<cmd>DiffviewToggleFiles<cr>", { desc = "Toggle file panel" } },
+        -- Jump to the file under the cursor and close diffview in one step
+        {
+          "n",
+          "gF",
+          function()
+            require("diffview.actions").goto_file_edit_close()
+          end,
+          { desc = "Go to file & close diffview" },
+        },
         { "n", "<leader>co", "<cmd>DiffviewConflictPick('ours')<cr>", { desc = "Pick ours" } },
         { "n", "<leader>ct", "<cmd>DiffviewConflictPick('theirs')<cr>", { desc = "Pick theirs" } },
         { "n", "<leader>cb", "<cmd>DiffviewConflictPick('base')<cr>", { desc = "Pick base" } },
@@ -145,6 +168,14 @@ return {
       file_panel = {
         { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close" } },
         { "n", "j", "<cmd>DiffviewFocusEntry<cr>", { desc = "Focus entry" } },
+        {
+          "n",
+          "gF",
+          function()
+            require("diffview.actions").goto_file_edit_close()
+          end,
+          { desc = "Go to file & close diffview" },
+        },
         { "n", "s", "<cmd>DiffviewToggleStage<cr>", { desc = "Stage/unstage" } },
         { "n", "S", "<cmd>DiffviewStageAll<cr>", { desc = "Stage all" } },
         { "n", "U", "<cmd>DiffviewUnstageAll<cr>", { desc = "Unstage all" } },
