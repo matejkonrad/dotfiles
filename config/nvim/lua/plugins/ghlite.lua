@@ -23,7 +23,17 @@ return {
       { "<leader>grv", "<cmd>GHLitePRView<cr>", desc = "GH: view PR" },
       { "<leader>gru", "<cmd>GHLitePRLoadComments<cr>", desc = "GH: load PR comments" },
       { "<leader>grp", "<cmd>GHLitePRDiff<cr>", desc = "GH: PR diff (quick)" },
-      { "<leader>grl", "<cmd>GHLitePRDiffview<cr>", desc = "GH: PR diffview" },
+      {
+        "<leader>grl",
+        function()
+          -- ghlite caches the selected PR (incl. headRefOid) in memory and never
+          -- invalidates it, so a diffview after pushing shows the pre-push diff.
+          -- Clear the cache to force a re-fetch of the current branch's PR head.
+          require("ghlite.state").selected_PR = nil
+          vim.cmd("GHLitePRDiffview")
+        end,
+        desc = "GH: PR diffview (fresh)",
+      },
       { "<leader>gra", "<cmd>GHLitePRAddComment<cr>", desc = "GH: add PR comment" },
       { "<leader>grc", "<cmd>GHLitePRUpdateComment<cr>", desc = "GH: update comment" },
       { "<leader>grd", "<cmd>GHLitePRDeleteComment<cr>", desc = "GH: delete comment" },
