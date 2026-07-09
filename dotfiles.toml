@@ -81,11 +81,6 @@ target = "~/.config/opencode/opencode.json"
 source = "config/tmux/tmux.conf"
 target = "~/.config/tmux/tmux.conf"
 
-[karabiner_elements]
-source = "config/karabiner/karabiner.json"
-target = "~/.config/karabiner/karabiner.json"
-os = "darwin"
-
 [hammerspoon]
 source = "config/hammerspoon/init.lua"
 target = "~/.hammerspoon/init.lua"
