@@ -34,6 +34,11 @@ return {
       mux = {
         backend = "tmux",
         enabled = true,
+        create = "split", ---@type "terminal"|"window"|"split"
+        split = {
+          vertical = true, -- true → side-by-side (-h), false → stacked (-v)
+          size = 0.5, -- 0–1 = percentage of the pane, >1 = absolute cols/lines
+        },
       },
     },
   },

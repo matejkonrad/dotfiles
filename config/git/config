@@ -54,3 +54,5 @@
 
 ; [merge]
 ;   conflictStyle = zdiff3
+[pager]
+	diff = diffnav
