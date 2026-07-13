@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Waiting for input in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; fi"
+            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Waiting for input in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Finished in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; fi"
+            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Finished in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi"
           }
         ]
       },

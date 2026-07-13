@@ -1,5 +1,34 @@
 local git_filter_enabled = false
 
+-- Generated/noise globs, excluded by default. Toggle back in with <a-g>.
+local noise_exclude = {
+  "**/drizzle/**/*.json", -- drizzle migration snapshots & journal
+}
+
+-- Test globs, excluded by default. Toggle back in with <a-t>.
+local test_exclude = {
+  "**/*_test.*",
+  "**/*.test.*",
+  "**/*.spec.*",
+  "**/*_spec.*",
+  "**/test/**",
+  "**/tests/**",
+  "**/__tests__/**",
+  "**/spec/**",
+}
+
+-- Effective grep excludes: each group is dropped unless its show_* flag is on.
+local function grep_exclude(show_tests, show_noise)
+  local ex = {}
+  if not show_noise then
+    vim.list_extend(ex, vim.deepcopy(noise_exclude))
+  end
+  if not show_tests then
+    vim.list_extend(ex, vim.deepcopy(test_exclude))
+  end
+  return ex
+end
+
 local get_git_nodes = function(root_path)
   local Tree = require("snacks.explorer.tree")
   local nodes = {}
@@ -49,6 +78,39 @@ return {
         sources = {
           files = {
             hidden = true,
+          },
+          grep = {
+            -- <leader>/ and <leader>sg skip tests + noise by default.
+            exclude = grep_exclude(false, false),
+            show_tests = false,
+            show_noise = false,
+            -- Title-bar icon lights up when that group is *included*.
+            toggles = {
+              show_tests = { icon = "󰙨" }, -- tests visible
+              show_noise = { icon = "" }, -- generated/noise visible
+            },
+            actions = {
+              toggle_tests = function(picker)
+                picker.opts.show_tests = not picker.opts.show_tests
+                picker.opts.exclude = grep_exclude(picker.opts.show_tests, picker.opts.show_noise)
+                picker.list:set_target()
+                picker:find()
+              end,
+              toggle_noise = function(picker)
+                picker.opts.show_noise = not picker.opts.show_noise
+                picker.opts.exclude = grep_exclude(picker.opts.show_tests, picker.opts.show_noise)
+                picker.list:set_target()
+                picker:find()
+              end,
+            },
+            win = {
+              input = {
+                keys = {
+                  ["<a-t>"] = { "toggle_tests", mode = { "i", "n" } },
+                  ["<a-g>"] = { "toggle_noise", mode = { "i", "n" } },
+                },
+              },
+            },
           },
           gh_issue = {},
           gh_pr = {},

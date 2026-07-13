@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Render the tmux session list for status-right — a tab-like row of every
+# session, so background projects are visible while you're attached to one.
+#
+# A red ● precedes any session that has a pending agent @notify flag on one of
+# its windows (set by the Claude/Codex hooks in claude/settings.json and
+# scripts/codex-notify). The attached session is shown white, the rest grey.
+#
+# Why a script and not an inline #() in tmux.conf: tmux expands #{...} in the
+# OUTER format before running #(), so an inline '#{@notify}' lookup would be
+# resolved against the current session and always come back empty. Keeping the
+# #{...} sequences inside this file hides them from that outer pass — the inner
+# `tmux` calls below do their own expansion, per session.
+#
+# The #[...] style directives in this script's output ARE interpreted by tmux.
+
+tmux list-sessions -F '#{session_attached} #{session_name}' 2>/dev/null |
+while read -r attached name; do
+	# Does any window in this session carry the @notify flag?
+	if tmux list-windows -t "$name" -F '#{@notify}' 2>/dev/null | grep -q 1; then
+		printf '#[fg=#ee5396]●#[default] '
+	fi
+	if [ "$attached" = 1 ]; then
+		printf '#[fg=#ffffff]%s#[default]  ' "$name"
+	else
+		printf '#[fg=#999999]%s#[default]  ' "$name"
+	fi
+done

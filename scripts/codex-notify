@@ -51,6 +51,9 @@ if [ -n "${TMUX_PANE:-}" ] && command -v tmux >/dev/null 2>&1; then
 		|| ! tmux list-clients -t "$TMUX_PANE" -F '#{client_flags}' 2>/dev/null | grep -q focused; then
 		win=$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}' 2>/dev/null)
 		[ -n "$win" ] && tmux set-option -w -t "$win" @notify 1 2>/dev/null
+		# Rebuild the status-right session list now so the dot shows instantly
+		# (status-right reads a variable, not a polled #() — see tmux.conf).
+		tmux set -g @session_list "$(~/.local/bin/tmux-sessions)" 2>/dev/null
 	fi
 fi
 

@@ -94,6 +94,10 @@ target = "~/.local/bin/op-env"
 source = "scripts/codex-notify"
 target = "~/.local/bin/codex-notify"
 
+[tmux_sessions]
+source = "scripts/tmux-sessions"
+target = "~/.local/bin/tmux-sessions"
+
 [lazygit_darwin]
 source = "config/lazygit/config.yml"
 target = "~/Library/Application Support/lazygit/config.yml"
