@@ -7,7 +7,10 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"diff_view_style": "split",
+	"edit_predictions": {
+  "provider": "copilot"
+ },
+ "diff_view_style": "split",
  "terminal": {
 		"font_size": 14.0,
 	},
