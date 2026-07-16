@@ -112,6 +112,8 @@ source = "config/lazygit/config.yml"
 target = "~/.config/lazygit/config.yml"
 os = "linux"
 
-[emacs]
-source = "config/emacs"
-target = "~/.config/emacs"
+# ~/.config/emacs is a Doom Emacs clone (managed by `doom`, not dotfiles).
+# Only the private Doom config is tracked here.
+[doom]
+source = "config/doom"
+target = "~/.config/doom"
