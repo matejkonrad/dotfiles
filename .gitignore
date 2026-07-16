@@ -1,3 +1,6 @@
 node_modules
 .claude/worktrees
 config/zed/prompts/prompts-library-db.*.mdb
+emacs/.cache
+emacs/.eln-cache
+emacs/elpa

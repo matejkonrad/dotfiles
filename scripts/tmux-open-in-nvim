@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# tmux-open-in-nvim — open a file path (from Claude Code / any pane output) in the
+# Neovim running in the SAME tmux session + git worktree, at the right line.
+#
+# Wired from config/tmux/tmux.conf:
+#   - ⌥-click anywhere        (M-MouseDown1Pane)      → #{mouse_word}
+#   - `gf` in copy/scroll mode (copy-mode-vi)         → #{copy_cursor_word}
+#   - click in copy/scroll mode                       → #{mouse_word}
+#
+# It reaches nvim over a per-(session, worktree) server socket that nvim opens at
+# startup (see config/nvim/lua/config/autocmds.lua). The socket name is
+# sha256(session_id ":" worktree_root), so multiple agents running in parallel
+# git worktrees never cross-talk — a click in one worktree's pane only ever
+# reaches that worktree's editor.
+#
+# The clicked path is handed to nvim as a literal command-line file argument via
+# --remote-silent, NOT a :edit command, so Next.js route paths such as
+# app/(marketing)/[id]/page.tsx open as real files instead of being interpreted
+# as :edit glob patterns ([id] is a character class to :edit).
+#
+# Args (all expanded by tmux from format variables):
+#   $1 = session_id          (#{session_id}, e.g. "$3")
+#   $2 = clicked pane cwd     (#{pane_current_path})
+#   $3 = word under cursor    (#{mouse_word} or #{copy_cursor_word})
+
+set -euo pipefail
+
+sid="${1:-}"
+cwd="${2:-}"
+word="${3:-}"
+
+[ -n "$word" ] || exit 0
+[ -d "$cwd" ] || exit 0
+
+# Strip trailing sentence punctuation (a path never ends in . or ,), but leave
+# brackets/parens intact — they're part of Next.js route segments.
+word="${word%[.,]}"
+
+# Split off a trailing :line[:col].
+file="${word%%:*}"
+rest="${word#"$file"}"                        # ":42" or ":42:8" or ""
+line="${rest#:}"; line="${line%%:*}"          # "42"
+case "$line" in ''|*[!0-9]*) line="" ;; esac  # keep only if purely numeric
+
+[ -n "$file" ] || exit 0
+
+# Worktree root of the clicked pane (falls back to the cwd for non-git dirs).
+ws="$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "$ws" ] || ws="$cwd"
+
+# Resolve to an absolute, existing file: try the pane cwd first, then the
+# worktree root (Claude prints repo-root-relative paths).
+abs=""
+for base in "$cwd" "$ws"; do
+  case "$file" in
+    /*) cand="$file" ;;
+    *)  cand="$base/$file" ;;
+  esac
+  if [ -e "$cand" ]; then abs="$cand"; break; fi
+done
+[ -n "$abs" ] || exit 0
+
+# Per-(session, worktree) nvim server socket. MUST match the name nvim builds in
+# config/nvim/lua/config/autocmds.lua.
+key="$(printf '%s' "${sid}:${ws}" | shasum -a 256 | cut -c1-16)"
+sock="/tmp/nvim-${key}.sock"
+[ -S "$sock" ] || exit 0                      # no matching nvim → silently do nothing
+
+# Open the file as a literal command-line argument (no :edit globbing). NOTE:
+# --remote-silent does NOT honor a leading "+{line}" (it treats it as another
+# filename), so the line jump is a separate --remote-send with a numeric line.
+nvim --server "$sock" --remote-silent "$abs"
+if [ -n "$line" ]; then
+  nvim --server "$sock" --remote-send "<C-\\><C-n>:${line}<CR>"
+fi
+
+# Best-effort: focus the nvim pane in the clicked pane's session.
+npane="$(tmux list-panes -s -t "$sid" -F '#{pane_id} #{pane_current_command}' 2>/dev/null \
+  | awk '$2=="nvim"{print $1; exit}')"
+[ -n "$npane" ] && tmux select-pane -t "$npane" || true
