@@ -1,0 +1,131 @@
+;;; init.el --- personal Emacs config  -*- lexical-binding: t; -*-
+
+;; Package setup
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Clean up the UI
+(setq inhibit-startup-message t)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-display-line-numbers-mode)
+(electric-pair-mode 1)
+(setq electric-pair-pairs
+      '((?\" . ?\")
+        (?\{ . ?\})
+        (?\[ . ?\])
+        (?\( . ?\))))
+
+;; Sane defaults
+(setq-default indent-tabs-mode nil)
+(setq make-backup-files nil)  ; no ~ backup files cluttering dirs
+(setq create-lockfiles nil)   ; no .#foo lock symlinks in project dirs
+(setq auto-save-file-name-transforms
+      `((".*" ,(expand-file-name "auto-saves/" user-emacs-directory) t)))
+(make-directory (expand-file-name "auto-saves/" user-emacs-directory) t)
+(recentf-mode 1)              ; track recent files
+(delete-selection-mode 1)
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(apheleia corfu corfu-terminal doom-themes kind-icon lsp-mode lsp-ui
+              magit treemacs)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; Font
+(set-face-attribute 'default nil
+                    :font "JetBrainsMono Nerd Font"
+                    :height 120)
+
+;; LSP
+(use-package lsp-mode
+  :ensure t
+  :hook ((typescript-mode . lsp)
+         (js-mode . lsp)
+         (css-mode . lsp))
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package apheleia
+  :ensure t
+  :config
+  (apheleia-global-mode 1))
+
+;; Corfu for in-buffer completion / intellisense
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-auto-prefix 2)
+  (corfu-cycle t)
+  (corfu-quit-no-match t)
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+  :hook
+  (corfu-mode . corfu-popupinfo-mode)
+  :init
+  (global-corfu-mode))
+
+(use-package corfu-terminal
+  :ensure t
+  :unless (display-graphic-p)
+  :config
+  (corfu-terminal-mode 1))
+
+(use-package treemacs
+  :ensure t
+  :init
+  (treemacs)
+  :bind
+  ("C-." . treemacs-select-window)
+  ("C-x e" . treemacs))
+
+(use-package which-key
+  :ensure t
+  :custom
+  (which-key-popup-type 'minibuffer)
+  :init
+  (which-key-mode))
+
+;; magit is bound on the SPC g leader key (see modules/evil-config.el)
+(use-package magit
+  :ensure t)
+
+;; Load local modules. user-emacs-directory resolves to ~/.config/emacs,
+;; so this is stable regardless of where Emacs was started from.
+(add-to-list 'load-path (expand-file-name "modules" user-emacs-directory))
+(require 'uitjes)       ; completion UI: vertico, orderless, consult, affe, embark, dirvish, helpful…
+(require 'evil-config)  ; vim emulation + SPC leader keybindings
+(require 'ai)           ; claude-code-ide + vterm
+
+(provide 'init)
+;;; init.el ends here

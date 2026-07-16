@@ -1,6 +1,22 @@
 node_modules
 .claude/worktrees
 config/zed/prompts/prompts-library-db.*.mdb
-emacs/.cache
-emacs/.eln-cache
-emacs/elpa
+
+# Emacs runtime state (config/emacs is symlinked to ~/.config/emacs)
+config/emacs/.cache/
+config/emacs/eln-cache/
+config/emacs/elpa/
+config/emacs/transient/
+config/emacs/url/
+config/emacs/auto-saves/
+config/emacs/forge-database.sqlite
+config/emacs/history
+config/emacs/places
+config/emacs/projects
+config/emacs/recentf
+config/emacs/tramp
+
+# Emacs auto-save / lock / byte-compiled files (repo-wide)
+\#*\#
+.\#*
+*.elc
