@@ -1,0 +1,141 @@
+onboarding = false
+# herdr configuration — symlinked to ~/.config/herdr/config.toml (see dotfiles.toml).
+#
+# Keymap tiers (macOS: Ghostty has macos-option-as-alt = true, so option == alt
+# reaches herdr; word-nav uses alt+f/b/d, which never clash with alt+h/j/k/l):
+#
+#   ctrl+h/j/k/l ....... NAVIGATE — seamless across nvim splits AND herdr panes
+#   ctrl+arrows ........ focus the adjacent herdr pane (plain, non-nvim-aware)
+#   option+h/j/k/l ..... RESIZE   — seamless across nvim splits AND herdr panes
+#   ctrl+option+j/k .... next / previous WORKSPACE  (also ctrl+opt+down/up)
+#   ctrl+option+h/l .... previous / next TAB         (also ctrl+opt+left/right)
+#   ctrl+option+p/n .... previous / next AGENT
+#   option + ........... pane ops (split / zoom / close)
+#   prefix (ctrl+b) .... the long tail (new tab/workspace, rename, copy-mode…)
+#
+# The ctrl+hjkl / option+hjkl seamless behaviour is provided by the herdr-splits
+# plugin (github:lmilojevicc/herdr-splits.nvim), bound at the bottom of this file
+# via [[keys.command]] plugin_action, paired with the Neovim side in
+# config/nvim/lua/plugins/herdr-splits.lua. Install the herdr side with:
+#   herdr plugin install lmilojevicc/herdr-splits.nvim
+#
+# Reload after editing:  herdr server reload-config   (or prefix+shift+r)
+
+[keys]
+prefix = "ctrl+b"
+
+# --- Panes: focus (prefix h/j/k/l + ctrl+arrows) ---
+# Seamless ctrl+h/j/k/l nav is owned by herdr-splits (see [[keys.command]] below),
+# so it is intentionally NOT set here. ctrl+arrows give a plain, always-herdr jump.
+focus_pane_left = ["prefix+h", "ctrl+left"]
+focus_pane_down = ["prefix+j", "ctrl+down"]
+focus_pane_up = ["prefix+k", "ctrl+up"]
+focus_pane_right = ["prefix+l", "ctrl+right"]
+
+# --- Panes: split (v = right/side-by-side, minus = down/stacked) ---
+split_vertical = ["prefix+v", "alt+v"]           # right / side-by-side
+split_horizontal = ["prefix+minus", "alt+minus"] # down / stacked
+
+# --- Panes: zoom + close ---
+# zoom = fullscreen one pane, press again to restore. alt+/ mirrors tmux's M-/.
+zoom = ["prefix+z", "prefix+f", "alt+z", "alt+/", "ctrl+alt+/"]
+close_pane = ["prefix+x", "alt+w"]
+
+# Resize mode kept as a prefix fallback; primary resize is option+h/j/k/l
+# (herdr-splits, seamless with nvim). In this mode use h/j/k/l or arrows, esc to exit.
+resize_mode = "prefix+r"
+
+# --- Tabs (inside a workspace) ---
+new_tab = "prefix+c"
+previous_tab = ["prefix+p", "ctrl+alt+h", "ctrl+alt+left"]
+next_tab = ["prefix+n", "ctrl+alt+l", "ctrl+alt+right"]
+switch_tab = "prefix+1..9"                                 # goto tab by number
+close_tab = "prefix+shift+x"
+rename_tab = ["prefix+comma", "prefix+shift+t"]
+
+# --- Workspaces (projects — the sidebar list) ---
+# Vertical keys for the vertical sidebar: k = up = previous, j = down = next.
+previous_workspace = ["ctrl+alt+k", "ctrl+alt+up"]
+next_workspace = ["ctrl+alt+j", "ctrl+alt+down"]
+workspace_picker = "prefix+w"
+new_workspace = "prefix+shift+n"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+switch_workspace = "prefix+shift+1..9"             # goto workspace by number
+
+# --- Agents (cycle focus between live agent panes) ---
+# p = previous, n = next (mnemonic; tabs took h/l, workspaces took j/k).
+previous_agent = "ctrl+alt+p"
+next_agent = "ctrl+alt+n"
+
+# --- Scrollback / copy mode ---
+edit_scrollback = ["prefix+s", "prefix+e"]
+
+# --- Session / misc ---
+detach = "prefix+q"
+reload_config = "prefix+shift+r"
+settings = "prefix+shift+s"
+toggle_sidebar = "ctrl+alt+b"
+
+# --- Seamless nav + resize across nvim splits and herdr panes ---
+# Provided by the herdr-splits plugin. ctrl+h/j/k/l navigate; option(alt)+h/j/k/l
+# resize. When the focused pane runs nvim, the chord is forwarded into nvim so its
+# own splits move/resize first, crossing into herdr panes at the edge.
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-splits.nav-left"
+description = "navigate left (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-splits.nav-down"
+description = "navigate down (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-splits.nav-up"
+description = "navigate up (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-splits.nav-right"
+description = "navigate right (nvim/herdr)"
+
+[[keys.command]]
+key = "alt+h"
+type = "plugin_action"
+command = "herdr-splits.resize-left"
+description = "resize left (nvim/herdr)"
+
+[[keys.command]]
+key = "alt+j"
+type = "plugin_action"
+command = "herdr-splits.resize-down"
+description = "resize down (nvim/herdr)"
+
+[[keys.command]]
+key = "alt+k"
+type = "plugin_action"
+command = "herdr-splits.resize-up"
+description = "resize up (nvim/herdr)"
+
+[[keys.command]]
+key = "alt+l"
+type = "plugin_action"
+command = "herdr-splits.resize-right"
+description = "resize right (nvim/herdr)"
+
+[theme]
+name = "vesper"
+auto_switch = false
+
+[experimental]
+pane_history = false
+switch_ascii_input_source_in_prefix = false
+
+[ui]
+show_agent_labels_on_pane_borders = true

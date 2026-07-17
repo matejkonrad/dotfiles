@@ -7,7 +7,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"edit_predictions": {
+	"agent_ui_font_size": 13.0,
+ "edit_predictions": {
   "provider": "copilot"
  },
  "diff_view_style": "split",
@@ -60,17 +61,27 @@
 	"ui_font_family": ".ZedSans",
 	"buffer_line_height": "comfortable",
 	"buffer_font_weight": 400.0,
-	"buffer_font_family": "JetBrains Mono",
+	"buffer_font_family": ".ZedMono",
 	"agent": {
-		"tool_permissions": {
+		"profiles": {
+   "auto": {
+    "name": "Auto",
+    "tools": {},
+    "enable_all_context_servers": false,
+    "context_servers": {}
+   }
+  },
+  "tool_permissions": {
 			"default": "allow",
 		},
 		"single_file_review": true,
 		"dock": "right",
 		"default_profile": "write",
 		"default_model": {
-			"provider": "copilot_chat",
-			"model": "claude-sonnet-4.5",
+			"effort": "medium",
+   "enable_thinking": true,
+   "provider": "openai-subscribed",
+			"model": "gpt-5.6-terra",
 		},
 		"model_parameters": [],
 	},
@@ -83,8 +94,8 @@
 		"light": "Zed (Default)",
 		"dark": "Zed (Default)",
 	},
-	"ui_font_size": 14.0,
-	"buffer_font_size": 13.0,
+	"ui_font_size": 13.0,
+	"buffer_font_size": 12.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",

@@ -32,17 +32,19 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Open a per-(tmux session, git worktree) server socket so the tmux
--- open-in-nvim handler (⌥-click / `gf` in copy-mode → ~/.local/bin/tmux-open-in-nvim)
--- can reach THIS nvim. Keyed by session+worktree so parallel agents in separate
--- worktrees never route to the wrong editor. The socket name MUST match the one
--- built in scripts/tmux-open-in-nvim.
+-- Open a per-(multiplexer session, git worktree) server socket so the
+-- open-in-nvim handlers can reach THIS nvim. Keyed by session+worktree so
+-- parallel agents in separate worktrees never route to the wrong editor.
+local function open_in_nvim_trim(s)
+  return (s or ""):gsub("%s+$", "")
+end
+
+-- tmux: ⌥-click / `gf` in copy-mode → ~/.local/bin/tmux-open-in-nvim.
+-- Socket name MUST match scripts/tmux-open-in-nvim.
 if vim.env.TMUX_PANE then
-  local function trim(s)
-    return (s or ""):gsub("%s+$", "")
-  end
-  local sid = trim(vim.fn.system({ "tmux", "display", "-p", "-t", vim.env.TMUX_PANE, "-F", "#{session_id}" }))
-  local ws = trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
+  local sid =
+    open_in_nvim_trim(vim.fn.system({ "tmux", "display", "-p", "-t", vim.env.TMUX_PANE, "-F", "#{session_id}" }))
+  local ws = open_in_nvim_trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
   if ws == "" then
     ws = vim.fn.getcwd()
   end
@@ -50,6 +52,21 @@ if vim.env.TMUX_PANE then
     local key = vim.fn.sha256(sid .. ":" .. ws):sub(1, 16)
     pcall(vim.fn.serverstart, ("/tmp/nvim-%s.sock"):format(key))
   end
+end
+
+-- herdr: click a path link in any pane → the open-in-nvim herdr plugin
+-- (config/herdr/plugins/open-in-nvim). Keyed by HERDR_WORKSPACE_ID + worktree.
+-- Socket + .pane sidecar names MUST match open-in-nvim.sh.
+if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" then
+  local wsid = vim.env.HERDR_WORKSPACE_ID or ""
+  local root = open_in_nvim_trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
+  if root == "" then
+    root = vim.fn.getcwd()
+  end
+  local key = vim.fn.sha256(wsid .. ":" .. root):sub(1, 16)
+  pcall(vim.fn.serverstart, ("/tmp/nvim-herdr-%s.sock"):format(key))
+  -- Record this nvim's herdr pane id so the handler can focus it after opening.
+  pcall(vim.fn.writefile, { vim.env.HERDR_PANE_ID }, ("/tmp/nvim-herdr-%s.pane"):format(key))
 end
 
 -- Auto-wipe unnamed empty buffers when they become hidden (avoids the stray

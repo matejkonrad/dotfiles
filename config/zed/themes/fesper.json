@@ -1,7 +1,7 @@
 {
   "$schema": "https://zed.dev/schema/themes/v0.2.0.json",
   "name": "Fesper",
-  "author": "Rauno Freiberg / bdsqqq / Matej Konrad",
+  "author": "/ Matej Konrad",
   "themes": [
     {
       "name": "Fesper",
@@ -24,15 +24,15 @@
         "drop_target.background": null,
         "ghost_element.background": null,
         "ghost_element.hover": "#282828",
-        "ghost_element.active": null,
+        "ghost_element.active": "#282828",
         "ghost_element.selected": "#232323",
         "ghost_element.disabled": null,
-        "text": "#FFFFFF",
+        "text": "#A6A6A6FF",
         "text.muted": "#A0A0A0",
         "text.placeholder": "#7E7E7E",
         "text.disabled": "#7E7E7E",
         "text.accent": "#FFC799",
-        "icon": "#FFFFFF",
+        "icon": "#A6A6A6FF",
         "icon.muted": "#A0A0A0",
         "icon.disabled": "#7E7E7E",
         "icon.placeholder": "#7E7E7E",
@@ -96,11 +96,11 @@
         "conflict": "#FF8080ff",
         "conflict.background": "#FF80803d",
         "conflict.border": null,
-        "created": "#99FFE4ff",
-        "created.background": "#99FFE43d",
+        "created": "#FFFFFF",
+        "created.background": null,
         "created.border": null,
-        "deleted": "#FF8080ff",
-        "deleted.background": "#FF80803d",
+        "deleted": "#FFFFFF",
+        "deleted.background": null,
         "deleted.border": null,
         "error": "#FF8080ff",
         "error.background": "#FF80803d",
@@ -310,8 +310,19 @@
         "panel.indent_guide_active": "#505050",
         "panel.indent_guide_hover": "#A0A0A0",
         "editor.indent_guide": "#242424",
-        "editor.indent_guide_active": "#505050"
+        "editor.indent_guide_active": "#505050",
+        "panel.overlay_background": "#101010",
+        "panel.overlay_hover": "#101010",
+        "minimap.thumb.background": "#34343480",
+        "minimap.thumb.hover_background": "#343434",
+        "minimap.thumb.border": "#34343480",
+        "version_control.added": "#2E5C49",
+        "version_control.deleted": "#5C3034",
+        "version_control.modified": "#FFC799",
+        "version_control.conflict": "#FF8080ff"
       }
     }
-  ]
+  ],
+  "isUserGenerated": true,
+  "description": "a"
 }

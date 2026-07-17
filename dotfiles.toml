@@ -81,6 +81,24 @@ target = "~/.config/opencode/opencode.json"
 source = "config/tmux/tmux.conf"
 target = "~/.config/tmux/tmux.conf"
 
+# Only config.toml is tracked — the rest of ~/.config/herdr (logs, sockets,
+# session.json, installed plugins) is runtime state, not dotfiles.
+# herdr plugins (install once, needs herdr >= 0.7.3):
+#   herdr plugin install lmilojevicc/herdr-splits.nvim      # nav + resize
+#   herdr plugin install makyinmars/herdr-context.nvim      # send context to agents
+#   herdr plugin link  ~/Project/self/dotfiles/config/herdr/plugins/open-in-nvim
+#     ^ local plugin (tracked below): click a path in any pane → open in sibling nvim
+[herdr]
+source = "config/herdr/config.toml"
+target = "~/.config/herdr/config.toml"
+
+# worktrunk (wt) — only config.toml is tracked; approvals.toml, state, and logs
+# under ~/.config/worktrunk are runtime state. The post-switch hook opens each
+# worktree in herdr; the .zshrc wt wrapper adds --no-cd inside herdr.
+[worktrunk]
+source = "config/worktrunk/config.toml"
+target = "~/.config/worktrunk/config.toml"
+
 [hammerspoon]
 source = "config/hammerspoon/init.lua"
 target = "~/.hammerspoon/init.lua"

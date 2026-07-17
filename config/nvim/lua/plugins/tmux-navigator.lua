@@ -1,6 +1,9 @@
 return {
   "christoomey/vim-tmux-navigator",
   enabled = true,
+  -- Only under tmux — inside a herdr pane, herdr-splits.nvim owns <C-h/j/k/l>
+  -- (see herdr-splits.lua). Prevents the two navigators from clashing.
+  cond = vim.env.HERDR_ENV ~= "1",
   init = function()
     vim.g.tmux_navigator_disable_when_zoomed = 1
   end,

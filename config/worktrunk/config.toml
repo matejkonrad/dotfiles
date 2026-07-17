@@ -1,0 +1,35 @@
+# worktrunk (wt) user config — symlinked to ~/.config/worktrunk/config.toml
+# (see dotfiles.toml). Only config.toml is tracked; approvals.toml, cached
+# state, and logs elsewhere under ~/.config/worktrunk are runtime state.
+#
+# Division of labour with herdr:
+#   worktrunk owns the git-worktree LIFECYCLE  — create / switch / merge / remove,
+#             plus hooks (dep install, dev servers), the merge pipeline, PR pickers.
+#   herdr     owns the SURFACE — each worktree opens as its own workspace in the
+#             sidebar (herdr models an opened worktree as an open_workspace_id).
+#
+# The post-switch hook below hands every `wt switch` result to herdr via
+# `herdr worktree open`, so the worktree shows up (or refocuses if already open)
+# as a workspace — the same thing herdr's native `new_worktree` (prefix+shift+g)
+# does, but driven by wt so wt's hooks/merge/cleanup all apply. Because of that,
+# prefer `wt switch` over prefix+shift+g so there is a single source of truth.
+#
+# The hook is guarded on $HERDR_ENV: outside herdr (plain shell, tmux) it is a
+# no-op and `wt switch` just behaves normally. Inside herdr, .zshrc injects
+# --no-cd for `wt switch` (see the wrapper there) so the origin pane stays put
+# and only the new workspace is focused. Reload nothing — wt reads this per run.
+#
+# Docs: https://worktrunk.dev/hook/  (hook types, template vars, forms)
+
+# --- Where wt creates worktrees ---------------------------------------------
+# Default: sibling dir next to the repo, e.g. dotfiles.feature-x. herdr adopts
+# any path, so this is free to change. Uncomment to centralize out-of-tree:
+# worktree-path = "~/worktrees/{{ repo }}/{{ branch | sanitize }}"
+
+# --- Open each worktree in herdr --------------------------------------------
+# Background hook, fires on create / switch-to-existing / stay-on-current.
+# `herdr worktree open` is idempotent: an already-open worktree just refocuses.
+#   --workspace "$HERDR_WORKSPACE_ID"  source workspace → resolves the repo
+#   --path      the freshly (or previously) created worktree to open
+#   --label     show the branch name on the workspace instead of the repo name
+post-switch = 'if [ "$HERDR_ENV" = "1" ]; then herdr worktree open --workspace "$HERDR_WORKSPACE_ID" --path "{{ worktree_path }}" --label "{{ branch }}" --focus; fi'

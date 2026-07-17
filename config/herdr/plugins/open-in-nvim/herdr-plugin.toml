@@ -1,0 +1,26 @@
+id = "open-in-nvim"
+name = "Open in Neovim"
+version = "0.1.0"
+min_herdr_version = "0.7.0"
+description = "Click a file path in any pane to open it in the sibling Neovim of the same workspace."
+platforms = ["linux", "macos"]
+
+# Clicking a matched path runs the `open` action. herdr passes the clicked text
+# in HERDR_PLUGIN_CLICKED_URL and the clicked pane's context in
+# HERDR_PANE_ID / HERDR_WORKSPACE_ID.
+[[actions]]
+id = "open"
+title = "Open path in Neovim"
+command = ["bash", "open-in-nvim.sh"]
+
+# Make repo-relative paths clickable in every pane's output. Anchored, and
+# requires a directory segment + a file extension, optionally followed by
+# :line[:col]. Requiring a "/" avoids turning prose like "Node.js" or "e.g."
+# into links, and matches how agents (and this repo's CLAUDE.md rule) print
+# paths — always with a directory. Next.js route segments (parens/brackets) are
+# allowed. TOML literal string (single quotes) → no backslash escaping needed.
+[[link_handlers]]
+id = "file-path"
+title = "Open in Neovim"
+pattern = '^[\w.@/()\[\]+-]+/[\w.@()\[\]+-]+\.[A-Za-z]\w*(?::\d+){0,2}$'
+action = "open"

@@ -19,6 +19,8 @@
   "ghlite.nvim": { "branch": "main", "commit": "4b5b9b079df04bd68c69482fac80ac7af1a39a3b" },
   "gitsigns.nvim": { "branch": "main", "commit": "eb60cc7b94c46005237fd34170d76f3a089a90aa" },
   "grug-far.nvim": { "branch": "main", "commit": "c69859c1d5427ab5fc7ed12380ab521b4e336691" },
+  "herdr-context.nvim": { "branch": "main", "commit": "e07e16f19c4fcd19139818a0e6dfb3c659d0b188" },
+  "herdr-splits.nvim": { "branch": "main", "commit": "19b9782c8d1941449bdb3376379adaa2444166a9" },
   "inc-rename.nvim": { "branch": "main", "commit": "0074b551a17338ccdcd299bd86687cc651bcb33d" },
   "lackluster.nvim": { "branch": "main", "commit": "70dd682e564784893b984deb51dd5ddd263c8cc7" },
   "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },

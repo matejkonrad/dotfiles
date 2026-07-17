@@ -81,3 +81,19 @@ _host="$(uname -n | tr '[:upper:]' '[:lower:]')"
 unset _os _host
 export NPM_TOKEN=$(sed -nE "s/\/\/registry.(yarnpkg.com|npmjs.org)\/:_authToken=//p" $HOME/.npmrc)
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+if command -v wt >/dev/null 2>&1; then
+  eval "$(command wt config shell init zsh)"
+  # herdr integration: inside a herdr pane, `wt switch` opens the worktree as its
+  # own herdr workspace (via wt's post-switch hook — see config/worktrunk/config.toml),
+  # so the origin pane should stay put. Inject --no-cd for `switch` only when
+  # HERDR_ENV=1; plain-shell/tmux `wt` (and every other subcommand) is untouched.
+  # `functions -c` copies worktrunk's generated wt function so there is no recursion.
+  functions -c wt _wt_worktrunk 2>/dev/null && wt() {
+    if [[ "$HERDR_ENV" == "1" && "$1" == "switch" ]]; then
+      shift; _wt_worktrunk switch --no-cd "$@"
+    else
+      _wt_worktrunk "$@"
+    fi
+  }
+fi
