@@ -10,9 +10,10 @@ alias cdfcc="cd ~/Project/framer/creators/"
 # Docker (Apple Silicon → amd64)
 # export DOCKER_DEFAULT_PLATFORM="linux/amd64"
 
-# Brotli (Homebrew)
-CGO_CFLAGS="-I/opt/homebrew/Cellar/brotli/1.1.0/include"
-CGO_LDFLAGS="-L/opt/homebrew/Cellar/brotli/1.1.0/lib"
+# Brotli / CGO (Homebrew) — needed to build Go with brotli (was set by nix-darwin)
+export CGO_ENABLED=1
+export CGO_CFLAGS="-I/opt/homebrew/opt/brotli/include"
+export CGO_LDFLAGS="-L/opt/homebrew/opt/brotli/lib"
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin

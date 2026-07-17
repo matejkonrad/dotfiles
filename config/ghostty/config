@@ -8,7 +8,7 @@ window-padding-balance = true
 
 theme = Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
-font-size = 14
+font-size = 13
 adjust-cell-height = 15%
 
 macos-titlebar-style = tabs 

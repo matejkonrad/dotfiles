@@ -40,3 +40,9 @@ end
 -- local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
 -- vim.g.lazyvim_ts_lsp = vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 and "tsgo" or "vtsls"
 vim.g.lazyvim_ts_lsp = "vtsls"
+
+-- Always show the buffer line, even with a single buffer. We own `showtabline`
+-- here (bufferline's own toggle is disabled in lua/plugins/bufferline.lua) so
+-- that snacks.nvim's dashboard can hide the line while it's up and restore this
+-- value (2) the moment a real buffer is opened.
+vim.o.showtabline = 2
