@@ -9,20 +9,10 @@
 	{
 		"context": "Workspace",
 		"bindings": {
-			"ctrl-shift-b": "multi_workspace::ToggleWorkspaceSidebar",
+			"alt-b": "multi_workspace::ToggleWorkspaceSidebar",
 			"alt-n": "multi_workspace::NextThread",
 			"alt-p": "multi_workspace::PreviousThread",
 			// "shift shift": "file_finder::Toggle"
-		},
-	},
-	{
-		"context": "Editor",
-		"bindings": {
-			// "ctrl-r": "editor::OpenContextMenu",
-			// "j k": ["workspace::SendKeystrokes", "escape"]
-		},
-		"unbind": {
-			"cmd-shift-b": "editor::GoToTypeDefinition",
 		},
 	},
 	// Thread sidebar actions
@@ -49,6 +39,21 @@
 		"context": "(vim_mode == helix_normal || vim_mode == helix_select || vim_mode == normal || vim_mode == visual) && !menu",
 		"bindings": {
 			"s": "vim::HelixJumpToWord",
+		},
+	},
+	// ctrl-w w closes the active item instead of cycling panes
+	{
+		"context": "(VimControl && !menu) || (!Editor && !Terminal)",
+		"bindings": {
+			"ctrl-w w": "pane::CloseActiveItem",
+			"ctrl-w ctrl-w": "pane::CloseActiveItem",
+		},
+	},
+	// ctrl-b toggles the left dock instead of vim's page-up in normal mode
+	{
+		"context": "VimControl && !menu",
+		"bindings": {
+			"ctrl-b": "workspace::ToggleLeftDock",
 		},
 	}
 ]

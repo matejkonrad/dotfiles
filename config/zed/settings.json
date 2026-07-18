@@ -15,9 +15,6 @@
  "terminal": {
 		"font_size": 14.0,
 	},
-	"which_key": {
-		"enabled": true,
-	},
 	"cli_default_open_behavior": "existing_window",
 	"agent_buffer_font_size": 13.0,
 	"helix_mode": false,
@@ -88,14 +85,14 @@
 	"auto_update_extensions": {
 		"biome": false,
 	},
-	"base_keymap": "VSCode",
+	"base_keymap": "Cursor",
 	"icon_theme": {
 		"mode": "dark",
 		"light": "Zed (Default)",
 		"dark": "Zed (Default)",
 	},
 	"ui_font_size": 13.0,
-	"buffer_font_size": 12.0,
+	"buffer_font_size": 13.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
