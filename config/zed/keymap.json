@@ -73,4 +73,16 @@
 			"cmd-alt-j": "multi_workspace::ToggleWorkspaceSidebar",
 		},
 	},
+ {
+  "context": "(VimControl && !menu) || (!Editor && !Terminal)",
+  "bindings": {
+   "ctrl-w": "pane::CloseActiveItem"
+  }
+ },
+ {
+  "context": "(VimControl && !menu) || (!Editor && !Terminal)",
+  "unbind": {
+   "ctrl-w q": "pane::CloseActiveItem"
+  }
+ }
 ]

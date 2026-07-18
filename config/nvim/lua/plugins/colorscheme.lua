@@ -14,6 +14,11 @@ return {
     },
   },
   {
+    "stevedylandev/darkmatter-nvim",
+    lazy = false,
+    priority = 1000,
+  },
+  {
     "datsfilipe/vesper.nvim",
     enabled = true,
     lazy = false,
@@ -28,6 +33,21 @@ return {
       local dim = "#606060"
       local bg = "#101010" -- Vesper's main bg
       local bg_selection = "#2a2a2a"
+
+      -- Diff red/green scale: 10 = subtle bg tint (whole-line context),
+      -- 100 = vivid bg tint (the actual differing chars/hunks).
+      local diff_green_10 = "#1a2e1a"
+      local diff_green_100 = "#2b5c2b"
+      local diff_red_10 = "#2e1a1a"
+      local diff_red_100 = "#5c2b2b"
+      local diff_red_fg = "#c47070" -- brighter/more saturated red, for text (not bg)
+      local diff_neutral = "#232323" -- DiffChange's global default: Snacks/mini.diff link their "unchanged context" highlight to DiffChange, so it must stay neutral, not green/red
+
+      local indent_subtle = "#282828" -- Snacks indent guide lines
+      local conflict_incoming = "#1a1a2e" -- merge conflict "incoming": kept distinct from diff red/green on purpose
+      local diffview_filler = "#3a3a3a" -- diffview's blank filler lines (the -----)
+      local ghost_text = "#a08770" -- inline completion (copilot-native) ghost text
+      local flash_backdrop = "#505050" -- flash.nvim dimmed backdrop
 
       require("vesper").setup({
         transparent = false,
@@ -88,7 +108,7 @@ return {
           hl(0, "SnacksPickerGitStatusAdded", { fg = sage })
           hl(0, "SnacksPickerGitStatusModified", { fg = tan })
           hl(0, "SnacksPickerGitStatusRenamed", { fg = tan })
-          hl(0, "SnacksPickerGitStatusDeleted", { fg = "#c47070" })
+          hl(0, "SnacksPickerGitStatusDeleted", { fg = diff_red_fg })
           hl(0, "SnacksPickerGitStatusIgnored", { fg = dim })
           hl(0, "SnacksPickerGitBranch", { fg = cream })
           hl(0, "SnacksPickerGitBranchCurrent", { fg = tan })
@@ -114,7 +134,7 @@ return {
           hl(0, "SnacksDashboardTerminal", { bg = bg })
 
           -- Snacks Indent
-          hl(0, "SnacksIndent", { fg = "#282828" })
+          hl(0, "SnacksIndent", { fg = indent_subtle })
           hl(0, "SnacksIndentScope", { fg = dim })
           hl(0, "SnacksIndentChunk", { fg = tan })
 
@@ -143,8 +163,8 @@ return {
           hl(0, "AvantePopupHint", { fg = dim, bg = bg })
           hl(0, "AvantePromptInput", { bg = bg })
           hl(0, "AvantePromptInputBorder", { fg = dim, bg = bg })
-          hl(0, "AvanteConflictCurrent", { bg = "#1a2e1a" })
-          hl(0, "AvanteConflictIncoming", { bg = "#1a1a2e" })
+          hl(0, "AvanteConflictCurrent", { bg = diff_green_10 })
+          hl(0, "AvanteConflictIncoming", { bg = conflict_incoming })
 
           -- WhichKey
           hl(0, "WhichKey", { fg = tan })
@@ -156,20 +176,31 @@ return {
           hl(0, "RenderMarkdownCodeInline", { bg = bg })
 
           -- Diff highlights - bg only so treesitter syntax colors show through
-          hl(0, "DiffAdd", { bg = "#1a2e1a" }) -- subtle green tint
-          hl(0, "DiffDelete", { bg = "#2e1a1a" }) -- subtle red tint
-          hl(0, "DiffChange", { bg = "#1a1a2e" }) -- subtle blue tint
-          hl(0, "DiffText", { bg = "#2a2a40" }) -- brighter blue for changed text
+          hl(0, "DiffAdd", { bg = diff_green_10 }) -- subtle green tint
+          hl(0, "DiffDelete", { bg = diff_red_10 }) -- subtle red tint
+          hl(0, "DiffChange", { bg = diff_neutral }) -- neutral: Snacks/mini.diff link "unchanged context" to this group
+          hl(0, "DiffChangeOld", { bg = diff_red_10 }) -- old/left window: red, same tint as DiffDelete
+          hl(0, "DiffChangeNew", { bg = diff_green_10 }) -- new/right window: green, same tint as DiffAdd
+          hl(0, "DiffText", { bg = diff_green_100, bold = true }) -- default/fallback: vivid green (new-side)
+          hl(0, "DiffTextOld", { bg = diff_red_100, bold = true }) -- old/left window: vivid red
+          hl(0, "DiffTextNew", { bg = diff_green_100, bold = true }) -- new/right window: vivid green
           hl(0, "Added", { fg = sage })
-          hl(0, "Removed", { fg = "#c47070" })
-          hl(0, "Changed", { fg = "#7090c4" })
+          hl(0, "Removed", { fg = diff_red_fg })
+          hl(0, "Changed", { fg = sage })
+
+          -- mini.diff overlay: single-buffer inline diff, not window-split,
+          -- so it needs its own explicit red/green (winhighlight remap above
+          -- doesn't reach it). MiniDiffOverChange = old/reference text,
+          -- MiniDiffOverChangeBuf = new/buffer text.
+          hl(0, "MiniDiffOverChange", { bg = diff_red_100, bold = true })
+          hl(0, "MiniDiffOverChangeBuf", { bg = diff_green_100, bold = true })
 
           -- Diffview specific
-          hl(0, "DiffviewDiffAddAsDelete", { bg = "#2e1a1a" })
-          hl(0, "DiffviewDiffDelete", { fg = "#3a3a3a" }) -- filler lines (the -----)
+          hl(0, "DiffviewDiffAddAsDelete", { bg = diff_red_10 })
+          hl(0, "DiffviewDiffDelete", { fg = diffview_filler }) -- filler lines (the -----)
 
           -- LSP inline completion (copilot-native uses ComplHint, not CopilotSuggestion)
-          hl(0, "ComplHint", { fg = "#a08770", italic = true })
+          hl(0, "ComplHint", { fg = ghost_text, italic = true })
 
           -- Neo-tree: strip italic from all its highlight groups.
           local function strip_italic(group)
@@ -210,11 +241,39 @@ return {
 
           -- Flash.nvim - high contrast labels for easy jumping
           hl(0, "FlashLabel", { fg = bg, bg = tan, bold = true, nocombine = true })
-          hl(0, "FlashMatch", { fg = cream, bg = "#2a2a2a", nocombine = true })
+          hl(0, "FlashMatch", { fg = cream, bg = bg_selection, nocombine = true })
           hl(0, "FlashCurrent", { fg = bg, bg = cream, bold = true, nocombine = true })
-          hl(0, "FlashBackdrop", { fg = "#505050" })
+          hl(0, "FlashBackdrop", { fg = flash_backdrop })
           hl(0, "FlashPrompt", { fg = muted_fg, bg = bg })
           hl(0, "FlashCursor", { reverse = true })
+        end,
+      })
+
+      -- Diff windows are separate highlight contexts: remap DiffChange and
+      -- DiffText per window so the old (left) side reads red and the new
+      -- (right) side reads green, instead of one flat color shared by both
+      -- sides.
+      local function apply_diff_side_highlights()
+        local wins = vim.tbl_filter(function(w)
+          return vim.api.nvim_win_get_option(w, "diff")
+        end, vim.api.nvim_tabpage_list_wins(0))
+
+        table.sort(wins, function(a, b)
+          return vim.api.nvim_win_get_position(a)[2] < vim.api.nvim_win_get_position(b)[2]
+        end)
+
+        for i, w in ipairs(wins) do
+          local side = (i == 1) and "Old" or "New"
+          local existing = vim.wo[w].winhighlight
+          local addition = "DiffChange:DiffChange" .. side .. ",DiffText:DiffText" .. side
+          vim.wo[w].winhighlight = existing == "" and addition or (existing .. "," .. addition)
+        end
+      end
+
+      vim.api.nvim_create_autocmd({ "OptionSet" }, {
+        pattern = "diff",
+        callback = function()
+          vim.schedule(apply_diff_side_highlights)
         end,
       })
     end,
@@ -223,7 +282,6 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      -- colorscheme = "lackluster-hack",
       colorscheme = "vesper",
     },
   },
