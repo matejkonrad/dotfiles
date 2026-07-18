@@ -44,7 +44,7 @@ return {
     },
   },
   opts = {
-    provider = "claude-code",
+    provider = "opencode",
     providers = {
       copilot = {
         endpoint = "https://api.githubcopilot.com",
@@ -60,6 +60,10 @@ return {
       },
     },
     acp_providers = {
+      ["opencode"] = {
+        command = "opencode",
+        args = { "acp" },
+      },
       ["claude-code"] = {
         command = "npx",
         args = { "-y", "@zed-industries/claude-code-acp" },
@@ -96,7 +100,7 @@ return {
     behaviour = {
       auto_suggestions = false,
       auto_set_highlight_group = true,
-      auto_set_keymaps = false,
+      auto_set_keymaps = true,
       auto_apply_diff_after_generation = false,
       support_paste_from_clipboard = false,
     },

@@ -9,7 +9,7 @@
 	{
 		"context": "Workspace",
 		"bindings": {
-			"cmd-shift-b": "multi_workspace::ToggleWorkspaceSidebar",
+			"ctrl-shift-b": "multi_workspace::ToggleWorkspaceSidebar",
 			"alt-n": "multi_workspace::NextThread",
 			"alt-p": "multi_workspace::PreviousThread",
 			// "shift shift": "file_finder::Toggle"
@@ -18,25 +18,11 @@
 	{
 		"context": "Editor",
 		"bindings": {
-			"ctrl-r": "editor::OpenContextMenu",
+			// "ctrl-r": "editor::OpenContextMenu",
 			// "j k": ["workspace::SendKeystrokes", "escape"]
 		},
 		"unbind": {
 			"cmd-shift-b": "editor::GoToTypeDefinition",
-		},
-	},
-	// Vim-style leader (space) panel toggles — only active in normal mode
-	{
-		"context": "vim_mode == normal",
-		"bindings": {
-			"space space": "file_finder::Toggle",
-			"space e": "project_panel::ToggleFocus",
-			"space t": "terminal_panel::ToggleFocus",
-			"space g": "git_panel::ToggleFocus",
-			"space a": "agent::ToggleFocus",
-			"space o": "outline_panel::ToggleFocus",
-			"space d": "diagnostics::Deploy",
-			"space p": "command_palette::Toggle",
 		},
 	},
 	// Thread sidebar actions
@@ -64,25 +50,5 @@
 		"bindings": {
 			"s": "vim::HelixJumpToWord",
 		},
-	},
-	{
-		"context": "Workspace",
-		"unbind": {
-			"alt-cmd-b": "workspace::ToggleRightDock",
-			"cmd-shift-b": "outline_panel::ToggleFocus",
-			"cmd-alt-j": "multi_workspace::ToggleWorkspaceSidebar",
-		},
-	},
- {
-  "context": "(VimControl && !menu) || (!Editor && !Terminal)",
-  "bindings": {
-   "ctrl-w": "pane::CloseActiveItem"
-  }
- },
- {
-  "context": "(VimControl && !menu) || (!Editor && !Terminal)",
-  "unbind": {
-   "ctrl-w q": "pane::CloseActiveItem"
-  }
- }
+	}
 ]
