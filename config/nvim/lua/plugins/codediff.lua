@@ -22,7 +22,7 @@ end
 
 return {
   "esmuellert/codediff.nvim",
-  enabled = false,
+  enabled = true,
   cmd = "CodeDiff",
   keys = {
     { "<leader>gad", "<cmd>CodeDiff<cr>", desc = "Diff Working Tree" },
@@ -73,7 +73,9 @@ return {
           confirm = function(picker, _)
             local selected = picker:selected({ fallback = true })
             picker:close()
-            if not selected or #selected == 0 then return end
+            if not selected or #selected == 0 then
+              return
+            end
 
             if #selected == 1 then
               local c = selected[1].commit
@@ -94,7 +96,9 @@ return {
       "<leader>gaS",
       function()
         vim.ui.input({ prompt = "Git revspec: " }, function(spec)
-          if not spec or spec == "" then return end
+          if not spec or spec == "" then
+            return
+          end
           vim.cmd("CodeDiff " .. spec)
         end)
       end,
@@ -105,7 +109,9 @@ return {
       "<leader>gar",
       function()
         vim.ui.input({ prompt = "PR number: " }, function(pr)
-          if not pr or pr == "" then return end
+          if not pr or pr == "" then
+            return
+          end
           vim.notify("Checking out PR #" .. pr .. "...", vim.log.levels.INFO)
           vim.fn.jobstart("gh pr checkout " .. pr, {
             on_exit = function(_, code)
@@ -119,7 +125,9 @@ return {
                   on_stdout = function(_, data)
                     vim.schedule(function()
                       local base = data[1] and data[1]:gsub("%s+", "") or "main"
-                      if base == "" then base = "main" end
+                      if base == "" then
+                        base = "main"
+                      end
                       vim.cmd("CodeDiff origin/" .. base .. "...")
                       vim.notify("Reviewing PR #" .. pr .. " against " .. base, vim.log.levels.INFO)
                     end)

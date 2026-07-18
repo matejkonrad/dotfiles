@@ -2,7 +2,8 @@ return {
   {
     "daliusd/ghlite.nvim",
     enabled = true,
-    dependencies = { "dlyongemallo/diffview.nvim" },
+    dependencies = { "esmuellert/codediff.nvim" },
+    --dependencies = { "dlyongemallo/diffview.nvim" },
     cmd = {
       "GHLitePRSelect",
       "GHLitePRCheckout",
@@ -40,7 +41,7 @@ return {
       { "<leader>grg", "<cmd>GHLitePROpenComment<cr>", desc = "GH: open comment in browser" },
     },
     opts = {
-      diff_tool = "diffview",
+      diff_tool = "codediff",
       view_split = "vsplit",
       diff_split = "vsplit",
       comment_split = "split",

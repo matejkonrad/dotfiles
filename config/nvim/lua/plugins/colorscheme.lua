@@ -34,14 +34,20 @@ return {
       local bg = "#101010" -- Vesper's main bg
       local bg_selection = "#2a2a2a"
 
-      -- Diff red/green scale: 10 = subtle bg tint (whole-line context),
-      -- 100 = vivid bg tint (the actual differing chars/hunks).
+      -- Diff green/red scale: 10 = subtle bg tint (DiffAdd/DiffDelete),
+      -- 100 = vivid bg tint (mini.diff's dedicated old/new overlay groups).
       local diff_green_10 = "#1a2e1a"
       local diff_green_100 = "#2b5c2b"
       local diff_red_10 = "#2e1a1a"
       local diff_red_100 = "#5c2b2b"
       local diff_red_fg = "#c47070" -- brighter/more saturated red, for text (not bg)
-      local diff_neutral = "#232323" -- DiffChange's global default: Snacks/mini.diff link their "unchanged context" highlight to DiffChange, so it must stay neutral, not green/red
+      -- DiffChange/DiffText stay neutral (not red/green): Snacks and mini.diff
+      -- link their "unchanged context" highlight to DiffChange, so coloring
+      -- it breaks their context rendering. This also matches convention --
+      -- tokyonight etc. keep DiffChange/DiffText a shared neutral hue at two
+      -- brightness levels rather than splitting them by diff side.
+      local diff_neutral_10 = "#232323"
+      local diff_neutral_100 = "#3a3a3a"
 
       local indent_subtle = "#282828" -- Snacks indent guide lines
       local conflict_incoming = "#1a1a2e" -- merge conflict "incoming": kept distinct from diff red/green on purpose
@@ -178,20 +184,16 @@ return {
           -- Diff highlights - bg only so treesitter syntax colors show through
           hl(0, "DiffAdd", { bg = diff_green_10 }) -- subtle green tint
           hl(0, "DiffDelete", { bg = diff_red_10 }) -- subtle red tint
-          hl(0, "DiffChange", { bg = diff_neutral }) -- neutral: Snacks/mini.diff link "unchanged context" to this group
-          hl(0, "DiffChangeOld", { bg = diff_red_10 }) -- old/left window: red, same tint as DiffDelete
-          hl(0, "DiffChangeNew", { bg = diff_green_10 }) -- new/right window: green, same tint as DiffAdd
-          hl(0, "DiffText", { bg = diff_green_100, bold = true }) -- default/fallback: vivid green (new-side)
-          hl(0, "DiffTextOld", { bg = diff_red_100, bold = true }) -- old/left window: vivid red
-          hl(0, "DiffTextNew", { bg = diff_green_100, bold = true }) -- new/right window: vivid green
+          hl(0, "DiffChange", { bg = diff_neutral_10 }) -- neutral: Snacks/mini.diff link "unchanged context" to this group
+          hl(0, "DiffText", { bg = diff_neutral_100, bold = true }) -- brighter neutral accent, not red/green
           hl(0, "Added", { fg = sage })
           hl(0, "Removed", { fg = diff_red_fg })
           hl(0, "Changed", { fg = sage })
 
-          -- mini.diff overlay: single-buffer inline diff, not window-split,
-          -- so it needs its own explicit red/green (winhighlight remap above
-          -- doesn't reach it). MiniDiffOverChange = old/reference text,
-          -- MiniDiffOverChangeBuf = new/buffer text.
+          -- mini.diff has dedicated, non-shared groups for each side (unlike
+          -- DiffText, nothing else links to these), so a real red/green split
+          -- here is safe and intentional. MiniDiffOverChange = old/reference
+          -- text, MiniDiffOverChangeBuf = new/buffer text.
           hl(0, "MiniDiffOverChange", { bg = diff_red_100, bold = true })
           hl(0, "MiniDiffOverChangeBuf", { bg = diff_green_100, bold = true })
 
@@ -246,34 +248,6 @@ return {
           hl(0, "FlashBackdrop", { fg = flash_backdrop })
           hl(0, "FlashPrompt", { fg = muted_fg, bg = bg })
           hl(0, "FlashCursor", { reverse = true })
-        end,
-      })
-
-      -- Diff windows are separate highlight contexts: remap DiffChange and
-      -- DiffText per window so the old (left) side reads red and the new
-      -- (right) side reads green, instead of one flat color shared by both
-      -- sides.
-      local function apply_diff_side_highlights()
-        local wins = vim.tbl_filter(function(w)
-          return vim.api.nvim_win_get_option(w, "diff")
-        end, vim.api.nvim_tabpage_list_wins(0))
-
-        table.sort(wins, function(a, b)
-          return vim.api.nvim_win_get_position(a)[2] < vim.api.nvim_win_get_position(b)[2]
-        end)
-
-        for i, w in ipairs(wins) do
-          local side = (i == 1) and "Old" or "New"
-          local existing = vim.wo[w].winhighlight
-          local addition = "DiffChange:DiffChange" .. side .. ",DiffText:DiffText" .. side
-          vim.wo[w].winhighlight = existing == "" and addition or (existing .. "," .. addition)
-        end
-      end
-
-      vim.api.nvim_create_autocmd({ "OptionSet" }, {
-        pattern = "diff",
-        callback = function()
-          vim.schedule(apply_diff_side_highlights)
         end,
       })
     end,
