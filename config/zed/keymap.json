@@ -26,19 +26,26 @@
 		},
 	},
 	// Vim-style pane navigation
+ {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+    }
+  },
+	// {
+	// 	"context": "Dock || Editor || Pane",
+	// 	"bindings": {
+	// 		"ctrl-h": "workspace::ActivatePaneLeft",
+	// 		"ctrl-j": "workspace::ActivatePaneDown",
+	// 		"ctrl-k": "workspace::ActivatePaneUp",
+	// 		"ctrl-l": "workspace::ActivatePaneRight",
+	// 	},
+	// },
 	{
-		"context": "Dock || Editor || Pane",
-		"bindings": {
-			"ctrl-h": "workspace::ActivatePaneLeft",
-			"ctrl-j": "workspace::ActivatePaneDown",
-			"ctrl-k": "workspace::ActivatePaneUp",
-			"ctrl-l": "workspace::ActivatePaneRight",
-		},
-	},
-	{
-		"context": "(vim_mode == helix_normal || vim_mode == helix_select || vim_mode == normal || vim_mode == visual) && !menu",
-		"bindings": {
-			"s": "vim::HelixJumpToWord",
+		"context": "(vim_mode == helix_normal || vim_mode == helix_select || vim_mode == normal || vim_mode == visual) && !menu", "bindings": { "s": "vim::HelixJumpToWord",
 		},
 	},
 	// ctrl-w w closes the active item instead of cycling panes
