@@ -7,3 +7,7 @@ vim.keymap.set("n", "<leader>yr", function()
   vim.fn.setreg("+", rel)
   vim.notify("Copied: " .. rel)
 end, { desc = "Yank relative file path" })
+
+-- Cycle tabpages with bracket pairs (]/[ = next/prev, matching other nav maps).
+vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next tab" })
+vim.keymap.set("n", "[<Tab>", "<cmd>tabprevious<cr>", { desc = "Prev tab" })
