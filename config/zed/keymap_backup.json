@@ -29,10 +29,10 @@
  {
     "context": "Editor",
     "bindings": {
-      "ctrl-h": "workspace::ActivatePaneLeft",
-      "ctrl-l": "workspace::ActivatePaneRight",
-      "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
     }
   },
 	// {
@@ -58,7 +58,7 @@
 	},
 	// ctrl-b toggles the left dock instead of vim's page-up in normal mode
 	{
-		"context": "Workspace",
+		"context": "VimControl && !menu",
 		"bindings": {
 			"ctrl-b": "workspace::ToggleLeftDock",
 		},

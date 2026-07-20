@@ -6,7 +6,7 @@ return {
   "snacks.nvim",
   keys = {
     {
-      "<leader>gr",
+      "<leader>Gg",
       function()
         Snacks.terminal.open("tuicr", {
           -- width/height 0 = full editor, matching the lazygit style (snacks.lua:57)
