@@ -7,13 +7,21 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+	"which_key": {
+		"enabled": true,
+	},
 	"agent_ui_font_size": 13.0,
- "edit_predictions": {
-  "provider": "copilot"
- },
- "diff_view_style": "split",
- "terminal": {
+	"edit_predictions": {
+		"provider": "copilot",
+	},
+	"diff_view_style": "split",
+	"terminal": {
 		"font_size": 14.0,
+		"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		"show_count_badge": true,
+		"env": {
+			"EDITOR": "zed --wait",
+		},
 	},
 	"cli_default_open_behavior": "existing_window",
 	"agent_buffer_font_size": 13.0,
@@ -23,18 +31,18 @@
 	"agent_servers": {
 		"cursor": {
 			"default_config_options": {
-    "mode": "agent"
-   },
-   "type": "registry",
+				"mode": "agent",
+			},
+			"type": "registry",
 		},
 		"gemini": {
 			"type": "registry",
 		},
 		"codex-acp": {
 			"default_config_options": {
-    "mode": "full-access"
-   },
-   "type": "registry",
+				"mode": "agent-full-access",
+			},
+			"type": "registry",
 		},
 		"claude-acp": {
 			"type": "registry",
@@ -61,24 +69,24 @@
 	"buffer_font_family": ".ZedMono",
 	"agent": {
 		"profiles": {
-   "auto": {
-    "name": "Auto",
-    "tools": {},
-    "enable_all_context_servers": false,
-    "context_servers": {}
-   }
-  },
-  "tool_permissions": {
+			"auto": {
+				"name": "Auto",
+				"tools": {},
+				"enable_all_context_servers": false,
+				"context_servers": {},
+			},
+		},
+		"tool_permissions": {
 			"default": "allow",
 		},
 		"single_file_review": true,
 		"dock": "right",
 		"default_profile": "write",
 		"default_model": {
-			"effort": "medium",
-   "enable_thinking": true,
-   "provider": "openai-subscribed",
-			"model": "gpt-5.6-terra",
+			"effort": "low",
+			"enable_thinking": true,
+			"provider": "openai",
+			"model": "gpt-5.6-sol",
 		},
 		"model_parameters": [],
 	},
@@ -126,5 +134,28 @@
 			"language_servers": ["!biome", "..."],
 		},
 	},
-	"file_scan_exclusions": ["**/.yarn/*"],
+	"file_scan_exclusions": [
+		"**/.yarn/*",
+		"**/.git",
+		"**/.svn",
+		"**/.hg",
+		"**/CVS",
+		"**/.DS_Store",
+		"**/Thumbs.db",
+		"**/.classpath",
+		"**/.settings",
+		// Above is default from Zed
+		"**/out",
+		"**/dist",
+		"**/.husky",
+		"**/.turbo",
+		"**/.vscode-test",
+		"**/.vscode",
+		"**/.next",
+		"**/.storybook",
+		"**/.tap",
+		"**/.nyc_output",
+		"**/report",
+		"**/node_modules",
+	],
 }

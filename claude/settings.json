@@ -1,7 +1,120 @@
 {
-  "agentPushNotifEnabled": true,
-  "editorMode": "vim",
-  "effortLevel": "high",
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/matejkonrad/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true,
     "code-refactoring@claude-code-workflows": true,
@@ -18,113 +131,73 @@
     "skill-creator@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "simple-english@simple-english": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "notfair@nowork-studio": true
   },
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Waiting for input in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
+  "extraKnownMarketplaces": {
+    "simple-english": {
+      "source": {
+        "source": "github",
+        "repo": "AminBlg/SimpleEnglish"
       }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
+    },
+    "nowork-studio": {
+      "source": {
+        "source": "github",
+        "repo": "nowork-studio/notfair-plugin"
       }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/matejkonrad/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "PROJECT=$(basename \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || echo 'unknown'); terminal-notifier -message \"Finished in $PROJECT\" -title \"Claude Code\" -sound Frog -activate com.mitchellh.ghostty; if [ -n \"$TMUX_PANE\" ] && { [ \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] || ! tmux list-clients -t \"$TMUX_PANE\" -F '#{client_flags}' 2>/dev/null | grep -q focused; }; then tmux set-option -w -t \"$(tmux display-message -p -t \"$TMUX_PANE\" '#{window_id}')\" @notify 1 2>/dev/null; tmux set -g @session_list \"$(~/.local/bin/tmux-sessions)\" 2>/dev/null; fi",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
-      },
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_AGENT_ID=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true",
-            "type": "command"
-          }
-        ]
-      }
-    ]
+    }
   },
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": false,
-  "tui": "fullscreen"
+  "editorMode": "vim",
+  "preferredNotifChannel": "terminal_bell",
+  "agentPushNotifEnabled": true,
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(stratus status:*)",
+      "Bash(stratus list:*)"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(stratus delete:*)",
+      "Bash(stratus deploy:*)"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Framer (github.com/framer)",
+      "**Cloud provider(s)**: AWS (account 946663360620)",
+      "**Repository visibility**: Private (framer/FramerStudio, confirmed via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: CI secrets referenced by name only (e.g. APPLE_API_KEY, AZURE_KEY_VAULT_*, GITHUB_TOKEN, SENTRY_AUTH_TOKEN, MERGETRON_APP_PRIVATE_KEY, SHIPPY_APP_PRIVATE_KEY) — values not gathered, treat as secret-store-managed",
+      "**Default / protected branches**: Default branch: master. Protected branches: legacy, master, release/hotfix. Rulesets active: Production environment ruleset, Code Reviews, Hotfix, Mergetron, Shippy QA (CI ruleset disabled)",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Source control**: framer/FramerStudio (https://github.com/framer/FramerStudio.git) and its remote(s) only",
+      "**Trusted internal domains**: framerusercontent.com, framer.com, www.framer.com",
+      "**Trusted cloud buckets**: project-tree-data.use1.946663360620 (usage-corroborated: 34× in project transcripts, also present in repo config); 946663360620-us-east-1-framer-modules-service (usage-corroborated: 30× in project transcripts); 946663360620-us-east-1-project-deployments (usage-corroborated: 12× in project transcripts); electron-releases.use1.946663360620 (config-derived — not a confirmed upload destination; uploads of local data still require confirmation)",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: CI secret names referenced in workflow config (APPLE_API_ISSUER, APPLE_API_KEY, APPLE_API_KEY_ID, APPLE_RELEASE_IDENTITY_P12_B64, AZURE_KEY_VAULT_CERTIFICATE, AZURE_KEY_VAULT_CLIENT_ID, AZURE_KEY_VAULT_TENANT_ID, AZURE_KEY_VAULT_URL, DEVIN_API_KEY, DX_DEPLOYMENTS_API_KEY, FRAMER_DEV_SESSION_COOKIE, FRAMER_SESSION_COOKIE, GITHUB_TOKEN, GOOGLE_FONTS_API_KEY, MERGETRON_APP_PRIVATE_KEY, MOTIFUS_GITHUB_TOKEN, NEW_RELIC_LICENSE_KEY, SENTRY_AUTH_TOKEN, SHIPPY_APP_ID, SHIPPY_APP_PRIVATE_KEY); AWS credential-provider packages present in .yarn/cache; local .env.example files under tools/framer-api-devkit and tools/sync-api-docs — share only with audiences cleared at the named+specifics bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment; note the active \"Production environment ruleset\" on this repo's protected branches",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development",
+      "**Trusted repo**: /Users/matejkonrad/Project/framer/FramerStudio, remote origin https://github.com/framer/FramerStudio.git (private) — confidential material (non-secret) is fine to commit/push here; secrets and personal/regulated data are never cleared by visibility alone",
+      "**Org-specific CLIs**: stratus (heavily used in-project and in shell history); gt, gco, gl, gpf, ga, gp, grbom (git/graphite workflow helpers); op-env, dotenvx (secrets/env tooling); worktree, cdfc, cdfs, cdfcc, cfg, tuicr, herdr, pi (project navigation/helper scripts)",
+      "routine under /Users/matejkonrad/Project/framer/FramerStudio/ prefix"
+    ]
+  }
 }

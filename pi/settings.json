@@ -1,0 +1,15 @@
+{
+  "lastChangelogVersion": "0.84.3",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:@narumitw/pi-subagents",
+    "npm:pi-lens",
+    "npm:@ff-labs/pi-fff",
+    "npm:pi-web-access",
+    "npm:pi-mcp-adapter"
+  ],
+  "theme": "dark"
+}
+

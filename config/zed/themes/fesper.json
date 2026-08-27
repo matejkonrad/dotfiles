@@ -96,11 +96,11 @@
         "conflict": "#FF8080ff",
         "conflict.background": "#FF80803d",
         "conflict.border": null,
-        "created": "#FFFFFF",
-        "created.background": null,
+        "created": "#99FFE4ff",
+        "created.background": "#99FFE43d",
         "created.border": null,
-        "deleted": "#FFFFFF",
-        "deleted.background": null,
+        "deleted": "#FF8080ff",
+        "deleted.background": "#FF80803d",
         "deleted.border": null,
         "error": "#FF8080ff",
         "error.background": "#FF80803d",
@@ -249,7 +249,7 @@
             "font_weight": null
           },
           "string": {
-            "color": "#99FFE4",
+            "color": "#85AB85FF",
             "font_style": null,
             "font_weight": null
           },
@@ -259,17 +259,17 @@
             "font_weight": null
           },
           "string.regex": {
-            "color": "#99FFE4",
+            "color": "#85AB85FF",
             "font_style": null,
             "font_weight": null
           },
           "string.special": {
-            "color": "#99FFE4",
+            "color": "#85AB85FF",
             "font_style": null,
             "font_weight": null
           },
           "string.special.symbol": {
-            "color": "#99FFE4",
+            "color": "#85AB85FF",
             "font_style": null,
             "font_weight": null
           },
@@ -279,7 +279,7 @@
             "font_weight": null
           },
           "text.literal": {
-            "color": "#99FFE4",
+            "color": "#85AB85FF",
             "font_style": null,
             "font_weight": null
           },
@@ -294,7 +294,7 @@
             "font_weight": null
           },
           "variable": {
-            "color": "#FFF",
+            "color": "#E0E0E0FF",
             "font_style": null,
             "font_weight": null
           },
@@ -302,6 +302,9 @@
             "color": "#A0A0A0",
             "font_style": null,
             "font_weight": null
+          },
+          "variable.parameter": {
+            "color": "#E0E0E0FF"
           }
         },
         "pane_group.border": "#2A2A2A",
@@ -311,18 +314,18 @@
         "panel.indent_guide_hover": "#A0A0A0",
         "editor.indent_guide": "#242424",
         "editor.indent_guide_active": "#505050",
+        "version_control.added": "#41A635FF",
         "panel.overlay_background": "#101010",
         "panel.overlay_hover": "#101010",
         "minimap.thumb.background": "#34343480",
         "minimap.thumb.hover_background": "#343434",
         "minimap.thumb.border": "#34343480",
-        "version_control.added": "#2E5C49",
-        "version_control.deleted": "#5C3034",
+        "version_control.deleted": "#FF8080ff",
         "version_control.modified": "#FFC799",
         "version_control.conflict": "#FF8080ff"
       }
     }
   ],
   "isUserGenerated": true,
-  "description": "a"
+  "description": "Fesper"
 }

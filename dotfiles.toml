@@ -38,6 +38,10 @@ target = "~/.claude/settings.json"
 source = "cursor/mcp.json"
 target = "~/.cursor/mcp.json"
 
+[pi]
+source = "pi/settings.json"
+target = "~/.pi/agent/settings.json"
+
 [zshrc_linux]
 source = ".zshrc.linux"
 target = "~/.zshrc.linux"

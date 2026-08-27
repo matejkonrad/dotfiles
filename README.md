@@ -78,7 +78,7 @@ hostname = "mymachine"
 ## What's tracked
 
 | Name | Target | OS |
-|------|--------|----|
+| ------ | -------- | ---- |
 | zshrc | `~/.zshrc` | all |
 | nvim | `~/.config/nvim` | all |
 | kitty | `~/.config/kitty` | all |
@@ -88,5 +88,6 @@ hostname = "mymachine"
 | zellij | `~/.config/zellij` | all |
 | claude | `~/.claude/settings.json` | all |
 | cursor | `~/.cursor/mcp.json` | all |
+| pi | `~/.pi/agent/settings.json` | all |
 | hypr | `~/.config/hypr` | linux |
 | qmk_udev | `/etc/udev/rules.d/50-qmk.rules` | linux |
