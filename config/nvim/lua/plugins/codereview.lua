@@ -15,19 +15,11 @@ return {
     "CodeReviewToggleScroll",
     "CodeReviewCommits",
   },
+  -- One entry point. Everything else is a key inside the review view:
+  -- <C-s> submit, <C-a> approve, A AI review, af AI review file, cc comment,
+  -- r reply, R resolve, o open in browser, p pipeline, <C-q> quit.
   keys = {
-    { "<leader>gv", "<cmd>CodeReview<cr>", desc = "Code Review: open PR/MR picker" },
-    { "<leader>gvs", "<cmd>CodeReviewStart<cr>", desc = "Code Review: start review" },
-    { "<leader>gvS", "<cmd>CodeReviewSubmit<cr>", desc = "Code Review: submit draft comments" },
-    { "<leader>gva", "<cmd>CodeReviewApprove<cr>", desc = "Code Review: approve" },
-    { "<leader>gvA", "<cmd>CodeReviewAI<cr>", desc = "Code Review: AI review (all files)" },
-    { "<leader>gvf", "<cmd>CodeReviewAIFile<cr>", desc = "Code Review: AI review (current file)" },
-    { "<leader>gvo", "<cmd>CodeReviewOpen<cr>", desc = "Code Review: open in browser" },
-    { "<leader>gvp", "<cmd>CodeReviewPipeline<cr>", desc = "Code Review: pipeline status" },
-    { "<leader>gvc", "<cmd>CodeReviewComments<cr>", desc = "Code Review: browse comments" },
-    { "<leader>gvF", "<cmd>CodeReviewFiles<cr>", desc = "Code Review: browse changed files" },
-    { "<leader>gvC", "<cmd>CodeReviewCommits<cr>", desc = "Code Review: browse commits" },
-    { "<leader>gvt", "<cmd>CodeReviewToggleScroll<cr>", desc = "Code Review: toggle scroll mode" },
+    { "<leader>gv", "<cmd>CodeReview<cr>", desc = "Review PR (codereview.nvim)" },
   },
   ---@module "codereview"
   ---@type codereview.Config

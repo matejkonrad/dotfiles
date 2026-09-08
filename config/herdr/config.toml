@@ -13,10 +13,16 @@ onboarding = false
 #   option + ........... pane ops (split / zoom / close)
 #   prefix (ctrl+b) .... the long tail (new tab/workspace, rename, copy-mode…)
 #
-# The ctrl+hjkl / option+hjkl seamless behaviour is provided by the herdr-splits
-# plugin (github:lmilojevicc/herdr-splits.nvim), bound at the bottom of this file
-# via [[keys.command]] plugin_action, paired with the Neovim side in
-# config/nvim/lua/plugins/herdr-splits.lua. Install the herdr side with:
+# The seamless behaviour is split across two plugins, both bound at the bottom of
+# this file via [[keys.command]] plugin_action:
+#   ctrl+hjkl NAV ..... herdr-nvim-nav (github:aimdevlee/herdr-nvim-nav) — a C
+#                       binary + marker file, ~3ms per press. Neovim side in
+#                       config/nvim/lua/plugins/herdr-nvim-nav.lua.
+#   option+hjkl RESIZE  herdr-splits (github:lmilojevicc/herdr-splits.nvim) —
+#                       kept only for resize, herdr-nvim-nav has no resize.
+#                       Neovim side in config/nvim/lua/plugins/herdr-splits.lua.
+# Install the herdr sides with:
+#   herdr plugin install aimdevlee/herdr-nvim-nav
 #   herdr plugin install lmilojevicc/herdr-splits.nvim
 #
 # Reload after editing:  herdr server reload-config   (or prefix+shift+r)
@@ -25,7 +31,7 @@ onboarding = false
 prefix = "ctrl+b"
 
 # --- Panes: focus (prefix h/j/k/l + ctrl+arrows) ---
-# Seamless ctrl+h/j/k/l nav is owned by herdr-splits (see [[keys.command]] below),
+# Seamless ctrl+h/j/k/l nav is owned by herdr-nvim-nav (see [[keys.command]] below),
 # so it is intentionally NOT set here. ctrl+arrows give a plain, always-herdr jump.
 focus_pane_left = ["prefix+h", "ctrl+left"]
 focus_pane_down = ["prefix+j", "ctrl+down"]
@@ -77,34 +83,37 @@ reload_config = "prefix+shift+r"
 settings = "prefix+shift+s"
 toggle_sidebar = "ctrl+alt+b"
 
-# --- Seamless nav + resize across nvim splits and herdr panes ---
-# Provided by the herdr-splits plugin. ctrl+h/j/k/l navigate; option(alt)+h/j/k/l
-# resize. When the focused pane runs nvim, the chord is forwarded into nvim so its
-# own splits move/resize first, crossing into herdr panes at the edge.
+# --- Seamless nav across nvim splits and herdr panes (herdr-nvim-nav) ---
+# When the focused pane runs nvim (marker file in $XDG_CACHE_HOME/herdr/nvim-panes),
+# the chord is forwarded into nvim so its own splits move first, crossing into
+# herdr panes at the edge. Otherwise herdr moves pane focus directly.
 [[keys.command]]
 key = "ctrl+h"
 type = "plugin_action"
-command = "herdr-splits.nav-left"
+command = "herdr-nvim-nav.left"
 description = "navigate left (nvim/herdr)"
 
 [[keys.command]]
 key = "ctrl+j"
 type = "plugin_action"
-command = "herdr-splits.nav-down"
+command = "herdr-nvim-nav.down"
 description = "navigate down (nvim/herdr)"
 
 [[keys.command]]
 key = "ctrl+k"
 type = "plugin_action"
-command = "herdr-splits.nav-up"
+command = "herdr-nvim-nav.up"
 description = "navigate up (nvim/herdr)"
 
 [[keys.command]]
 key = "ctrl+l"
 type = "plugin_action"
-command = "herdr-splits.nav-right"
+command = "herdr-nvim-nav.right"
 description = "navigate right (nvim/herdr)"
 
+# --- Seamless resize across nvim splits and herdr panes (herdr-splits) ---
+# option(alt)+h/j/k/l resize nvim splits first, delegating to herdr when a split
+# already fills the pane.
 [[keys.command]]
 key = "alt+h"
 type = "plugin_action"

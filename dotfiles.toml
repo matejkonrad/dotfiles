@@ -88,7 +88,8 @@ target = "~/.config/tmux/tmux.conf"
 # Only config.toml is tracked — the rest of ~/.config/herdr (logs, sockets,
 # session.json, installed plugins) is runtime state, not dotfiles.
 # herdr plugins (install once, needs herdr >= 0.7.3):
-#   herdr plugin install lmilojevicc/herdr-splits.nvim      # nav + resize
+#   herdr plugin install aimdevlee/herdr-nvim-nav             # ctrl+hjkl nav (fast, C binary)
+#   herdr plugin install lmilojevicc/herdr-splits.nvim      # option+hjkl resize only
 #   herdr plugin install makyinmars/herdr-context.nvim      # send context to agents
 #   herdr plugin link  ~/Project/self/dotfiles/config/herdr/plugins/open-in-nvim
 #     ^ local plugin (tracked below): click a path in any pane → open in sibling nvim
@@ -123,6 +124,22 @@ target = "~/.local/bin/tmux-sessions"
 [tmux_open_in_nvim]
 source = "scripts/tmux-open-in-nvim"
 target = "~/.local/bin/tmux-open-in-nvim"
+
+# tuicr (code review TUI). The editor wrapper must be installed under an "nvim"
+# basename in its own directory — see the header of scripts/tuicr-editor-nvim.
+[tuicr]
+source = "config/tuicr/config.toml"
+target = "~/.config/tuicr/config.toml"
+
+[tuicr_editor_nvim]
+source = "scripts/tuicr-editor-nvim"
+target = "~/.local/bin/tuicr-editor/nvim"
+
+# gh-dash (gh extension dlvhdr/gh-dash): PR/issue dashboard, opened in Neovim
+# with <leader>G. `R` on a PR hands it to tuicr.
+[gh_dash]
+source = "config/gh-dash/config.yml"
+target = "~/.config/gh-dash/config.yml"
 
 [lazygit_darwin]
 source = "config/lazygit/config.yml"

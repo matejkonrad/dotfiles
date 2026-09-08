@@ -11,14 +11,14 @@ return {
     },
   },
   -- Talks to an EXTERNAL Claude Code (running in a tmux pane) over the
-  -- WebSocket IDE protocol. Kept under <leader>ac so it doesn't clash with
-  -- sidekick's <leader>a* keys, which drive sidekick's own embedded terminal.
+  -- WebSocket IDE protocol. Lives under <leader>aC: <leader>ac is herdr-context's
+  -- compose key (herdr-context.lua), and sidekick owns the other <leader>a* keys.
   keys = {
-    { "<leader>ac", "", desc = "+claude code" },
-    { "<leader>acf", "<cmd>ClaudeCodeAdd %<cr>", desc = "Send file" },
-    { "<leader>act", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send this (selection)" },
-    { "<leader>aca", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-    { "<leader>acd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-    { "<leader>ac?", "<cmd>ClaudeCodeStatus<cr>", desc = "Connection status" },
+    { "<leader>aC", "", desc = "+claude code" },
+    { "<leader>aCf", "<cmd>ClaudeCodeAdd %<cr>", desc = "Send file" },
+    { "<leader>aCt", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send this (selection)" },
+    { "<leader>aCa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+    { "<leader>aCd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+    { "<leader>aC?", "<cmd>ClaudeCodeStatus<cr>", desc = "Connection status" },
   },
 }

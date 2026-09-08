@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# tuicr-editor-nvim — the `e` key in tuicr, landing in the Neovim you already have
+# open instead of a nested one. Linked to ~/.local/bin/tuicr-editor/nvim and set as
+# `editor` in config/tuicr/config.toml.
+#
+# Why the odd install path: tuicr only appends "+<line>" when the editor's
+# basename is a known terminal editor (vi/vim/nvim/…), so this script must be
+# reachable as ".../nvim". It is NOT on $PATH, so it never shadows the real nvim.
+#
+# tuicr invokes:  <this> +<line> /abs/path       (line is optional)
+#
+# Where the file opens, in order:
+#   1. $NVIM set        → tuicr runs in a Neovim :terminal (the <leader>gt float).
+#                          Hide the float, open the file in a new tab, jump to line.
+#   2. herdr pane       → sibling nvim of this workspace + worktree, over the
+#                          socket built in config/nvim/lua/config/autocmds.lua.
+#   3. tmux pane        → same, via ~/.local/bin/tmux-open-in-nvim.
+#   4. otherwise        → the real nvim, blocking, as tuicr expects.
+
+set -euo pipefail
+
+line=""
+file=""
+for arg in "$@"; do
+  case "$arg" in
+    +[0-9]*) line="${arg#+}" ;;
+    *) file="$arg" ;;
+  esac
+done
+[ -n "$file" ] || exit 0
+
+case "$file" in
+  /*) abs="$file" ;;
+  *) abs="$PWD/$file" ;;
+esac
+
+# Real nvim: first `nvim` on $PATH that is not this script.
+real_nvim=""
+while IFS= read -r cand; do
+  if [ "$cand" != "$0" ] && [ "$(cd "$(dirname "$cand")" && pwd)/nvim" != "$(cd "$(dirname "$0")" && pwd)/nvim" ]; then
+    real_nvim="$cand"
+    break
+  fi
+done < <(type -aP nvim 2>/dev/null || true)
+[ -n "$real_nvim" ] || real_nvim="nvim"
+
+# --remote-silent does NOT honor a leading "+{line}", so jump separately.
+jump() { # $1 = server
+  if [ -n "$line" ]; then
+    "$real_nvim" --server "$1" --remote-send "<C-\\><C-n>:${line}<CR>zz"
+  fi
+}
+
+# 1. Inside a Neovim terminal (the tuicr float). Leave terminal mode, close the
+#    float window (the terminal buffer stays alive; <leader>gt toggles it back),
+#    then open the file in its own tab.
+if [ -n "${NVIM:-}" ]; then
+  "$real_nvim" --server "$NVIM" --remote-send "<C-\\><C-n>:close<CR>"
+  "$real_nvim" --server "$NVIM" --remote-tab-silent "$abs"
+  jump "$NVIM"
+  exit 0
+fi
+
+root=$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null || true)
+[ -n "$root" ] || root="$PWD"
+
+# 2. herdr pane → sibling nvim. Key MUST match autocmds.lua / open-in-nvim.sh.
+if [ -n "${HERDR_PANE_ID:-}" ]; then
+  key=$(printf '%s' "${HERDR_WORKSPACE_ID:-}:${root}" | shasum -a 256 | cut -c1-16)
+  sock="/tmp/nvim-herdr-${key}.sock"
+  if [ -S "$sock" ]; then
+    "$real_nvim" --server "$sock" --remote-silent "$abs"
+    jump "$sock"
+    pane_file="/tmp/nvim-herdr-${key}.pane"
+    if [ -r "$pane_file" ]; then
+      npane=$(cat "$pane_file" 2>/dev/null || true)
+      [ -n "$npane" ] && "${HERDR_BIN_PATH:-herdr}" agent focus "$npane" >/dev/null 2>&1 || true
+    fi
+    exit 0
+  fi
+fi
+
+# 3. tmux pane → sibling nvim, reusing the ⌥-click opener. Looked up by absolute
+#    path too: a shell tmux spawns may not have ~/.local/bin on $PATH yet.
+if [ -n "${TMUX:-}" ]; then
+  opener=$(command -v tmux-open-in-nvim 2>/dev/null || true)
+  [ -n "$opener" ] || { [ -x "$HOME/.local/bin/tmux-open-in-nvim" ] && opener="$HOME/.local/bin/tmux-open-in-nvim"; }
+  sid=$(tmux display-message -p '#{session_id}' 2>/dev/null || true)
+  if [ -n "$opener" ] && [ -n "$sid" ]; then
+    target="$abs"
+    [ -n "$line" ] && target="$abs:$line"
+    "$opener" "$sid" "$PWD" "$target"
+    exit 0
+  fi
+fi
+
+# 4. No running Neovim to reach: behave like a normal editor.
+if [ -n "$line" ]; then
+  exec "$real_nvim" "+$line" "$abs"
+fi
+exec "$real_nvim" "$abs"

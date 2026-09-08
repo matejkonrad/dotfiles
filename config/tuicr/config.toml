@@ -1,0 +1,10 @@
+# tuicr — code review TUI. Launched inside Neovim with <leader>gt (full-window
+# float, like lazygit) or straight from a herdr/tmux pane.
+#
+# `editor` is what the `e` key runs. It points at scripts/tuicr-editor-nvim,
+# linked by dotfiles.toml to ~/.local/bin/tuicr-editor/nvim. That script opens
+# the file at the cursor line in the Neovim you already have open (float, herdr
+# sibling, or tmux sibling) instead of a nested nvim — tuicr's `gf`.
+# The basename has to be "nvim" so tuicr passes "+<line>"; the path is absolute
+# because tuicr does not expand ~ or $HOME.
+editor = "/Users/matejkonrad/.local/bin/tuicr-editor/nvim"

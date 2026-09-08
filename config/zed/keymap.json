@@ -25,11 +25,9 @@
       // Chat with AI — inline assists (editor buffer)
       "space a i": "assistant::InlineAssist",
       // Agent panel (chat panel)
-      "space a c": "agent::ToggleFocus",
       "space a n": "agent::NewThread",
       "space a m": "agent::ToggleModelSelector",
       "space a s": "agent::OpenSettings",
-      "space a a": "agent::OpenProjectAGENTS.mdRules",
       "space a d": "agent::OpenAgentDiff",
       // Go to file with `gf`
       "g f": "editor::OpenExcerpts",
@@ -134,7 +132,7 @@
       // Open recent project
       "space f p": "projects::OpenRecent",
       // Open AI chat
-      "space a c": "agent::ToggleFocus",
+      "space a a": "agent::ToggleFocus",
       // FFF GUI, refer https://github.com/th0jensen/fff-gpui#configuration
       "space f f": [
         "task::Spawn",
@@ -331,4 +329,29 @@
   //     "g e": "vim::PreviousSubwordEnd"
   //   }
   // }
+
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-j": "multi_workspace::ToggleWorkspaceSidebar"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-cmd-j": "multi_workspace::ToggleWorkspaceSidebar"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "space a ]": "multi_workspace::NextThread"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "space a [": "multi_workspace::PreviousThread"
+    }
+  }
 ]
