@@ -3,9 +3,9 @@
 -- Add any additional keymaps here
 
 vim.keymap.set("n", "<leader>yr", function()
-  local rel = vim.fn.expand("%:.")
-  vim.fn.setreg("+", rel)
-  vim.notify("Copied: " .. rel)
+  local relative = vim.fn.expand("%:.")
+  vim.fn.setreg("+", relative)
+  vim.notify("Copied: " .. relative)
 end, { desc = "Yank relative file path" })
 
 -- Cycle tabpages with bracket pairs (]/[ = next/prev, matching other nav maps).
