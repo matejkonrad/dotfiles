@@ -138,9 +138,28 @@ type = "plugin_action"
 command = "herdr-splits.resize-right"
 description = "resize right (nvim/herdr)"
 
+# Gruvbox Material (medium, dark) — matches Ghostty "Gruvbox Material Dark",
+# nvim sainnhe/gruvbox-material and the tmux status colours. herdr only ships
+# plain gruvbox, so the material palette is layered on top via [theme.custom].
 [theme]
-name = "vesper"
+name = "gruvbox"
 auto_switch = false
+
+[theme.custom]
+panel_bg = "#282828"      # bg0
+sidebar_bg = "#282828"    # bg0
+surface_dim = "#282828"   # bg0
+active_row_bg = "#32302f" # bg1
+selection_bg = "#45403d"  # bg3
+text = "#d4be98"          # fg0
+accent = "#d8a657"        # yellow
+red = "#ea6962"
+green = "#a9b665"
+yellow = "#d8a657"
+blue = "#7daea3"
+mauve = "#d3869b"         # purple
+peach = "#e78a4e"         # orange
+teal = "#89b482"          # aqua
 
 [experimental]
 pane_history = false

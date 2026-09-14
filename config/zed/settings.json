@@ -14,11 +14,11 @@
  "vim": {
   "toggle_relative_line_numbers": true
  },
- "markdown_preview_font_size": 13.0,
+ "markdown_preview_font_size": 14.0,
  "which_key": {
 		"enabled": true,
 	},
-	"agent_ui_font_size": 13.0,
+	"agent_ui_font_size": 14.0,
 	"edit_predictions": {
 		"provider": "copilot",
 	},
@@ -34,7 +34,7 @@
 		},
 	},
 	"cli_default_open_behavior": "existing_window",
-	"agent_buffer_font_size": 13.0,
+	"agent_buffer_font_size": 14.0,
 	"helix_mode": false,
 	"vim_mode": true,
 	"proxy": "",
@@ -115,8 +115,8 @@
 		"light": "Zed (Default)",
 		"dark": "Zed (Default)",
 	},
-	"ui_font_size": 13.0,
-	"buffer_font_size": 13.0,
+	"ui_font_size": 14.0,
+	"buffer_font_size": 14.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",

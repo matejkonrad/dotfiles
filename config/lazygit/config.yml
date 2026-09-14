@@ -5,6 +5,23 @@ gui:
   # normal -> half -> full; 'half' always splits 50/50 (focused panel gets
   # half) regardless of this, so use 'normal' for diffs and 'full' to maximize.
   sidePanelWidth: 0.2
+  # Gruvbox Material (medium, dark) — same palette as Ghostty, nvim, tmux and
+  # herdr. Used when lazygit runs outside nvim; inside nvim, snacks generates a
+  # theme from the colorscheme on top of this (config/nvim/lua/plugins/snacks.lua).
+  theme:
+    activeBorderColor: ["#d8a657", bold] # yellow
+    inactiveBorderColor: ["#928374"] # grey1
+    searchingActiveBorderColor: ["#ea6962", bold] # red
+    optionsTextColor: ["#a9b665"] # green
+    selectedLineBgColor: ["#45403d"] # bg3
+    selectedRangeBgColor: ["#45403d"] # bg3
+    inactiveViewSelectedLineBgColor: ["#32302f"] # bg1
+    cherryPickedCommitFgColor: ["#a9b665"] # green
+    cherryPickedCommitBgColor: ["#7daea3"] # blue
+    markedBaseCommitFgColor: ["#7daea3"] # blue
+    markedBaseCommitBgColor: ["#d8a657"] # yellow
+    unstagedChangesColor: ["#ea6962"] # red
+    defaultFgColor: ["#d4be98"] # fg0
 git:
   pagers:
     - colorArg: always

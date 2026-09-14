@@ -6,7 +6,8 @@ window-padding-y = 4
 # all at the bottom — kills the big "chin" below the tmux status bar.
 window-padding-balance = true
 
-theme = Vesper
+theme = Gruvbox Material Dark
+#Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 13
 # adjust-cell-height = 15%

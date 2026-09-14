@@ -63,6 +63,31 @@ return {
           border = "none",
         },
       },
+      -- snacks writes ~/.cache/nvim/lazygit-theme.yml from highlight groups.
+      -- Its defaults pick groups that are bg-only or too subtle in
+      -- gruvbox-material: MatchParen has no fg (active border came out as bare
+      -- "bold", no colour) and Visual/CursorLine are faint greys. Point the
+      -- theme at groups with real fg colours, and cover the keys snacks leaves
+      -- unset (range / inactive-view selection) so lazygit's ANSI-blue defaults
+      -- stop leaking through. Same palette as config/lazygit/config.yml, which
+      -- covers lazygit run outside nvim.
+      lazygit = {
+        theme = {
+          activeBorderColor = { fg = "Special", bold = true }, -- yellow, the accent used in tmux/herdr
+          searchingActiveBorderColor = { fg = "Statement", bold = true }, -- red
+          inactiveBorderColor = { fg = "Comment" },
+          optionsTextColor = { fg = "Function" }, -- green
+          selectedLineBgColor = { bg = "Visual" },
+          selectedRangeBgColor = { bg = "Visual" },
+          inactiveViewSelectedLineBgColor = { bg = "CursorLine" },
+          cherryPickedCommitFgColor = { fg = "Function" },
+          cherryPickedCommitBgColor = { fg = "Identifier" },
+          markedBaseCommitFgColor = { fg = "Identifier" },
+          markedBaseCommitBgColor = { fg = "Type" },
+          unstagedChangesColor = { fg = "DiagnosticError" },
+          defaultFgColor = { fg = "Normal" },
+        },
+      },
       gh = {},
       dashboard = {
         preset = {

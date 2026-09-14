@@ -20,6 +20,7 @@
   "gh.nvim": { "branch": "main", "commit": "6f367b2ab8f9d4a0a23df2b703a3f91137618387" },
   "gitsigns.nvim": { "branch": "main", "commit": "eb60cc7b94c46005237fd34170d76f3a089a90aa" },
   "grug-far.nvim": { "branch": "main", "commit": "c69859c1d5427ab5fc7ed12380ab521b4e336691" },
+  "gruvbox-material": { "branch": "master", "commit": "11d779b26a9ab2b3db8c22c6ac9fb6e8ed4fea79" },
   "herdr-context.nvim": { "branch": "main", "commit": "e07e16f19c4fcd19139818a0e6dfb3c659d0b188" },
   "herdr-nvim-nav": { "branch": "main", "commit": "ec047fd6d8d0269d54a34e9405af28d8aad4c8f0" },
   "herdr-splits.nvim": { "branch": "main", "commit": "19b9782c8d1941449bdb3376379adaa2444166a9" },
