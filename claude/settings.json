@@ -1,5 +1,5 @@
 {
-  "model": "fable[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -151,7 +151,7 @@
     }
   },
   "feedbackDrafts": "off",
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "modelSettings": {
     "claude-fable-5": {
       "effortLevel": "medium"

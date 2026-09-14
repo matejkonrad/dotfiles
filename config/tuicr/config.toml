@@ -8,3 +8,5 @@
 # The basename has to be "nvim" so tuicr passes "+<line>"; the path is absolute
 # because tuicr does not expand ~ or $HOME.
 editor = "/Users/matejkonrad/.local/bin/tuicr-editor/nvim"
+theme = "gruvbox-dark"
+ignore_whitespace = true

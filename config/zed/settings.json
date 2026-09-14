@@ -14,18 +14,20 @@
  "vim": {
   "toggle_relative_line_numbers": true
  },
- "markdown_preview_font_size": 12.0,
+ "markdown_preview_font_size": 13.0,
  "which_key": {
 		"enabled": true,
 	},
-	"agent_ui_font_size": 12.0,
+	"agent_ui_font_size": 13.0,
 	"edit_predictions": {
 		"provider": "copilot",
 	},
 	"diff_view_style": "split",
 	"terminal": {
 		"font_size": 14.0,
-		"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		// "shell": {
+		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		// },
 		"show_count_badge": true,
 		"env": {
 			"EDITOR": "zed --wait",
@@ -48,12 +50,17 @@
 		},
 		"codex-acp": {
 			"default_config_options": {
-				"mode": "agent-full-access",
+				"model": "gpt-5.6-sol",
+    "mode": "agent-full-access",
 			},
 			"type": "registry",
 		},
 		"claude-acp": {
-			"type": "registry",
+			"default_config_options": {
+    "mode": "auto",
+    "model": "opus[1m]"
+   },
+   "type": "registry",
 		},
 	},
 	"project_panel": {
@@ -72,11 +79,12 @@
 	"ui_font_weight": 450.0,
 	"unnecessary_code_fade": 0.4,
 	"ui_font_family": ".ZedSans",
-	"buffer_line_height": "comfortable",
+	"buffer_line_height": "standard",
 	"buffer_font_weight": 400.0,
 	"buffer_font_family": ".ZedMono",
 	"agent": {
-		"profiles": {
+		"expand_terminal_card": false,
+  "profiles": {
 			"auto": {
 				"name": "Auto",
 				"tools": {},
@@ -107,12 +115,12 @@
 		"light": "Zed (Default)",
 		"dark": "Zed (Default)",
 	},
-	"ui_font_size": 12.0,
+	"ui_font_size": 13.0,
 	"buffer_font_size": 13.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
-		"dark": "Fesper",
+		"dark": "Gruvbox Material Neovim Dark",
 	},
 	"relative_line_numbers": "enabled",
 	"hard_tabs": true,
@@ -122,8 +130,7 @@
 			"tab_size": 4,
 			"formatter": {
 				"external": {
-					"command": "/Users/matejkonrad/.volta/bin/yarn",
-					"arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"],
+					"command": "yarn format",
 				},
 			},
 			"format_on_save": "on",
@@ -134,8 +141,7 @@
 			"tab_size": 4,
 			"formatter": {
 				"external": {
-					"command": "/Users/matejkonrad/.volta/bin/yarn",
-					"arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"],
+					"command": "yarn format",
 				},
 			},
 			"format_on_save": "on",

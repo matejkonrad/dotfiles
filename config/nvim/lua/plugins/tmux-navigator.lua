@@ -15,12 +15,10 @@ return {
     "TmuxNavigatePrevious",
   },
   keys = {
-    -- Normal AND terminal mode: with lazygit/tuicr open in a full-window float
-    -- the chord must still leave nvim for the tmux pane (see herdr-nvim-nav.lua
-    -- for the same reasoning). <cmd> mappings keep terminal mode intact.
-    { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", mode = { "n", "t" }, desc = "Window Left (tmux-aware)" },
-    { "<C-j>", "<cmd>TmuxNavigateDown<cr>", mode = { "n", "t" }, desc = "Window Down (tmux-aware)" },
-    { "<C-k>", "<cmd>TmuxNavigateUp<cr>", mode = { "n", "t" }, desc = "Window Up (tmux-aware)" },
-    { "<C-l>", "<cmd>TmuxNavigateRight<cr>", mode = { "n", "t" }, desc = "Window Right (tmux-aware)" },
+    -- Terminal-mode handling (lazygit/tuicr floats) lives in terminal-nav.lua.
+    { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Window Left (tmux-aware)" },
+    { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Window Down (tmux-aware)" },
+    { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Window Up (tmux-aware)" },
+    { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Window Right (tmux-aware)" },
   },
 }

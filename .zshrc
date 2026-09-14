@@ -67,8 +67,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 # Volta
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+# export VOLTA_HOME="$HOME/.volta"
+# export PATH="$VOLTA_HOME/bin:$PATH"
 
 # Local binaries
 export PATH="$HOME/.local/bin:$PATH"
@@ -97,3 +97,5 @@ if command -v wt >/dev/null 2>&1; then
     fi
   }
 fi
+
+eval "$(/Users/matejkonrad/.local/bin/mise activate zsh)"

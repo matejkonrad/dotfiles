@@ -34,36 +34,13 @@ return {
       right = { "<Plug>(herdr-nav-right)" },
     },
   },
-  keys = (function()
-    local keys = {}
-    for _, d in ipairs({ { "h", "left" }, { "j", "down" }, { "k", "up" }, { "l", "right" } }) do
-      local lhs, dir = "<C-" .. d[1] .. ">", d[2]
-      local plug = "<Plug>(herdr-nav-" .. dir .. ")"
-      -- <C-arrows> are a plain herdr pane jump (config.toml focus_pane_*) and
-      -- never reach nvim, so only the hjkl chords are bound.
-      keys[#keys + 1] = { lhs, plug, desc = "Navigate " .. dir .. " (nvim/herdr)" }
-      -- Terminal mode too: with lazygit/tuicr/gh-dash open in a full-window
-      -- float, herdr hands the chord to nvim (the pane marker says nvim owns
-      -- it) and nvim would pass it into the TUI, where it dies. Leave terminal
-      -- mode, run the same nav (a float has no split neighbours, so it crosses
-      -- into the herdr pane), then re-enter terminal mode if we are still in
-      -- the terminal window so the TUI is live when focus comes back.
-      keys[#keys + 1] = {
-        lhs,
-        function()
-          local win = vim.api.nvim_get_current_win()
-          local esc = vim.api.nvim_replace_termcodes("<C-\\><C-n>" .. plug, true, false, true)
-          vim.api.nvim_feedkeys(esc, "m", false)
-          vim.schedule(function()
-            if vim.api.nvim_get_current_win() == win and vim.bo.buftype == "terminal" then
-              vim.cmd("startinsert")
-            end
-          end)
-        end,
-        mode = "t",
-        desc = "Navigate " .. dir .. " (nvim/herdr)",
-      }
-    end
-    return keys
-  end)(),
+  keys = {
+    -- <C-arrows> are a plain herdr pane jump (config.toml focus_pane_*) and
+    -- never reach nvim, so only the hjkl chords are bound. Terminal-mode
+    -- handling (lazygit/tuicr floats) lives in terminal-nav.lua.
+    { "<C-h>", "<Plug>(herdr-nav-left)", desc = "Navigate left (nvim/herdr)" },
+    { "<C-j>", "<Plug>(herdr-nav-down)", desc = "Navigate down (nvim/herdr)" },
+    { "<C-k>", "<Plug>(herdr-nav-up)", desc = "Navigate up (nvim/herdr)" },
+    { "<C-l>", "<Plug>(herdr-nav-right)", desc = "Navigate right (nvim/herdr)" },
+  },
 }

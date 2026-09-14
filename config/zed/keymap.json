@@ -11,7 +11,7 @@
       "space t i": "editor::ToggleInlayHints",
       // Toggle soft wrap
       "space u w": "editor::ToggleSoftWrap",
-      // NOTE: Toggle Zen mode, partially with nvim plugin like no-neck-pain
+      // NOTE: Toggle Zen mode, partially with nvim plugin like no-neckpain
       "space c z": "workspace::ToggleCenteredLayout",
       // Open markdown preview
       "space m p": "markdown::OpenPreview",
@@ -333,7 +333,11 @@
   {
     "context": "Workspace",
     "bindings": {
-      "ctrl-alt-j": "multi_workspace::ToggleWorkspaceSidebar"
+      "ctrl-alt-b": "multi_workspace::ToggleWorkspaceSidebar",
+      "ctrl-alt-n": "multi_workspace::NextThread",
+      "ctrl-alt-p": "multi_workspace::PreviousThread",
+      "ctrl-alt-j": "multi_workspace::NextProject",
+      "ctrl-alt-k": "multi_workspace::PreviousProject"
     }
   },
   {
@@ -352,6 +356,12 @@
     "context": "VimControl && !menu",
     "bindings": {
       "space a [": "multi_workspace::PreviousThread"
+    }
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "ctrl-alt-b": "editor::MoveToPreviousSubwordStart"
     }
   }
 ]
