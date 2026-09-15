@@ -167,3 +167,12 @@ switch_ascii_input_source_in_prefix = false
 
 [ui]
 show_agent_labels_on_pane_borders = true
+# tmux-style splits: a single thin divider between panes, nothing else.
+# Default draws a frame around the whole pane area, a gap between panes (so
+# every pane gets its own full box) and a scrollbar column — too much chrome
+# with several panes open. pane_borders stays "auto": dividers only appear
+# when a tab actually has splits, a lone/zoomed pane is frameless.
+pane_borders = "auto"
+pane_outer_borders = false
+pane_gaps = false
+pane_scrollbars = false
