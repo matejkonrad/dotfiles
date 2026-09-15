@@ -16,13 +16,52 @@
 -- Expose the `hs` command-line tool (lets you run `hs -c "..."` from a shell).
 require("hs.ipc")
 
--- OS-level remaps (idempotent; re-applied on every reload, which also covers
--- login since Hammerspoon loads at startup):
+-- OS-level remaps:
 --   Caps Lock    (0x700000039) -> Left Control (0x7000000E0)
 --   Left Control (0x7000000E0) -> F18          (0x70000006D)
-hs.execute(
-	[[hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0},{"HIDKeyboardModifierMappingSrc":0x7000000E0,"HIDKeyboardModifierMappingDst":0x70000006D}]}']]
-)
+--
+-- macOS owns this same `UserKeyMapping` property via System Settings ->
+-- Keyboard -> Modifier Keys, and it rewrites the property on every device
+-- enumeration (login, wake, replug). That write REPLACES our mapping rather
+-- than merging with it, so a one-shot call at config load does not survive a
+-- sleep or a keyboard replug. We re-apply on both events instead.
+--
+-- `--matching` on usage page 1 / usage 6 targets keyboards only, so a keyboard
+-- connected after Hammerspoon started still gets the remap.
+local KEY_MAPPING = [[{"UserKeyMapping":[]]
+	.. [[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0},]]
+	.. [[{"HIDKeyboardModifierMappingSrc":0x7000000E0,"HIDKeyboardModifierMappingDst":0x70000006D}]]
+	.. [[]}]]
+
+local function applyKeyMapping()
+	hs.execute(
+		"hidutil property --matching '{\"PrimaryUsagePage\":1,\"PrimaryUsage\":6}' --set '" .. KEY_MAPPING .. "'"
+	)
+end
+
+applyKeyMapping()
+
+-- Re-apply after sleep/unlock, when macOS has re-enumerated the keyboards.
+-- Globals so the garbage collector does not quietly stop them.
+wakeWatcher = hs.caffeinate.watcher.new(function(event)
+	if
+		event == hs.caffeinate.watcher.systemDidWake
+		or event == hs.caffeinate.watcher.screensDidUnlock
+		or event == hs.caffeinate.watcher.sessionDidBecomeActive
+	then
+		applyKeyMapping()
+	end
+end)
+wakeWatcher:start()
+
+-- Re-apply when a USB keyboard is plugged in. macOS writes its own mapping to
+-- the new device first, so wait a moment before overwriting it.
+usbWatcher = hs.usb.watcher.new(function(event)
+	if event.eventType == "added" then
+		hs.timer.doAfter(1.5, applyKeyMapping)
+	end
+end)
+usbWatcher:start()
 
 -- Turn F18 (our remapped Left Control) into a real, system-wide Hyper modifier:
 -- while it's held, stamp cmd+ctrl+alt onto every other key so any app sees a

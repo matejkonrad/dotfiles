@@ -99,3 +99,6 @@ if command -v wt >/dev/null 2>&1; then
 fi
 
 eval "$(/Users/matejkonrad/.local/bin/mise activate zsh)"
+
+# Added by cua-driver-rs installer — see https://github.com/trycua/cua
+export PATH="/Users/matejkonrad/.local/bin:$PATH"
