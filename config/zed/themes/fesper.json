@@ -13,9 +13,9 @@
         "border.selected": "#FFC799",
         "border.transparent": null,
         "border.disabled": "#242424",
-        "elevated_surface.background": "#1A1A1A",
-        "surface.background": "#101010",
-        "background": "#101010",
+        "elevated_surface.background": "#1A1A1AFF",
+        "surface.background": "#1A1A1AFF",
+        "background": "#1A1A1AFF",
         "element.background": "#212121FF",
         "element.hover": "#171717FF",
         "element.active": "#000000FF",
@@ -37,24 +37,24 @@
         "icon.disabled": "#7E7E7E",
         "icon.placeholder": "#7E7E7E",
         "icon.accent": "#FFC799",
-        "status_bar.background": "#101010",
-        "title_bar.background": "#101010",
-        "toolbar.background": "#101010",
-        "tab_bar.background": "#101010",
-        "tab.inactive_background": "#101010",
+        "status_bar.background": "#1A1A1AFF",
+        "title_bar.background": "#1A1A1AFF",
+        "toolbar.background": "#1A1A1AFF",
+        "tab_bar.background": "#1A1A1AFF",
+        "tab.inactive_background": "#1A1A1AFF",
         "tab.active_background": "#161616",
         "search.match_background": "#575757",
-        "panel.background": "#101010",
+        "panel.background": "#1A1A1AFF",
         "panel.focused_border": "#FFC799",
         "scrollbar.thumb.background": "#34343480",
         "scrollbar.thumb.hover_background": "#343434",
         "scrollbar.thumb.border": "#34343480",
         "scrollbar.track.background": "#101010",
         "scrollbar.track.border": "#242424",
-        "editor.foreground": "#FFFFFF",
-        "editor.background": "#101010",
-        "editor.gutter.background": "#101010",
-        "editor.subheader.background": "#1A1A1A",
+        "editor.foreground": "#B3B3B3FF",
+        "editor.background": "#1A1A1AFF",
+        "editor.gutter.background": "#1A1A1AFF",
+        "editor.subheader.background": "#1A1A1AFF",
         "editor.active_line.background": "#101010",
         "editor.highlighted_line.background": "#101010",
         "editor.line_number": "#525252FF",
@@ -64,9 +64,9 @@
         "editor.active_wrap_guide": null,
         "editor.document_highlight.read_background": "#282828",
         "editor.document_highlight.write_background": "#282828",
-        "terminal.background": "#101010",
+        "terminal.background": "#1A1A1AFF",
         "terminal.foreground": "#A0A0A0",
-        "terminal.bright_foreground": "#FFFFFF",
+        "terminal.bright_foreground": "#C2C2C2FF",
         "terminal.dim_foreground": "#7E7E7E",
         "terminal.ansi.black": "#101010",
         "terminal.ansi.bright_black": "#7E7E7E",
@@ -108,7 +108,7 @@
         "hidden": null,
         "hidden.background": null,
         "hidden.border": null,
-        "hint": "#A0A0A0",
+        "hint": "#6E6E6EFF",
         "hint.background": "#1C1C1C",
         "hint.border": null,
         "ignored": null,
@@ -179,7 +179,7 @@
             "font_weight": null
           },
           "emphasis": {
-            "color": "#FFF",
+            "color": "#DBDBDBFF",
             "font_style": "italic",
             "font_weight": null
           },
@@ -194,7 +194,7 @@
             "font_weight": null
           },
           "keyword": {
-            "color": "#A0A0A0",
+            "color": "#B3B3B3FF",
             "font_style": null,
             "font_weight": null
           },
@@ -204,7 +204,7 @@
             "font_weight": null
           },
           "link_text": {
-            "color": "#FFF",
+            "color": "#FFFFFFFF",
             "font_style": null,
             "font_weight": null
           },
@@ -219,7 +219,7 @@
             "font_weight": null
           },
           "operator": {
-            "color": "#A0A0A0",
+            "color": "#B3B3B3FF",
             "font_style": null,
             "font_weight": null
           },
@@ -249,7 +249,7 @@
             "font_weight": null
           },
           "string": {
-            "color": "#85AB85FF",
+            "color": "#8CD9B2FF",
             "font_style": null,
             "font_weight": null
           },
@@ -259,17 +259,17 @@
             "font_weight": null
           },
           "string.regex": {
-            "color": "#85AB85FF",
+            "color": "#8CD9B2FF",
             "font_style": null,
             "font_weight": null
           },
           "string.special": {
-            "color": "#85AB85FF",
+            "color": "#8CD9B2FF",
             "font_style": null,
             "font_weight": null
           },
           "string.special.symbol": {
-            "color": "#85AB85FF",
+            "color": "#8CD9B2FF",
             "font_style": null,
             "font_weight": null
           },
@@ -279,7 +279,7 @@
             "font_weight": null
           },
           "text.literal": {
-            "color": "#85AB85FF",
+            "color": "#8CD9B2FF",
             "font_style": null,
             "font_weight": null
           },
@@ -289,12 +289,12 @@
             "font_weight": null
           },
           "type": {
-            "color": "#FFC799",
+            "color": "#FFB47AFF",
             "font_style": null,
             "font_weight": null
           },
           "variable": {
-            "color": "#E0E0E0FF",
+            "color": "#DBDBDBFF",
             "font_style": null,
             "font_weight": null
           },
@@ -304,7 +304,10 @@
             "font_weight": null
           },
           "variable.parameter": {
-            "color": "#E0E0E0FF"
+            "color": "#D9CCC1FF"
+          },
+          "primary": {
+            "color": "#DBDBDBFF"
           }
         },
         "pane_group.border": "#2A2A2A",
@@ -316,8 +319,8 @@
         "editor.indent_guide_active": "#505050",
         "version_control.added": "#39B01E87",
         "element.selection_background": "#0A0A0AFF",
-        "panel.overlay_background": "#101010",
-        "panel.overlay_hover": "#101010",
+        "panel.overlay_background": "#1A1A1AFF",
+        "panel.overlay_hover": "#1A1A1AFF",
         "minimap.thumb.background": "#34343480",
         "minimap.thumb.hover_background": "#343434",
         "minimap.thumb.border": "#34343480",

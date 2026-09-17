@@ -36,22 +36,59 @@
   side-by-side = true
   line-numbers = true
   hyperlinks = true
+  # ANSI on purpose: Ghostty runs the "Gruvbox Material Dark" theme, so the
+  # terminal's 16 ANSI colors ARE the gruvbox-material palette. A named bat
+  # theme (gruvbox-dark) would be original gruvbox, which is brighter and
+  # clashes with the muted material variant used everywhere else.
   syntax-theme = ansi
-  file-style = bold yellow
-  file-decoration-style = yellow ul
-  hunk-header-decoration-style = cyan box
+  file-style = "#d8a657" bold
+  file-decoration-style = "#d8a657" ul
   hunk-header-style = file line-number syntax
-  line-numbers-left-style = cyan
-  line-numbers-right-style = cyan
-  line-numbers-minus-style = red
-  line-numbers-plus-style = green
-  minus-style = syntax "#3a1f1f"
-  minus-emph-style = syntax "#5c2828"
-  plus-style = syntax "#1f3a1f"
-  plus-emph-style = syntax "#285c28"
+  hunk-header-decoration-style = "#7daea3" box
+  hunk-header-file-style = "#89b482"
+  hunk-header-line-number-style = "#e78a4e" bold
+  line-numbers-left-style = "#5a524c"
+  line-numbers-right-style = "#5a524c"
+  line-numbers-zero-style = "#5a524c"
+  line-numbers-minus-style = "#ea6962"
+  line-numbers-plus-style = "#a9b665"
+  # Backgrounds are gruvbox-material medium dark bg_diff_red / bg_diff_green.
+  # The -emph variants are lightened from those; the palette's bg_visual_*
+  # values sit too close to bg_diff_* to read as word-level emphasis.
+  minus-style = syntax "#402120"
+  minus-emph-style = syntax bold "#6b302b"
+  minus-non-emph-style = syntax "#402120"
+  plus-style = syntax "#34381b"
+  plus-emph-style = syntax bold "#4f5a25"
+  plus-non-emph-style = syntax "#34381b"
   zero-style = syntax
+  whitespace-error-style = "#282828" "#ea6962"
   blame-code-style = syntax
   blame-format = "{author:<18} {commit:<8} {timestamp:>16} "
+  blame-palette = "#282828 #32302f #3c3836 #45403d"
+  merge-conflict-begin-symbol = ▼
+  merge-conflict-end-symbol = ▲
+  merge-conflict-ours-diff-header-style = "#d8a657" bold
+  merge-conflict-theirs-diff-header-style = "#d8a657" bold
+
+# Lazygit's staging panel (Enter on a file, to stage individual lines/hunks)
+# renders the diff itself and ignores git.pagers, so delta never runs there.
+# See jesseduffield/lazygit#2117 and the stalled PR #4332. These raw git
+# colors are the only way to make that panel gruvbox-compliant.
+[color "diff"]
+  meta = "#d8a657" bold
+  frag = "#7daea3" bold
+  func = "#89b482"
+  commit = "#d8a657"
+  old = "#ea6962" "#402120"
+  new = "#a9b665" "#34381b"
+  whitespace = "#282828" "#ea6962"
+
+[color "diff-highlight"]
+  oldNormal = "#ea6962" "#402120"
+  oldHighlight = "#ea6962" "#6b302b"
+  newNormal = "#a9b665" "#34381b"
+  newHighlight = "#a9b665" "#4f5a25"
 
 ; [merge]
 ;   conflictStyle = zdiff3

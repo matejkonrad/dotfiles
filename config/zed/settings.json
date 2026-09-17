@@ -7,14 +7,12 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"accessible_mode": false,
  "git": {
   "hunk_style": "staged_hollow"
  },
  "vim": {
   "toggle_relative_line_numbers": true
  },
- "markdown_preview_font_size": 14.0,
  "which_key": {
 		"enabled": true,
 	},
@@ -34,7 +32,7 @@
 		},
 	},
 	"cli_default_open_behavior": "existing_window",
-	"agent_buffer_font_size": 14.0,
+	// "agent_buffer_font_size": 14.0,
 	"helix_mode": false,
 	"vim_mode": true,
 	"proxy": "",
@@ -76,12 +74,6 @@
 		"tree_view": true,
 		"dock": "left",
 	},
-	"ui_font_weight": 450.0,
-	"unnecessary_code_fade": 0.4,
-	"ui_font_family": ".ZedSans",
-	"buffer_line_height": "standard",
-	"buffer_font_weight": 400.0,
-	"buffer_font_family": ".ZedMono",
 	"agent": {
 		"expand_terminal_card": false,
   "profiles": {
@@ -120,7 +112,7 @@
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
-		"dark": "Gruvbox Material Neovim Dark",
+		"dark": "Fesper",
 	},
 	"relative_line_numbers": "enabled",
 	"hard_tabs": true,

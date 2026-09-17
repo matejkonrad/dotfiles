@@ -7,85 +7,169 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "agent_servers": {
-    "gemini": {
-      "type": "registry"
-    },
-    "codex-acp": {
-      "type": "registry"
-    },
-    "claude-acp": {
-      "type": "registry"
-    }
-  },
-  "project_panel": {
-    "dock": "left"
-  },
-  "outline_panel": {
-    "dock": "left"
-  },
-  "collaboration_panel": {
-    "dock": "left"
-  },
-  "git_panel": {
-    "dock": "left"
-  },
-  "ui_font_weight": 450.0,
-  "unnecessary_code_fade": 0.4,
-  "ui_font_family": ".ZedSans",
-  "buffer_line_height": "comfortable",
-  "buffer_font_weight": 400.0,
-  "buffer_font_family": "JetBrains Mono",
-  "agent": {
-    "single_file_review": true,
-    "dock": "right",
-    "always_allow_tool_actions": true,
-    "default_profile": "write",
-    "default_model": {
-      "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5"
-    },
-    "model_parameters": []
-  },
-  "auto_update_extensions": {
-    "biome": false
-  },
-  "vim_mode": true,
-  "base_keymap": "Cursor",
-  "icon_theme": "Zed (Default)",
-  "ui_font_size": 12.0,
-  "buffer_font_size": 12.0,
-  "theme": {
-    "mode": "system",
-    "light": "Hami Melon Light",
-    "dark": "Hami Melon Dark"
-  },
-  "relative_line_numbers": "enabled",
-  "languages": {
-    "JSONC": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "language_servers": ["!biome", "..."]
-    },
-    "JSON": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "language_servers": ["!biome", "..."]
-    },
-    "TypeScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "language_servers": ["!biome", "..."]
-    },
-    "TSX": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "language_servers": ["!biome", "..."]
-    }
-  },
-  "file_scan_exclusions": ["**/.yarn/*"]
+	"accessible_mode": false,
+ "git": {
+  "hunk_style": "staged_hollow"
+ },
+ "vim": {
+  "toggle_relative_line_numbers": true
+ },
+ "markdown_preview_font_size": 14.0,
+ "which_key": {
+		"enabled": true,
+	},
+	"agent_ui_font_size": 14.0,
+	"edit_predictions": {
+		"provider": "copilot",
+	},
+	"diff_view_style": "split",
+	"terminal": {
+		"font_size": 14.0,
+		// "shell": {
+		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		// },
+		"show_count_badge": true,
+		"env": {
+			"EDITOR": "zed --wait",
+		},
+	},
+	"cli_default_open_behavior": "existing_window",
+	"agent_buffer_font_size": 14.0,
+	"helix_mode": false,
+	"vim_mode": true,
+	"proxy": "",
+	"agent_servers": {
+		"cursor": {
+			"default_config_options": {
+				"mode": "agent",
+			},
+			"type": "registry",
+		},
+		"gemini": {
+			"type": "registry",
+		},
+		"codex-acp": {
+			"default_config_options": {
+				"model": "gpt-5.6-sol",
+    "mode": "agent-full-access",
+			},
+			"type": "registry",
+		},
+		"claude-acp": {
+			"default_config_options": {
+    "mode": "auto",
+    "model": "opus[1m]"
+   },
+   "type": "registry",
+		},
+	},
+	"project_panel": {
+		"dock": "left",
+	},
+	"outline_panel": {
+		"dock": "left",
+	},
+	"collaboration_panel": {
+		"dock": "left",
+	},
+	"git_panel": {
+		"tree_view": true,
+		"dock": "left",
+	},
+	"ui_font_weight": 450.0,
+	"unnecessary_code_fade": 0.4,
+	"ui_font_family": ".ZedSans",
+	"buffer_line_height": "standard",
+	"buffer_font_weight": 400.0,
+	"buffer_font_family": ".ZedMono",
+	"agent": {
+		"expand_terminal_card": false,
+  "profiles": {
+			"auto": {
+				"name": "Auto",
+				"tools": {},
+				"enable_all_context_servers": false,
+				"context_servers": {},
+			},
+		},
+		"tool_permissions": {
+			"default": "allow",
+		},
+		"single_file_review": true,
+		"dock": "right",
+		"default_profile": "write",
+		"default_model": {
+			"effort": "medium",
+			"enable_thinking": true,
+			"provider": "openai",
+			"model": "gpt-5.6-sol",
+		},
+		"model_parameters": [],
+	},
+	"auto_update_extensions": {
+		"biome": false,
+	},
+	"base_keymap": "Cursor",
+	"icon_theme": {
+		"mode": "dark",
+		"light": "Zed (Default)",
+		"dark": "Zed (Default)",
+	},
+	"ui_font_size": 14.0,
+	"buffer_font_size": 14.0,
+	"theme": {
+		"mode": "dark",
+		"light": "Hami Melon Light",
+		"dark": "Gruvbox Material Neovim Dark",
+	},
+	"relative_line_numbers": "enabled",
+	"hard_tabs": true,
+	"languages": {
+		"TypeScript": {
+			"hard_tabs": true,
+			"tab_size": 4,
+			"formatter": {
+				"external": {
+					"command": "yarn format",
+				},
+			},
+			"format_on_save": "on",
+			"language_servers": ["!biome", "..."],
+		},
+		"TSX": {
+			"hard_tabs": true,
+			"tab_size": 4,
+			"formatter": {
+				"external": {
+					"command": "yarn format",
+				},
+			},
+			"format_on_save": "on",
+			"language_servers": ["!biome", "..."],
+		},
+	},
+	"file_scan_exclusions": [
+		"**/.yarn/*",
+		"**/.git",
+		"**/.svn",
+		"**/.hg",
+		"**/CVS",
+		"**/.DS_Store",
+		"**/Thumbs.db",
+		"**/.classpath",
+		"**/.settings",
+		// Above is default from Zed
+		"**/out",
+		"**/dist",
+		"**/.husky",
+		"**/.turbo",
+		"**/.vscode-test",
+		"**/.vscode",
+		"**/.next",
+		"**/.storybook",
+		"**/.tap",
+		"**/.nyc_output",
+		"**/report",
+		"**/node_modules",
+	],
 }
