@@ -4,6 +4,8 @@
 --   * Caps Lock    -> Left Control  (Control in the easy-to-reach home spot)
 --   * Left Control -> Hyper         (a real, system-wide cmd+ctrl+alt modifier)
 --
+-- The keyboards in EXCLUDED_KEYBOARDS below keep their printed layout.
+--
 -- hidutil only does 1:1 remaps, so it can't turn a key into a modifier combo.
 -- We route Left Control -> F18 (an unused key) at the OS level, then an eventtap
 -- below stamps cmd+ctrl+alt onto whatever you press while F18 is held. Because
@@ -33,10 +35,22 @@ local KEY_MAPPING = [[{"UserKeyMapping":[]]
 	.. [[{"HIDKeyboardModifierMappingSrc":0x7000000E0,"HIDKeyboardModifierMappingDst":0x70000006D}]]
 	.. [[]}]]
 
+-- Keyboards that keep their printed layout. A split keyboard has its own
+-- firmware layout and sends cmd+ctrl+alt by itself, so it needs no remap.
+-- Match the `Product` column of `hidutil list` exactly.
+local EXCLUDED_KEYBOARDS = { "Lily58 Pro" }
+
+local function hidutilSet(matching, mapping)
+	hs.execute("hidutil property --matching '" .. matching .. "' --set '" .. mapping .. "'")
+end
+
+-- hidutil can only match devices, never exclude them, so remap every keyboard
+-- and then clear the mapping again on the excluded ones.
 local function applyKeyMapping()
-	hs.execute(
-		"hidutil property --matching '{\"PrimaryUsagePage\":1,\"PrimaryUsage\":6}' --set '" .. KEY_MAPPING .. "'"
-	)
+	hidutilSet('{"PrimaryUsagePage":1,"PrimaryUsage":6}', KEY_MAPPING)
+	for _, product in ipairs(EXCLUDED_KEYBOARDS) do
+		hidutilSet('{"Product":"' .. product .. '"}', '{"UserKeyMapping":[]}')
+	end
 end
 
 applyKeyMapping()

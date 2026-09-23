@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+ "buffer_font_family": "JetBrains Mono",
  "git": {
   "hunk_style": "staged_hollow"
  },
@@ -22,7 +23,7 @@
 	},
 	"diff_view_style": "split",
 	"terminal": {
-		"font_size": 14.0,
+		"font_size": 13.0,
 		// "shell": {
 		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
 		// },
@@ -108,7 +109,7 @@
 		"dark": "Zed (Default)",
 	},
 	"ui_font_size": 14.0,
-	"buffer_font_size": 14.0,
+	"buffer_font_size": 12.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
