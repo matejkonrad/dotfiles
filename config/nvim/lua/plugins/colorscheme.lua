@@ -258,7 +258,7 @@ return {
     priority = 1000,
     init = function()
       -- Vimscript globals: must be set before the colorscheme loads.
-      vim.g.gruvbox_material_background = "medium" -- hard | medium | soft
+      vim.g.gruvbox_material_background = "hard" -- hard | medium | soft
       vim.g.gruvbox_material_foreground = "material" -- material | mix | original
       vim.g.gruvbox_material_enable_italic = true
       -- Floats (pickers, lazygit, docs) share the editor bg instead of the

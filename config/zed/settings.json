@@ -24,9 +24,9 @@
 	"diff_view_style": "split",
 	"terminal": {
 		"font_size": 13.0,
-		// "shell": {
-		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
-		// },
+		"shell": {
+			"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		},
 		"show_count_badge": true,
 		"env": {
 			"EDITOR": "zed --wait",
@@ -49,15 +49,16 @@
 		},
 		"codex-acp": {
 			"default_config_options": {
-				"model": "gpt-5.6-sol",
+				"model": "gpt-6-sol",
     "mode": "agent-full-access",
 			},
 			"type": "registry",
 		},
 		"claude-acp": {
 			"default_config_options": {
+    "fast": false,
     "mode": "auto",
-    "model": "opus[1m]"
+    "model": "default"
    },
    "type": "registry",
 		},
@@ -76,7 +77,11 @@
 		"dock": "left",
 	},
 	"agent": {
-		"expand_terminal_card": false,
+		"sidebar_side": "left",
+  "use_modifier_to_send": false,
+  "thinking_display": "always_collapsed",
+  "expand_edit_card": true,
+  "expand_terminal_card": false,
   "profiles": {
 			"auto": {
 				"name": "Auto",
@@ -88,14 +93,14 @@
 		"tool_permissions": {
 			"default": "allow",
 		},
-		"single_file_review": true,
+		"single_file_review": false,
 		"dock": "right",
 		"default_profile": "write",
 		"default_model": {
 			"effort": "medium",
 			"enable_thinking": true,
-			"provider": "openai",
-			"model": "gpt-5.6-sol",
+			"provider": "openai-subscribed",
+			"model": "gpt-6-sol",
 		},
 		"model_parameters": [],
 	},

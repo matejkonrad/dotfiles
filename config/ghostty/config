@@ -7,6 +7,8 @@ window-padding-y = 4
 window-padding-balance = true
 
 theme = Gruvbox Material Dark
+# "hard" gruvbox-material bg0, to match nvim (gruvbox_material_background = "hard") and herdr.
+background = #1d2021
 #Vesper
 font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 13

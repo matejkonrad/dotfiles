@@ -69,6 +69,13 @@ rename_workspace = "prefix+shift+w"
 close_workspace = "prefix+shift+d"
 switch_workspace = "prefix+shift+1..9"             # goto workspace by number
 
+# --- Worktrees (g = git; each worktree opens as its own workspace) ---
+# Remove (prefix+ctrl+g) is a [[keys.command]] popup below, not the built-in
+# remove_worktree: that one deletes the checkout synchronously and freezes herdr
+# for the whole rm of node_modules.
+new_worktree = "prefix+shift+g" # create branch + checkout under [worktrees].directory
+open_worktree = "prefix+g"      # pick an existing worktree of the selected repo
+
 # --- Agents (cycle focus between live agent panes) ---
 # p = previous, n = next (mnemonic; tabs took h/l, workspaces took j/k).
 previous_agent = "ctrl+alt+p"
@@ -111,6 +118,28 @@ type = "plugin_action"
 command = "herdr-nvim-nav.right"
 description = "navigate right (nvim/herdr)"
 
+# --- Remove the focused worktree without blocking herdr ---
+# `wt remove` detaches the actual delete into the background and returns at once,
+# then the workspace is closed. wt refuses dirty worktrees and the main checkout,
+# and deletes the branch only if merged. On any failure the popup stays open.
+[[keys.command]]
+key = "prefix+ctrl+g"
+type = "popup"
+description = "remove worktree (wt, background)"
+width = "70%"
+height = "40%"
+command = '''
+cd "$HERDR_ACTIVE_PANE_CWD" || exit 1
+printf 'Remove worktree %s? [y/N] ' "$(git rev-parse --show-toplevel)"
+read -r answer
+[ "$answer" = y ] || exit 0
+if wt remove --yes; then
+  herdr workspace close "$HERDR_ACTIVE_WORKSPACE_ID"
+else
+  printf '\nPress enter to close.'; read -r _
+fi
+'''
+
 # --- Seamless resize across nvim splits and herdr panes (herdr-splits) ---
 # option(alt)+h/j/k/l resize nvim splits first, delegating to herdr when a split
 # already fills the pane.
@@ -138,19 +167,21 @@ type = "plugin_action"
 command = "herdr-splits.resize-right"
 description = "resize right (nvim/herdr)"
 
-# Gruvbox Material (medium, dark) — matches Ghostty "Gruvbox Material Dark",
-# nvim sainnhe/gruvbox-material and the tmux status colours. herdr only ships
-# plain gruvbox, so the material palette is layered on top via [theme.custom].
+# Gruvbox Material (hard, dark) — matches Ghostty "Gruvbox Material Dark" with
+# background = #1d2021 and nvim gruvbox_material_background = "hard". herdr only
+# ships plain gruvbox, so the material palette is layered on top via [theme.custom].
+# One background everywhere; surface_dim draws the only chrome: the sidebar
+# edge │ and the section ─ dividers.
 [theme]
 name = "gruvbox"
 auto_switch = false
 
 [theme.custom]
-panel_bg = "#282828"      # bg0
-sidebar_bg = "#282828"    # bg0
-surface_dim = "#282828"   # bg0
-active_row_bg = "#32302f" # bg1
-selection_bg = "#45403d"  # bg3
+panel_bg = "#1d2021"      # bg0
+sidebar_bg = "#1d2021"    # bg0
+surface_dim = "#3c3836"   # bg3 — separators
+active_row_bg = "#282828" # bg1
+selection_bg = "#3c3836"  # bg3
 text = "#d4be98"          # fg0
 accent = "#d8a657"        # yellow
 red = "#ea6962"
@@ -160,6 +191,11 @@ blue = "#7daea3"
 mauve = "#d3869b"         # purple
 peach = "#e78a4e"         # orange
 teal = "#89b482"          # aqua
+
+# Where prefix+shift+g / `herdr worktree create` put worktrees (herdr adds
+# <repo>/<branch> below it). Matches worktrunk's worktree-path.
+[worktrees]
+directory = "~/Projects/worktrees"
 
 [experimental]
 pane_history = false

@@ -22,9 +22,9 @@
 # Docs: https://worktrunk.dev/hook/  (hook types, template vars, forms)
 
 # --- Where wt creates worktrees ---------------------------------------------
-# Default: sibling dir next to the repo, e.g. dotfiles.feature-x. herdr adopts
-# any path, so this is free to change. Uncomment to centralize out-of-tree:
-# worktree-path = "~/worktrees/{{ repo }}/{{ branch | sanitize }}"
+# Centralized out-of-tree, same root as herdr's [worktrees] directory
+# (config/herdr/config.toml). Default would be a sibling dir, e.g. dotfiles.feature-x.
+worktree-path = "~/Projects/worktrees/{{ repo }}/{{ branch | sanitize }}"
 
 # --- Open each worktree in herdr --------------------------------------------
 # Background hook, fires on create / switch-to-existing / stay-on-current.

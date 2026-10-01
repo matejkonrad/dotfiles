@@ -23,9 +23,9 @@ gui:
     unstagedChangesColor: ["#ea6962"] # red
     defaultFgColor: ["#d4be98"] # fg0
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}" --syntax-theme "ansi"
+      command: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}" --syntax-theme "ansi"
 os:
   editPreset: "nvim-remote"
   # edit: "nvim --server $NVIM --remote-send '<C-\\><C-n>:close | edit {{filename}}<CR>'"
