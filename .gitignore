@@ -20,3 +20,9 @@ config/emacs/tramp
 \#*\#
 .\#*
 *.elc
+
+# Backups and scratch files
+*.bak
+*.bak.*
+Untitled
+.DS_Store
