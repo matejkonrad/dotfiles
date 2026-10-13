@@ -1,0 +1,61 @@
+id = "herdr-pr"
+name = "herdr-pr"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Pull request status per workspace, a PR board, and an agent auto-fix loop"
+platforms = ["macos", "linux"]
+
+[[build]]
+command = ["cargo", "build", "--release"]
+
+# One daemon per server; a second start finds the lock and exits.
+[[startup]]
+command = ["target/release/herdr-pr", "daemon"]
+
+[[actions]]
+id = "start"
+title = "herdr-pr: start daemon"
+command = ["target/release/herdr-pr", "daemon"]
+
+[[actions]]
+id = "board"
+title = "herdr-pr: open PR board"
+command = ["target/release/herdr-pr", "action", "board"]
+
+[[actions]]
+id = "fix"
+title = "herdr-pr: fix this workspace's PR now"
+command = ["target/release/herdr-pr", "action", "fix"]
+
+[[actions]]
+id = "auto"
+title = "herdr-pr: toggle auto-fix for this workspace's PR"
+command = ["target/release/herdr-pr", "action", "auto"]
+
+[[actions]]
+id = "seen"
+title = "herdr-pr: mark comments seen"
+command = ["target/release/herdr-pr", "action", "seen"]
+
+[[actions]]
+id = "refresh"
+title = "herdr-pr: refresh"
+command = ["target/release/herdr-pr", "action", "refresh"]
+
+# Ctrl-click on a PR URL: watch it in this workspace and still open it.
+[[actions]]
+id = "watch-link"
+title = "herdr-pr: watch clicked PR"
+command = ["target/release/herdr-pr", "link"]
+
+[[panes]]
+id = "board"
+title = "PRs"
+placement = "popup"
+command = ["target/release/herdr-pr", "board"]
+
+[[link_handlers]]
+id = "github-pr"
+title = "Watch PR (herdr-pr)"
+pattern = '^https://github\.com/[^/]+/[^/]+/pull/[0-9]+'
+action = "watch-link"

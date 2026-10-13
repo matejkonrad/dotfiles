@@ -105,3 +105,12 @@ export PATH="/Users/matejkonrad/.local/bin:$PATH"
 
 # opencode
 export PATH=/Users/matejkonrad/.opencode/bin:$PATH
+
+# herdr-automatic-rename: rename the herdr tab as soon as a command starts
+# (plugin: herdr plugin install qu8n/herdr-automatic-rename).
+if [[ "$HERDR_ENV" == "1" ]]; then
+  for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/hook.zsh(N); do
+    source $_f; break
+  done
+  unset _f
+fi

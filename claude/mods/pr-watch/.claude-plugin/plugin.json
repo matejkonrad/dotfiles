@@ -1,0 +1,6 @@
+{
+  "name": "pr-watch",
+  "version": "0.2.1",
+  "description": "Watches several pull requests across repos: CI, review state and new review comments, in a pane and the status line.",
+  "types": "./types/index.d.ts"
+}

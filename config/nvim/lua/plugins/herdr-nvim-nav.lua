@@ -34,6 +34,47 @@ return {
       right = { "<Plug>(herdr-nav-right)" },
     },
   },
+  config = function(_, opts)
+    local nav = require("herdr-nvim-nav")
+    if not vim.g.herdr_nvim_daemon then
+      nav.setup(opts)
+      return
+    end
+    -- herdr-nvim sidebar daemon: every toggle opens a new herdr pane and
+    -- herdr-nvim setenv()s its HERDR_PANE_ID just before the UI attaches.
+    -- setup() reads the pane id once, so rerun it on each attach to move the
+    -- pane marker and the socket target to the new pane.
+    local marker
+    local function marker_path(pane)
+      local cache = vim.env.XDG_CACHE_HOME
+      if not cache or cache == "" then
+        cache = vim.env.HOME .. "/.cache"
+      end
+      return cache .. "/herdr/nvim-panes/" .. pane
+    end
+    vim.api.nvim_create_autocmd("UIEnter", {
+      callback = function()
+        local pane = vim.env.HERDR_PANE_ID
+        if not pane or pane == "" then
+          return
+        end
+        if marker and marker ~= marker_path(pane) then
+          os.remove(marker)
+        end
+        marker = marker_path(pane)
+        nav.setup(opts)
+      end,
+    })
+    -- The daemon outlives the sidebar pane: drop the marker when the UI detaches.
+    vim.api.nvim_create_autocmd("UILeave", {
+      callback = function()
+        if marker then
+          os.remove(marker)
+          marker = nil
+        end
+      end,
+    })
+  end,
   keys = {
     -- <C-arrows> are a plain herdr pane jump (config.toml focus_pane_*) and
     -- never reach nvim, so only the hjkl chords are bound. Terminal-mode

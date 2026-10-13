@@ -144,17 +144,6 @@ return {
           hl(0, "SnacksIndentScope", { fg = dim })
           hl(0, "SnacksIndentChunk", { fg = tan })
 
-          -- Sidekick overrides - same background as main editor
-          hl(0, "SidekickChat", { bg = bg })
-          hl(0, "SidekickSign", { fg = tan })
-          hl(0, "SidekickCliAttached", { fg = sage })
-          hl(0, "SidekickCliStarted", { fg = cream })
-          hl(0, "SidekickCliInstalled", { fg = sage })
-          hl(0, "SidekickDiffContext", { bg = bg_selection })
-          hl(0, "SidekickDiffAdd", { fg = sage })
-          hl(0, "SidekickLocFile", { fg = tan })
-          hl(0, "SidekickLocNum", { fg = dim })
-
           -- Avante
           hl(0, "AvanteSidebarNormal", { bg = bg })
           hl(0, "AvanteSidebarWinSeparator", { fg = dim, bg = bg })

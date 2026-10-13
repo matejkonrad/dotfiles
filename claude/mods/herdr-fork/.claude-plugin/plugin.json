@@ -1,0 +1,5 @@
+{
+  "name": "herdr-fork",
+  "version": "0.1.0",
+  "description": "Inside herdr, /fork and /clone fork this session once and open the fork in a new herdr tab."
+}

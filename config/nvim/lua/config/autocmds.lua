@@ -57,7 +57,8 @@ end
 -- herdr: click a path link in any pane → the open-in-nvim herdr plugin
 -- (config/herdr/plugins/open-in-nvim). Keyed by HERDR_WORKSPACE_ID + worktree.
 -- Socket + .pane sidecar names MUST match open-in-nvim.sh.
-if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" then
+-- The herdr-nvim sidebar daemon is skipped: its pane id changes on every toggle.
+if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" and not vim.g.herdr_nvim_daemon then
   local wsid = vim.env.HERDR_WORKSPACE_ID or ""
   local root = open_in_nvim_trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
   if root == "" then

@@ -83,34 +83,38 @@ local function open_tuicr(args)
   Snacks.terminal.open(vim.list_extend({ "tuicr" }, args), { win = full_float("tuicr") })
 end
 
--- Stage text into the focused herdr agent's prompt (herdr-context.nvim, not
+-- Stage text into a herdr agent's prompt (herdr-nvim's agent lookup, not
 -- submitted). Outside herdr the text goes to the clipboard instead.
 ---@param payload string
 ---@param what string
 local function send_to_agent(payload, what)
   if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" then
     local ok, err = pcall(function()
-      local cfg = require("herdr-context.config").get()
-      local targets = require("herdr-context.targets")
-      local transport = require("herdr-context.transport")
-      targets.resolve(cfg, require("herdr-context.picker"), {}, function(target, terr)
-        if not target then
-          vim.notify(terr or "No herdr agent", vim.log.levels.ERROR, { title = "git review" })
-          return
+      local agents = require("herdr-nvim.agents")
+      local list, lerr = agents.list()
+      if not list then
+        error(lerr)
+      end
+      local function deliver(agent)
+        local sent, serr = require("herdr-nvim.dispatch").send(agent.pane_id, payload, { submit = false })
+        if not sent then
+          vim.notify(serr or "Could not stage", vim.log.levels.ERROR, { title = "git review" })
+        else
+          vim.notify(what .. " staged in " .. agents.display(agent), vim.log.levels.INFO, { title = "git review" })
         end
-        transport.stage(cfg, target, payload, function(sent, serr)
-          if not sent then
-            vim.notify(serr or "Could not stage", vim.log.levels.ERROR, { title = "git review" })
-          else
-            vim.notify(what .. " staged in " .. (target.agent or "agent"), vim.log.levels.INFO, { title = "git review" })
-          end
-        end)
-      end)
+      end
+      -- One plausible agent (alone in the workspace, or in this tab): no picker.
+      local agent = agents.resolve(list)
+      if agent then
+        deliver(agent)
+      else
+        require("herdr-nvim.ui").pick_agent(list, deliver)
+      end
     end)
     if ok then
       return
     end
-    vim.notify("herdr-context unavailable: " .. tostring(err), vim.log.levels.WARN, { title = "git review" })
+    vim.notify("herdr-nvim unavailable: " .. tostring(err), vim.log.levels.WARN, { title = "git review" })
   end
   vim.fn.setreg("+", payload)
   vim.notify(what .. " copied to clipboard (no herdr agent)", vim.log.levels.INFO, { title = "git review" })

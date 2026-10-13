@@ -11,8 +11,8 @@ return {
     },
   },
   -- Talks to an EXTERNAL Claude Code (running in a tmux pane) over the
-  -- WebSocket IDE protocol. Lives under <leader>aC: <leader>ac is herdr-context's
-  -- compose key (herdr-context.lua), and sidekick owns the other <leader>a* keys.
+  -- WebSocket IDE protocol. Lives under <leader>aC: herdr-nvim owns
+  -- <leader>ac/al/as/aS/ai (herdr-nvim.lua).
   keys = {
     { "<leader>aC", "", desc = "+claude code" },
     { "<leader>aCf", "<cmd>ClaudeCodeAdd %<cr>", desc = "Send file" },

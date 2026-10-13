@@ -1,3 +1,12 @@
+-- herdr-nvim sidebar daemon: a headless nvim that herdr-nvim starts per tab
+-- and listens under .../herdr-nvim/<tab>.sock (see lua/plugins/herdr-nvim.lua).
+-- Mark it before the specs load, so the herdr-gated plugins (cond =
+-- HERDR_ENV == "1") also load in the sidebar.
+vim.g.herdr_nvim_daemon = vim.v.servername:find("/herdr-nvim/", 1, true) ~= nil
+if vim.g.herdr_nvim_daemon then
+  vim.env.HERDR_ENV = "1"
+end
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"

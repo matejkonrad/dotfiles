@@ -1,0 +1,8 @@
+# herdr-radar (github:hhdebb/herdr-radar) settings — symlinked to
+# $(herdr plugin config-dir hhdebb.herdr-radar)/config.toml (see dotfiles.toml).
+# After editing: herdr plugin action invoke hhdebb.herdr-radar.state-stop, then state-start.
+
+# No blank rows between groups.
+group_gap = false
+# Keep the fixed gruvbox theme; do not follow macOS light/dark.
+follow_appearance = false

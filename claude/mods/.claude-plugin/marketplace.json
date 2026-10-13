@@ -1,0 +1,16 @@
+{
+  "name": "matej-mods",
+  "owner": { "name": "Matej Konrad" },
+  "plugins": [
+    {
+      "name": "pr-watch",
+      "source": "./pr-watch",
+      "description": "Watches PRs across repos: CI, review threads, merge state, and per-PR auto-fix."
+    },
+    {
+      "name": "herdr-fork",
+      "source": "./herdr-fork",
+      "description": "Inside herdr, /fork and /clone fork the session once and open it in a new tab."
+    }
+  ]
+}

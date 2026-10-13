@@ -90,12 +90,22 @@ target = "~/.config/tmux/tmux.conf"
 # herdr plugins (install once, needs herdr >= 0.7.3):
 #   herdr plugin install aimdevlee/herdr-nvim-nav             # ctrl+hjkl nav (fast, C binary)
 #   herdr plugin install lmilojevicc/herdr-splits.nvim      # option+hjkl resize only
-#   herdr plugin install makyinmars/herdr-context.nvim      # send context to agents
+#   herdr plugin install ChmaraX/herdr-nvim                 # nvim sidebar + annotations
+#   herdr plugin install qu8n/herdr-automatic-rename        # auto tab names (hook in .zshrc)
+#   herdr plugin install hhdebb/herdr-radar                 # grouped Agents panel (repo > worktree > agent)
 #   herdr plugin link  ~/Project/self/dotfiles/config/herdr/plugins/open-in-nvim
 #     ^ local plugin (tracked below): click a path in any pane → open in sibling nvim
 [herdr]
 source = "config/herdr/config.toml"
 target = "~/.config/herdr/config.toml"
+
+[herdr_automatic_rename]
+source = "config/herdr-automatic-rename/config.sh"
+target = "~/.config/herdr-automatic-rename/config.sh"
+
+[herdr_radar]
+source = "config/herdr-radar/config.toml"
+target = "~/.config/herdr/plugins/config/hhdebb.herdr-radar/config.toml"
 
 # worktrunk (wt) — only config.toml is tracked; approvals.toml, state, and logs
 # under ~/.config/worktrunk are runtime state. The post-switch hook opens each
@@ -156,3 +166,7 @@ os = "linux"
 [doom]
 source = "config/doom"
 target = "~/.config/doom"
+
+[claude_mods]
+source = "claude/mods"
+target = "~/.claude/mods"
