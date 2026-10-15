@@ -140,6 +140,14 @@ else
 fi
 '''
 
+# --- PR board (herdr-pr, config/herdr/plugins/herdr-pr) ---
+# Popup for the focused workspace: stack, checks, comments, fix and auto-fix.
+[[keys.command]]
+key = "prefix+shift+p"
+type = "plugin_action"
+command = "herdr-pr.board"
+description = "PR board"
+
 # --- nvim sidebar (herdr-nvim, github:ChmaraX/herdr-nvim) ---
 # A persistent per-tab nvim on the right half of the tab. The nvim side
 # (annotations) is config/nvim/lua/plugins/herdr-nvim.lua.
@@ -257,5 +265,12 @@ muse = [[{ token = "$group_parent", fg = "#8b8e9c", bold = true, dim = false }],
 [ui.sidebar.spaces]
 row_gap = 0
 # Built-in state_icon + name: herdr joins them with one space, radar tokens with " · ".
-rows = [["state_icon", "workspace"]]
+# The last cell is herdr-pr's PR mark: at most one of these tokens has a value.
+rows = [["state_icon", "workspace",
+  { token = "$pr_fail", fg = "#ea6962" },
+  { token = "$pr_wait", fg = "#d8a657" },
+  { token = "$pr_ok", fg = "#a9b665" },
+  { token = "$pr_auto", fg = "#d3869b" },
+  { token = "$pr_stale", fg = "#928374" },
+]]
 # <<< herdr-radar sidebar block

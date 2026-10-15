@@ -1,5 +1,5 @@
 import { atom, read, update } from 'claude-code'
-import type { EngineInterface, Register } from 'claude-code'
+import type { EngineInterface, Register, RenderChildren } from 'claude-code'
 
 import type { FailedCheck, PrComment, PrRef, PrStatus } from '../types'
 
@@ -17,6 +17,7 @@ const selectedPr = atom({ plugin: 'pr-watch', key: 'selectedPr' } as const, null
 const openComment = atom({ plugin: 'pr-watch', key: 'openComment' } as const, null)
 const autoFix = atom({ plugin: 'pr-watch', key: 'autoFix' } as const, [])
 const scope = atom({ plugin: 'pr-watch', key: 'scope' } as const, null)
+const showResolved = atom({ plugin: 'pr-watch', key: 'showResolved' } as const, false)
 
 // Bots that only post noise (stack lists, deploy previews, migration reminders), not reviews.
 const NOISE_AUTHORS = /graphite|vercel|github-actions|mergetron|linear/i
@@ -358,12 +359,42 @@ function priorityRank(priority: string | null): number {
   return priority ? Number(priority.slice(1)) : 9
 }
 
-const TONE_COLOR = { success: GRUV.green, error: GRUV.red, warning: GRUV.orange, inactive: GRUV.grey } as const
+function toneColor(tone: ReturnType<typeof mergeReadiness>['tone']): string {
+  return { success: GRUV.green, error: GRUV.red, warning: GRUV.orange, inactive: GRUV.grey }[tone]
+}
 
 function priorityColor(priority: string): string {
   if (priority === 'P0' || priority === 'P1') return GRUV.red
   if (priority === 'P2') return GRUV.orange
   return GRUV.aqua
+}
+
+/** e.g. "+120 −30 · 8 files", or "" before GitHub said */
+function diffSize(pr: PrStatus): string {
+  if (pr.additions + pr.deletions === 0) return ''
+  return `+${pr.additions} −${pr.deletions} · ${pr.changedFiles} ${pr.changedFiles === 1 ? 'file' : 'files'}`
+}
+
+/** e.g. "CHANGES_REQUESTED" → "changes requested", "" → "no review yet" */
+function reviewText(pr: PrStatus): string {
+  return pr.reviewDecision ? pr.reviewDecision.toLowerCase().replace(/_/g, ' ') : 'no review yet'
+}
+
+/** One verdict per reviewer, its newest, and the findings: open threads, then PR-level comments, then resolved threads. */
+function splitComments(pr: PrStatus): { verdicts: PrComment[]; findings: PrComment[] } {
+  const verdicts = pr.comments
+    .filter(isVerdict)
+    .filter((one, index, all) => all.findIndex(other => other.author === one.author) === index)
+  const findings = pr.comments
+    .filter(one => !isVerdict(one))
+    .map((one, index) => ({ one, index, priority: priorityRank(summarizeComment(one.body).priority) }))
+    .sort((a, b) => threadRank(a.one) - threadRank(b.one) || a.priority - b.priority || a.index - b.index)
+    .map(entry => entry.one)
+  return { verdicts, findings }
+}
+
+function threadRank(comment: PrComment): number {
+  return comment.isResolved === false ? 0 : comment.isResolved === null ? 1 : 2
 }
 
 /** What auto-fix already asked about per PR, so one failure or comment starts one turn, not one per poll. */
@@ -720,8 +751,13 @@ function openPane($: EngineInterface, focus?: true): Promise<unknown> {
   return $.ui.open({ id: PANE, title: 'Pull requests', focus })
 }
 
+let isTui = false
+
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
+    // The desktop app tracks PRs itself, so the mod stays out of every session no terminal draws: no pane, polls or tool.
+    isTui = (await $.session.surfaces()).includes('terminal')
+    if (!isTui) return next(e)
     await $.command.register({
       name: 'pr-watch',
       description: 'Watch PRs: /pr-watch [<ref>] [add|remove <refs>] [auto <ref> on|off] [seen] [clear] [refresh]',
@@ -767,6 +803,7 @@ export const register: Register = on => {
   })
 
   on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
+    if (!isTui) return next(e)
     const ran = await next(e)
     const command = 'command' in e ? e.command : ''
     if (ran.deny !== undefined || !PR_COMMANDS.test(command)) return ran
@@ -832,7 +869,7 @@ export const register: Register = on => {
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const list = (await read($, prs)).filter(one => one.state === 'OPEN')
-    if (e.props.hasSurvey || list.length === 0) return next(e)
+    if (e.surface !== 'terminal' || e.props.hasSurvey || list.length === 0) return next(e)
 
     const { Box, Text, Button } = $.ui.resolve(e)
     const columns = e.viewport?.columns ?? 80
@@ -841,6 +878,7 @@ export const register: Register = on => {
       await update($, selectedPr, () => key)
       await openPane($, true)
     }
+
     // Each PR chip takes about 12 cells; when they do not fit, we show one chip per CI state instead.
     const fitsEveryPr = list.length * 12 + 10 < columns
 
@@ -887,6 +925,7 @@ export const register: Register = on => {
     const selectedKey = await read($, selectedPr)
     const openCommentKey = await read($, openComment)
     const now = await $.clock.now()
+
     const columns = Math.max(30, e.props.bodyColumns - 1)
     const isNarrow = columns < NARROW_COLUMNS
 
@@ -964,37 +1003,115 @@ export const register: Register = on => {
       )
     }
 
+    const showResolvedNow = await read($, showResolved)
+
+    /** A bold section name and a dim summary on one line, the same for every section. */
+    const section = (key: string, name: string, summary: string, extra?: RenderChildren) => (
+      <Box key={`section:${key}`} marginTop={1} gap={2}>
+        <Text bold color={GRUV.grey}>
+          {name.toUpperCase()}
+        </Text>
+        {summary !== '' && <Text color={GRUV.grey}>{summary}</Text>}
+        {extra}
+      </Box>
+    )
+
+    /** The comment text after its title line, flattened and cut to about `lines` rows. */
+    const preview = (comment: PrComment, lines: number) => {
+      const rest = commentPlainText(comment.body).split('\n').slice(1).join(' ').replace(/\s+/g, ' ').trim()
+      const max = Math.max(24, (columns - 4) * lines - 2)
+      return rest.length > max ? `${rest.slice(0, max - 1)}…` : rest
+    }
+
     const details = (pr: PrStatus) => {
       const key = keyOf(pr)
       const chip = ciChip(pr)
       const readiness = mergeReadiness(pr)
-      const review = pr.reviewDecision ? pr.reviewDecision.toLowerCase().replace(/_/g, ' ') : 'no review yet'
-      const facts = [
-        pr.additions + pr.deletions > 0 ? `+${pr.additions} −${pr.deletions} · ${pr.changedFiles} files` : '',
-        review,
-        pr.checks.pending > 0
-          ? `${pr.checks.pending} ${pr.checks.pending === 1 ? 'check' : 'checks'} running`
-          : `${pr.checks.passed} ${pr.checks.passed === 1 ? 'check' : 'checks'} passed`,
-      ].filter(one => one !== '')
+      const review = reviewText(pr)
+      const size = diffSize(pr)
       const canRerun = pr.checks.failed.some(check => runIdOfCheck(check.url) !== null)
       const isOpen = pr.state === 'OPEN'
       const isAutoFixOn = autoFixKeys.includes(key)
-      // One verdict per reviewer: its newest says where it stands now.
-      const verdicts = pr.comments
-        .filter(isVerdict)
-        .filter((one, index, all) => all.findIndex(other => other.author === one.author) === index)
-      // Unresolved first (collectComments already orders that), then the most severe, so P1s lead the list.
-      const findings = pr.comments
-        .filter(one => !isVerdict(one))
-        .map((one, index) => ({ one, index, rank: priorityRank(summarizeComment(one.body).priority) }))
-        .sort((a, b) => Number(a.one.isResolved === true) - Number(b.one.isResolved === true) || a.rank - b.rank || a.index - b.index)
-        .map(entry => entry.one)
-      const newFindings = findings.filter(one => one.isNew).length
+      const { verdicts, findings } = splitComments(pr)
       const resolvedCount = findings.filter(one => one.isResolved === true).length
+      const shown = findings.filter(one => showResolvedNow || one.isResolved !== true)
+      const checkSummary = [
+        pr.checks.failed.length > 0 ? `✗ ${pr.checks.failed.length} failed` : '',
+        pr.checks.pending > 0 ? `◐ ${pr.checks.pending} running` : '',
+        pr.checks.passed > 0 ? `✓ ${pr.checks.passed} passed` : '',
+      ].filter(one => one !== '')
 
+      const card = (comment: PrComment, index: number, shownList: PrComment[]) => {
+        // Keyed by URL, so a card stays open when the list above it changes.
+        const commentKey = `${key}:${comment.url}`
+        const isExpanded = openCommentKey === commentKey
+        const isResolved = comment.isResolved === true
+        const { priority, text } = summarizeComment(comment.body)
+        const startsGroup = index === 0 || threadRank(shownList[index - 1]!) !== threadRank(comment)
+        const toggle = () => void update($, openComment, current => (current === commentKey ? null : commentKey))
+        const fullText = commentPlainText(comment.body).split('\n').slice(1).join('\n').trim()
+        const rest = preview(comment, 2)
+        return (
+          <Box key={`card:${commentKey}`} flexDirection="column">
+            {startsGroup && comment.isResolved === null && section(`comments:${key}`, 'Comments', '')}
+            {startsGroup && isResolved && section(`resolved:${key}`, 'Resolved', '')}
+            <Box flexDirection="column" marginTop={1}>
+              <Button plain key={`comment:${commentKey}`} onPress={toggle}>
+                <Text color={GRUV.grey}>{isExpanded ? '▾ ' : '▸ '}</Text>
+                {priority && (
+                  <Text bold color={isResolved ? GRUV.faint : priorityColor(priority)}>
+                    {`${priority} `}
+                  </Text>
+                )}
+                <Text bold color={isResolved ? GRUV.faint : GRUV.fg}>
+                  {shortAuthor(comment.author)}
+                </Text>
+                <Text color={GRUV.grey}> · {timeAgo(comment.createdAt, now)}</Text>
+                {comment.isNew && <Text color={GRUV.aqua}> · new</Text>}
+              </Button>
+              {comment.location && (
+                <Text color={GRUV.aqua} wrap="truncate-middle">
+                  {'  '}
+                  {comment.location}
+                </Text>
+              )}
+              <Text color={isResolved ? GRUV.faint : GRUV.fg} wrap="wrap">
+                {'  '}
+                {text}
+              </Text>
+              {!isExpanded && rest !== '' && (
+                <Text color={isResolved ? GRUV.faint : GRUV.grey} wrap="wrap">
+                  {'  '}
+                  {rest}
+                </Text>
+              )}
+              {isExpanded && (
+                <Box flexDirection="column" paddingLeft={2}>
+                  {fullText !== '' && (
+                    <Text color={GRUV.fg} wrap="wrap">
+                      {fullText.length > COMMENT_TEXT_CHARS ? `${fullText.slice(0, COMMENT_TEXT_CHARS)}…` : fullText}
+                    </Text>
+                  )}
+                  <Box gap={3} marginTop={1}>
+                    <Button
+                      key={`ask:${commentKey}`}
+                      label="Ask Claude to fix"
+                      plain
+                      onPress={() => void $.prompt.submit({ text: commentFixPrompt(pr, comment) })}
+                    />
+                    <Button key={`open-comment:${commentKey}`} label="Open thread" plain onPress={() => void openUrl($, comment.url)} />
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        )
+      }
+
+      const visibleCards = shown.slice(0, COMMENTS_SHOWN)
       return (
         <Box flexDirection="column">
-          <Text bold color={GRUV.fg} wrap="truncate-end">
+          <Text bold color={GRUV.fg} wrap="wrap">
             #{pr.number} {pr.title}
           </Text>
           {pr.headRef !== '' && (
@@ -1002,14 +1119,13 @@ export const register: Register = on => {
               {pr.headRef} → {pr.baseRef}
             </Text>
           )}
-          <Box gap={1} marginTop={1} flexWrap="wrap">
-            <Text color={TONE_COLOR[readiness.tone]}>{readiness.text}</Text>
+          <Box gap={1} flexWrap="wrap">
+            <Text color={toneColor(readiness.tone)}>{readiness.text}</Text>
             <Text color={GRUV.faint}>·</Text>
-            <Text color={chip.color}>{chip.label}</Text>
-            <Text color={GRUV.faint}>·</Text>
-            <Text color={GRUV.grey} wrap="truncate-end">
-              {facts.join(' · ')}
-            </Text>
+            <Text color={GRUV.grey}>{review}</Text>
+            {size !== '' && <Text color={GRUV.faint}>·</Text>}
+            {size !== '' && <Text color={GRUV.grey}>{size}</Text>}
+            {isAutoFixOn && <Text color={GRUV.purple}>· auto-fix on</Text>}
           </Box>
           {pr.error && <Text color={GRUV.red}>{pr.error}</Text>}
 
@@ -1019,7 +1135,7 @@ export const register: Register = on => {
             {isOpen && (
               <Button
                 key={`action-auto:${key}`}
-                label={isAutoFixOn ? 'Auto-fix on' : 'Auto-fix off'}
+                label={isAutoFixOn ? 'Auto-fix off' : 'Auto-fix on'}
                 hotkey="3"
                 plain
                 onPress={() => void setAutoFix($, key, !isAutoFixOn)}
@@ -1028,117 +1144,66 @@ export const register: Register = on => {
             {canRerun && (
               <Button key={`action-rerun:${key}`} label="Re-run failed" hotkey="4" plain onPress={() => void rerunFailedChecks($, pr)} />
             )}
+            {isOpen && pr.checks.failed.length > 0 && (
+              <Button key={`action-fix-ci:${key}`} label="Fix CI" hotkey="7" plain onPress={() => void $.prompt.submit({ text: ciFixPrompt(pr) })} />
+            )}
             {isOpen && pr.isDraft && (
               <Button key={`action-ready:${key}`} label="Ready for review" hotkey="5" plain onPress={() => void markReadyForReview($, pr)} />
             )}
             <Button key={`action-remove:${key}`} label="Stop watching" hotkey="6" plain onPress={() => void removeRefs($, [pr])} />
           </Box>
 
-          {pr.checks.failed.length > 0 && (
-            <Box flexDirection="column" marginTop={1}>
-              {pr.checks.failed.map((check, index) => (
-                <Button plain key={`check:${key}:${index}`} onPress={() => void openUrl($, check.url ?? pr.url)}>
-                  <Text color={GRUV.red}>✗ </Text>
-                  <Text color={GRUV.fg}>{check.name}</Text>
-                  <Text color={GRUV.grey}> · logs</Text>
-                </Button>
-              ))}
-            </Box>
-          )}
-
-          {verdicts.length > 0 && (
-            <Box marginTop={1} gap={1} flexWrap="wrap">
-              <Text bold color={GRUV.fg}>
-                Verdicts
-              </Text>
-              {verdicts.map((verdict, index) => (
-                <Text key={`verdict:${key}:${index}`} color={GRUV.grey}>
-                  {shortAuthor(verdict.author)}{' '}
-                  <Text color={verdictText(verdict).isGood ? GRUV.green : GRUV.orange}>{verdictText(verdict).text}</Text>
-                  {index < verdicts.length - 1 ? ' ·' : ''}
-                </Text>
-              ))}
-            </Box>
-          )}
-
-          <Box marginTop={1} gap={1}>
-            <Text bold color={GRUV.fg}>
-              Findings
+          {section(`checks:${key}`, 'Checks', checkSummary.length > 0 ? '' : 'none', checkSummary.length > 0 && (
+            <Text>
+              {pr.checks.failed.length > 0 && <Text color={GRUV.red}>✗ {pr.checks.failed.length} failed  </Text>}
+              {pr.checks.pending > 0 && <Text color={GRUV.yellow}>◐ {pr.checks.pending} running  </Text>}
+              {pr.checks.passed > 0 && <Text color={GRUV.green}>✓ {pr.checks.passed} passed</Text>}
             </Text>
-            <Text color={GRUV.grey}>
-              {findings.length === 0
-                ? 'none'
-                : [
-                    pr.unresolvedThreads > 0 ? `${pr.unresolvedThreads} unresolved` : '',
-                    resolvedCount > 0 ? `${resolvedCount} resolved` : '',
-                    newFindings > 0 ? `${newFindings} new` : '',
-                  ]
-                    .filter(one => one !== '')
-                    .join(' · ') || `${findings.length} comments`}
-            </Text>
-          </Box>
-          {findings.slice(0, COMMENTS_SHOWN).map((comment, index) => {
-            const commentKey = `${key}:${index}`
-            const isExpanded = openCommentKey === commentKey
-            const isResolved = comment.isResolved === true
-            const { priority, text } = summarizeComment(comment.body)
-            const location = comment.location ? (comment.location.split('/').pop() ?? comment.location) : ''
-            const meta = [
-              shortAuthor(comment.author),
-              location,
-              timeAgo(comment.createdAt, now),
-              isResolved ? 'resolved' : '',
-            ].filter(one => one !== '')
-            const toggle = () => void update($, openComment, current => (current === commentKey ? null : commentKey))
-            // The first line is the title, already shown on the row above.
-            const fullText = commentPlainText(comment.body).split('\n').slice(1).join('\n').trim()
+          ))}
+          {pr.checks.failed.map((check, index) => (
+            <Button plain key={`check:${key}:${index}`} onPress={() => void openUrl($, check.url ?? pr.url)}>
+              <Text color={GRUV.red}>{'  '}✗ </Text>
+              <Text color={GRUV.fg}>{check.name}</Text>
+              <Text color={GRUV.grey}> · logs</Text>
+            </Button>
+          ))}
 
-            return (
-              <Box key={`comment-box:${commentKey}`} flexDirection="column" marginTop={1}>
-                <Button plain key={`comment:${commentKey}`} onPress={toggle}>
-                  <Text color={GRUV.grey}>{isExpanded ? '▾ ' : '▸ '}</Text>
-                  {priority && !isResolved && (
-                    <Text bold color={priorityColor(priority)}>
-                      {`${priority} `}
-                    </Text>
-                  )}
-                  <Text
-                    bold={comment.isNew}
-                    color={isResolved ? GRUV.faint : GRUV.fg}
-                    strikethrough={isResolved}
-                  >
-                    {fit(text, columns - (priority && !isResolved ? 5 : 2))}
+          {verdicts.length > 0 &&
+            section(
+              `verdicts:${key}`,
+              'Verdicts',
+              '',
+              <Text>
+                {verdicts.map((verdict, index) => (
+                  <Text key={`verdict:${key}:${index}`} color={GRUV.grey}>
+                    {index > 0 ? '  ·  ' : ''}
+                    {shortAuthor(verdict.author)}{' '}
+                    <Text color={verdictText(verdict).isGood ? GRUV.green : GRUV.orange}>{verdictText(verdict).text}</Text>
                   </Text>
-                </Button>
-                <Text wrap="truncate-end">
-                  <Text color={GRUV.grey}>
-                    {'  '}
-                    {meta.join(' · ')}
-                  </Text>
-                  {comment.isNew && <Text color={GRUV.aqua}> · new</Text>}
+                ))}
+              </Text>,
+            )}
+
+          {section(
+            `threads:${key}`,
+            'Open threads',
+            pr.unresolvedThreads > 0 ? String(pr.unresolvedThreads) : 'none',
+            resolvedCount > 0 && (
+              <Button
+                plain
+                key={`resolved-toggle:${key}`}
+                onPress={() => void update($, showResolved, current => !current)}
+              >
+                <Text color={GRUV.faint}>
+                  {resolvedCount} resolved · {showResolvedNow ? 'hide' : 'show'}
                 </Text>
-                {isExpanded && (
-                  <Box flexDirection="column" paddingLeft={2} marginTop={1}>
-                    <Text wrap="wrap">
-                      {fullText.length > COMMENT_TEXT_CHARS ? `${fullText.slice(0, COMMENT_TEXT_CHARS)}…` : fullText}
-                    </Text>
-                    <Box gap={3} marginTop={1}>
-                      <Button
-                        key={`ask:${commentKey}`}
-                        label="Ask Claude to fix"
-                        plain
-                        onPress={() => void $.prompt.submit({ text: commentFixPrompt(pr, comment) })}
-                      />
-                      <Button key={`open-comment:${commentKey}`} label="Open thread" plain onPress={() => void openUrl($, comment.url)} />
-                    </Box>
-                  </Box>
-                )}
-              </Box>
-            )
-          })}
-          {findings.length > COMMENTS_SHOWN && (
+              </Button>
+            ),
+          )}
+          {visibleCards.map((comment, index) => card(comment, index, visibleCards))}
+          {shown.length > COMMENTS_SHOWN && (
             <Box marginTop={1}>
-              <Text color={GRUV.grey}>{findings.length - COMMENTS_SHOWN} more on GitHub: press 1</Text>
+              <Text color={GRUV.grey}>{shown.length - COMMENTS_SHOWN} more on GitHub: press 1</Text>
             </Box>
           )}
         </Box>

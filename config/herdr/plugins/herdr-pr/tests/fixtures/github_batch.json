@@ -1,0 +1,48 @@
+{
+  "data": {
+    "viewer": { "login": "me" },
+    "p0": {
+      "pullRequest": {
+        "number": 12, "title": "Add guard", "url": "https://github.com/acme/app/pull/12",
+        "state": "OPEN", "isDraft": false, "reviewDecision": "CHANGES_REQUESTED",
+        "mergeStateStatus": "BEHIND", "baseRefName": "main", "headRefName": "feat/guard", "headRefOid": "aaa111",
+        "commits": { "nodes": [ { "commit": { "statusCheckRollup": { "contexts": { "nodes": [
+          { "__typename": "CheckRun", "name": "test", "status": "COMPLETED", "conclusion": "FAILURE", "detailsUrl": "https://github.com/acme/app/actions/runs/555/job/1" },
+          { "__typename": "CheckRun", "name": "lint", "status": "IN_PROGRESS", "conclusion": null, "detailsUrl": null },
+          { "__typename": "CheckRun", "name": "docs", "status": "COMPLETED", "conclusion": "SKIPPED", "detailsUrl": null },
+          { "__typename": "StatusContext", "context": "deploy", "state": "SUCCESS", "targetUrl": "https://deploy" },
+          { "__typename": "StatusContext", "context": "preview", "state": "PENDING", "targetUrl": null },
+          { "__typename": "CheckRun", "name": "test", "status": "COMPLETED", "conclusion": "TIMED_OUT", "detailsUrl": "https://github.com/acme/app/actions/runs/556/job/2" }
+        ] } } } } ] },
+        "comments": { "nodes": [
+          { "author": { "login": "alice" }, "body": "Looks risky", "url": "https://github.com/acme/app/pull/12#issuecomment-1", "createdAt": "2026-10-01T10:00:00Z" },
+          { "author": null, "body": "ghost", "url": "https://github.com/acme/app/pull/12#issuecomment-2", "createdAt": "2026-10-01T11:00:00Z" }
+        ] },
+        "reviews": { "nodes": [
+          { "author": { "login": "bob" }, "body": "", "url": "https://github.com/acme/app/pull/12#pullrequestreview-1", "submittedAt": "2026-10-02T09:00:00Z" },
+          { "author": { "login": "carol" }, "body": "Please split this", "url": "https://github.com/acme/app/pull/12#pullrequestreview-2", "submittedAt": "2026-10-02T10:00:00Z" }
+        ] },
+        "reviewThreads": { "nodes": [
+          { "id": "PRRT_1", "isResolved": false, "path": "src/a.rs", "line": 3,
+            "comments": { "nodes": [ { "author": { "login": "dave" }, "body": "Null check missing", "url": "https://github.com/acme/app/pull/12#discussion_r1", "createdAt": "2026-10-03T08:00:00Z" } ] } },
+          { "id": "PRRT_2", "isResolved": true, "path": "src/b.rs", "line": null,
+            "comments": { "nodes": [ { "author": { "login": "dave" }, "body": "Rename", "url": "https://github.com/acme/app/pull/12#discussion_r2", "createdAt": "2026-10-03T07:00:00Z" } ] } },
+          { "id": "PRRT_3", "isResolved": false, "path": null, "line": null, "comments": { "nodes": [] } }
+        ] }
+      }
+    },
+    "p1": {
+      "pullRequest": {
+        "number": 13, "title": "Merged one", "url": "https://github.com/acme/app/pull/13",
+        "state": "MERGED", "isDraft": false, "reviewDecision": null,
+        "mergeStateStatus": "UNKNOWN", "baseRefName": "main", "headRefName": "feat/old", "headRefOid": "bbb222",
+        "commits": { "nodes": [ { "commit": { "statusCheckRollup": null } } ] },
+        "comments": { "nodes": [] }, "reviews": { "nodes": [] }, "reviewThreads": { "nodes": [] }
+      }
+    },
+    "p2": { "pullRequest": null }
+  },
+  "errors": [
+    { "type": "NOT_FOUND", "path": ["p2", "pullRequest"], "message": "Could not resolve to a PullRequest with the number of 99." }
+  ]
+}

@@ -42,12 +42,14 @@ declare module 'claude-code' {
       prs: PrStatus[]
       /** The PR whose details show: the last PR row the focus ring landed on. */
       selectedPr: string | null
-      /** The comment whose full text shows, as `<pr key>:<index>`. */
+      /** The comment whose full text shows, as `<pr key>:<comment url>`. */
       openComment: string | null
       /** The PRs whose new CI failures and review comments start a turn on their own. */
       autoFix: string[]
       /** The herdr workspace and git worktree the list belongs to, e.g. "herdr:w1V|/src/app-wt"; null before the first poll. */
       scope: string | null
+      /** Whether resolved review threads show in the details. */
+      showResolved: boolean
     }
   }
 }

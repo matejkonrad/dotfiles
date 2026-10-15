@@ -93,6 +93,8 @@ target = "~/.config/tmux/tmux.conf"
 #   herdr plugin install ChmaraX/herdr-nvim                 # nvim sidebar + annotations
 #   herdr plugin install qu8n/herdr-automatic-rename        # auto tab names (hook in .zshrc)
 #   herdr plugin install hhdebb/herdr-radar                 # grouped Agents panel (repo > worktree > agent)
+#   (cd config/herdr/plugins/herdr-pr && cargo build --release) && herdr plugin link ~/Project/self/dotfiles/config/herdr/plugins/herdr-pr
+#     ^ local plugin (tracked below): PR status token, PR board (prefix+P), auto-fix loop
 #   herdr plugin link  ~/Project/self/dotfiles/config/herdr/plugins/open-in-nvim
 #     ^ local plugin (tracked below): click a path in any pane → open in sibling nvim
 [herdr]

@@ -23,6 +23,16 @@ title = "herdr-pr: open PR board"
 command = ["target/release/herdr-pr", "action", "board"]
 
 [[actions]]
+id = "board-split"
+title = "herdr-pr: open PR board as a split"
+command = ["target/release/herdr-pr", "action", "board-split"]
+
+[[actions]]
+id = "board-tab"
+title = "herdr-pr: open PR board as a tab"
+command = ["target/release/herdr-pr", "action", "board-tab"]
+
+[[actions]]
 id = "fix"
 title = "herdr-pr: fix this workspace's PR now"
 command = ["target/release/herdr-pr", "action", "fix"]
