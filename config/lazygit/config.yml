@@ -30,3 +30,14 @@ os:
   editPreset: "nvim-remote"
   # edit: "nvim --server $NVIM --remote-send '<C-\\><C-n>:close | edit {{filename}}<CR>'"
   # editAtLine: "nvim --server $NVIM --remote-send '<C-\\><C-n>:close | edit {{filename}}<CR>:{{line}}<CR>'"
+customCommands:
+  # W in the worktrees panel: open the worktree as its own herdr workspace
+  # (focuses it when it is already open). space still switches in place, and
+  # lazygit inside nvim then moves nvim too (config/nvim/lua/config/keymaps.lua).
+  - key: "W"
+    context: "worktrees"
+    description: "Open worktree in its herdr workspace"
+    command: >-
+      herdr worktree open --cwd "{{.SelectedWorktree.Path}}"
+      --path "{{.SelectedWorktree.Path}}" --focus >/dev/null
+    output: log

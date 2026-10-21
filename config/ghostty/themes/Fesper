@@ -1,0 +1,30 @@
+# Fesper: the terminal block of config/zed/themes/fesper.json.
+background = #1a1a1a
+# Zed uses #A0A0A0 here, but that is too dark for plain terminal text such as
+# Claude Code. #DBDBDB is the Fesper variable color.
+foreground = #dbdbdb
+# Faint (SGR 2) text blends toward the background. The default 0.5 makes dim
+# text almost invisible on #1A1A1A.
+faint-opacity = 0.7
+cursor-color = #ffc799
+cursor-text = #1a1a1a
+# Zed selection #FFC7993d, blended over the background.
+selection-background = #514438
+selection-foreground = cell-foreground
+
+palette = 0=#101010
+palette = 1=#f5a191
+palette = 2=#90b99f
+palette = 3=#e6b99d
+palette = 4=#aca1cf
+palette = 5=#e29eca
+palette = 6=#ea83a5
+palette = 7=#a0a0a0
+palette = 8=#7e7e7e
+palette = 9=#ff8080
+palette = 10=#99ffe4
+palette = 11=#ffc799
+palette = 12=#b9aeda
+palette = 13=#ecaad6
+palette = 14=#f591b2
+palette = 15=#ffffff

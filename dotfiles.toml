@@ -125,13 +125,13 @@ os = "darwin"
 source = "scripts/op-env"
 target = "~/.local/bin/op-env"
 
-[codex_notify]
-source = "scripts/codex-notify"
-target = "~/.local/bin/codex-notify"
-
 [tmux_sessions]
 source = "scripts/tmux-sessions"
 target = "~/.local/bin/tmux-sessions"
+
+[theme]
+source = "scripts/theme"
+target = "~/.local/bin/theme"
 
 [tmux_open_in_nvim]
 source = "scripts/tmux-open-in-nvim"

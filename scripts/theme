@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# Switch the color theme of Ghostty, herdr and Neovim in one go.
+#
+#   theme            print the current theme
+#   theme fesper     Fesper (config/zed/themes/fesper.json, ported to each tool)
+#   theme gruvbox    Gruvbox Material hard
+#
+# Each tool keeps the theme in its own tracked file, so a switch shows up in
+# `git status` and survives a fresh checkout:
+#   Ghostty  config/ghostty/theme.conf           (included via config-file)
+#   herdr    the "theme block" in config/herdr/config.toml, from themes/<name>.toml
+#   Neovim   config/nvim/theme                   (read by lua/config/theme.lua)
+# Running instances reload in place. Zed already uses Fesper and is not touched.
+set -euo pipefail
+
+dotfiles="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+themes=(fesper gruvbox)
+nvim_theme="$dotfiles/config/nvim/theme"
+
+if [[ $# -eq 0 ]]; then
+	cat "$nvim_theme"
+	exit 0
+fi
+
+name="$1"
+if [[ ! " ${themes[*]} " == *" $name "* ]]; then
+	echo "theme: unknown theme '$name' (choose: ${themes[*]})" >&2
+	exit 1
+fi
+
+# --- Ghostty ---
+case "$name" in
+fesper) ghostty='theme = Fesper' ;;
+gruvbox) ghostty=$'theme = Gruvbox Material Dark\n# "hard" gruvbox-material bg0, to match nvim and herdr.\nbackground = #1d2021' ;;
+esac
+printf '%s\n' "$ghostty" >"$dotfiles/config/ghostty/theme.conf"
+
+# --- herdr: replace the lines between the theme block markers ---
+herdr_config="$dotfiles/config/herdr/config.toml"
+herdr_block="$dotfiles/config/herdr/themes/$name.toml"
+awk -v block="$herdr_block" '
+	/^# >>> theme block/ { print; while ((getline line < block) > 0) print line; skip = 1; next }
+	/^# <<< theme block/ { skip = 0 }
+	!skip
+' "$herdr_config" >"$herdr_config.tmp"
+mv "$herdr_config.tmp" "$herdr_config"
+
+# --- Neovim ---
+printf '%s\n' "$name" >"$nvim_theme"
+
+# --- Reload running instances ---
+# Ghostty: AppleScript "perform action" (Ghostty 1.3+) reloads the config.
+if [[ "$(uname)" == Darwin ]] && pgrep -xq ghostty; then
+	osascript -e 'tell application "Ghostty" to perform action "reload_config" on focused terminal of selected tab of front window' >/dev/null 2>&1 ||
+		echo "theme: reload Ghostty by hand (cmd+shift+,)" >&2
+fi
+
+if command -v herdr >/dev/null && herdr status server >/dev/null 2>&1; then
+	herdr server reload-config >/dev/null || echo "theme: herdr reload failed" >&2
+	# The herdr client caches Ghostty's palette and hands it to its panes. A
+	# SIGWINCH makes it query the new palette (see herdr docs, "Theme").
+	# Ghostty reloads asynchronously, so wait for it first.
+	sleep 0.5
+	pkill -WINCH -x herdr || true
+fi
+
+# Every Neovim listens on a socket under $TMPDIR/nvim.$USER/ by default.
+for sock in "${TMPDIR:-/tmp/}"nvim."$USER"/*/nvim.*.0; do
+	[[ -S "$sock" ]] || continue
+	nvim --server "$sock" --remote-expr 'v:lua.require("config.theme").apply()' >/dev/null 2>&1 || true
+done
+
+echo "theme: $name"

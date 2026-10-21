@@ -77,7 +77,9 @@
 		"dock": "left",
 	},
 	"agent": {
-		"sidebar_side": "left",
+		"threads_sidebar": {
+   "position": "left"
+  },
   "use_modifier_to_send": false,
   "thinking_display": "always_collapsed",
   "expand_edit_card": true,

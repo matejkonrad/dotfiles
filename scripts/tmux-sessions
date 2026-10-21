@@ -3,8 +3,7 @@
 # session, so background projects are visible while you're attached to one.
 #
 # A red ● precedes any session that has a pending agent @notify flag on one of
-# its windows (set by the Claude/Codex hooks in claude/settings.json and
-# scripts/codex-notify). The attached session is shown white, the rest grey.
+# its windows (set by the Claude hooks in claude/settings.json). The attached session is shown white, the rest grey.
 #
 # Why a script and not an inline #() in tmux.conf: tmux expands #{...} in the
 # OUTER format before running #(), so an inline '#{@notify}' lookup would be

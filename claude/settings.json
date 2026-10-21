@@ -1,4 +1,14 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(op whoami)",
+      "Bash(op-env id *)",
+      "Bash(op-env list)",
+      "Bash(op-env run creators/dev -- npx *)",
+      "Bash(op-env run creators/dev -- yarn *)",
+      "Bash(op-env sync)"
+    ]
+  },
   "model": "opus",
   "hooks": {
     "Notification": [
@@ -285,7 +295,8 @@
     "simple-english@simple-english": true,
     "gopls-lsp@claude-plugins-official": true,
     "pr-watch@matej-mods": true,
-    "herdr-fork@matej-mods": true
+    "herdr-fork@matej-mods": true,
+    "1password@1password": true
   },
   "extraKnownMarketplaces": {
     "simple-english": {
@@ -304,6 +315,12 @@
       "source": {
         "source": "directory",
         "path": "/Users/matejkonrad/.claude/mods"
+      }
+    },
+    "1password": {
+      "source": {
+        "source": "github",
+        "repo": "1Password/1password-claude-plugin"
       }
     }
   },

@@ -7,14 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"accessible_mode": false,
+ "buffer_font_family": "JetBrains Mono",
  "git": {
   "hunk_style": "staged_hollow"
  },
  "vim": {
   "toggle_relative_line_numbers": true
  },
- "markdown_preview_font_size": 14.0,
  "which_key": {
 		"enabled": true,
 	},
@@ -24,17 +23,17 @@
 	},
 	"diff_view_style": "split",
 	"terminal": {
-		"font_size": 14.0,
-		// "shell": {
-		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
-		// },
+		"font_size": 13.0,
+		"shell": {
+			"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		},
 		"show_count_badge": true,
 		"env": {
 			"EDITOR": "zed --wait",
 		},
 	},
 	"cli_default_open_behavior": "existing_window",
-	"agent_buffer_font_size": 14.0,
+	// "agent_buffer_font_size": 14.0,
 	"helix_mode": false,
 	"vim_mode": true,
 	"proxy": "",
@@ -50,15 +49,16 @@
 		},
 		"codex-acp": {
 			"default_config_options": {
-				"model": "gpt-5.6-sol",
+				"model": "gpt-6-sol",
     "mode": "agent-full-access",
 			},
 			"type": "registry",
 		},
 		"claude-acp": {
 			"default_config_options": {
+    "fast": false,
     "mode": "auto",
-    "model": "opus[1m]"
+    "model": "default"
    },
    "type": "registry",
 		},
@@ -76,14 +76,12 @@
 		"tree_view": true,
 		"dock": "left",
 	},
-	"ui_font_weight": 450.0,
-	"unnecessary_code_fade": 0.4,
-	"ui_font_family": ".ZedSans",
-	"buffer_line_height": "standard",
-	"buffer_font_weight": 400.0,
-	"buffer_font_family": ".ZedMono",
 	"agent": {
-		"expand_terminal_card": false,
+		"sidebar_side": "left",
+  "use_modifier_to_send": false,
+  "thinking_display": "always_collapsed",
+  "expand_edit_card": true,
+  "expand_terminal_card": false,
   "profiles": {
 			"auto": {
 				"name": "Auto",
@@ -95,14 +93,14 @@
 		"tool_permissions": {
 			"default": "allow",
 		},
-		"single_file_review": true,
+		"single_file_review": false,
 		"dock": "right",
 		"default_profile": "write",
 		"default_model": {
-			"effort": "medium",
+			"effort": "low",
 			"enable_thinking": true,
-			"provider": "openai",
-			"model": "gpt-5.6-sol",
+			"provider": "openai-subscribed",
+			"model": "gpt-6-sol",
 		},
 		"model_parameters": [],
 	},
@@ -116,11 +114,11 @@
 		"dark": "Zed (Default)",
 	},
 	"ui_font_size": 14.0,
-	"buffer_font_size": 14.0,
+	"buffer_font_size": 12.0,
 	"theme": {
 		"mode": "dark",
 		"light": "Hami Melon Light",
-		"dark": "Gruvbox Material Neovim Dark",
+		"dark": "Fesper",
 	},
 	"relative_line_numbers": "enabled",
 	"hard_tabs": true,

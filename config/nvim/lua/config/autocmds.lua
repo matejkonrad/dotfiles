@@ -39,36 +39,55 @@ local function open_in_nvim_trim(s)
   return (s or ""):gsub("%s+$", "")
 end
 
--- tmux: ⌥-click / `gf` in copy-mode → ~/.local/bin/tmux-open-in-nvim.
--- Socket name MUST match scripts/tmux-open-in-nvim.
-if vim.env.TMUX_PANE then
-  local sid =
-    open_in_nvim_trim(vim.fn.system({ "tmux", "display", "-p", "-t", vim.env.TMUX_PANE, "-F", "#{session_id}" }))
-  local ws = open_in_nvim_trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
-  if ws == "" then
-    ws = vim.fn.getcwd()
-  end
-  if sid ~= "" then
-    local key = vim.fn.sha256(sid .. ":" .. ws):sub(1, 16)
-    pcall(vim.fn.serverstart, ("/tmp/nvim-%s.sock"):format(key))
-  end
-end
+-- Sockets started for the current worktree; stopped again when the global cwd
+-- moves to another worktree (e.g. a lazygit worktree switch, see keymaps.lua).
+local open_in_nvim_socks = {}
 
--- herdr: click a path link in any pane → the open-in-nvim herdr plugin
--- (config/herdr/plugins/open-in-nvim). Keyed by HERDR_WORKSPACE_ID + worktree.
--- Socket + .pane sidecar names MUST match open-in-nvim.sh.
--- The herdr-nvim sidebar daemon is skipped: its pane id changes on every toggle.
-if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" and not vim.g.herdr_nvim_daemon then
-  local wsid = vim.env.HERDR_WORKSPACE_ID or ""
+local function open_in_nvim_register()
+  for _, sock in ipairs(open_in_nvim_socks) do
+    pcall(vim.fn.serverstop, sock)
+  end
+  open_in_nvim_socks = {}
   local root = open_in_nvim_trim(vim.fn.system({ "git", "-C", vim.fn.getcwd(), "rev-parse", "--show-toplevel" }))
   if root == "" then
     root = vim.fn.getcwd()
   end
-  local key = vim.fn.sha256(wsid .. ":" .. root):sub(1, 16)
-  pcall(vim.fn.serverstart, ("/tmp/nvim-herdr-%s.sock"):format(key))
-  -- Record this nvim's herdr pane id so the handler can focus it after opening.
-  pcall(vim.fn.writefile, { vim.env.HERDR_PANE_ID }, ("/tmp/nvim-herdr-%s.pane"):format(key))
+
+  -- tmux: ⌥-click / `gf` in copy-mode → ~/.local/bin/tmux-open-in-nvim.
+  -- Socket name MUST match scripts/tmux-open-in-nvim.
+  if vim.env.TMUX_PANE then
+    local sid =
+      open_in_nvim_trim(vim.fn.system({ "tmux", "display", "-p", "-t", vim.env.TMUX_PANE, "-F", "#{session_id}" }))
+    if sid ~= "" then
+      local key = vim.fn.sha256(sid .. ":" .. root):sub(1, 16)
+      local ok, sock = pcall(vim.fn.serverstart, ("/tmp/nvim-%s.sock"):format(key))
+      if ok then
+        table.insert(open_in_nvim_socks, sock)
+      end
+    end
+  end
+
+  -- herdr: click a path link in any pane → the open-in-nvim herdr plugin
+  -- (config/herdr/plugins/open-in-nvim). Keyed by HERDR_WORKSPACE_ID + worktree.
+  -- Socket + .pane sidecar names MUST match open-in-nvim.sh.
+  -- The herdr-nvim sidebar daemon is skipped: its pane id changes on every toggle.
+  if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" and not vim.g.herdr_nvim_daemon then
+    local wsid = vim.env.HERDR_WORKSPACE_ID or ""
+    local key = vim.fn.sha256(wsid .. ":" .. root):sub(1, 16)
+    local ok, sock = pcall(vim.fn.serverstart, ("/tmp/nvim-herdr-%s.sock"):format(key))
+    if ok then
+      table.insert(open_in_nvim_socks, sock)
+    end
+    -- Record this nvim's herdr pane id so the handler can focus it after opening.
+    pcall(vim.fn.writefile, { vim.env.HERDR_PANE_ID }, ("/tmp/nvim-herdr-%s.pane"):format(key))
+  end
 end
+
+open_in_nvim_register()
+vim.api.nvim_create_autocmd("DirChanged", {
+  pattern = "global",
+  callback = open_in_nvim_register,
+})
 
 -- Auto-wipe unnamed empty buffers when they become hidden (avoids the stray
 -- "[No Name]" buffers that linger after creating/opening new files).

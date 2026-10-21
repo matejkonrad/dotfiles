@@ -1,0 +1,28 @@
+# Fesper — the palette of config/zed/themes/fesper.json, matching Ghostty
+# themes/Fesper and nvim colors/fesper.lua. Every token is set, so the base
+# theme only supplies structure. The surface/overlay tokens give the tab bar
+# its contrast: without them the tabs blend into one strip.
+[theme]
+name = "gruvbox"
+auto_switch = false
+
+[theme.custom]
+panel_bg = "#1a1a1a"      # background
+sidebar_bg = "#1a1a1a"
+surface_dim = "#2a2a2a"   # border — separators
+active_row_bg = "#232323" # element.selected
+selection_bg = "#282828"  # ghost_element.hover
+surface0 = "#282828"      # inactive tab
+surface1 = "#343434"      # scrollbar thumb
+overlay0 = "#7e7e7e"      # inactive tab text (placeholder)
+overlay1 = "#a0a0a0"      # named inactive tab text (muted)
+subtext0 = "#a0a0a0"      # muted text
+text = "#a6a6a6"
+accent = "#ffc799"
+red = "#ff8080"
+green = "#99ffe4"         # success / created
+yellow = "#ffc799"
+blue = "#aca1cf"
+mauve = "#e29eca"
+peach = "#ffb47a"         # syntax type
+teal = "#8cd9b2"          # syntax string

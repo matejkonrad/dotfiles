@@ -263,7 +263,8 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox-material",
+      -- Set by `theme fesper|gruvbox` (scripts/theme), see lua/config/theme.lua.
+      colorscheme = require("config.theme").current().colorscheme,
     },
   },
 }

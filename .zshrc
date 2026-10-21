@@ -3,9 +3,32 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="lambda"
 
-plugins=(git)
+# Plugins in $ZSH_CUSTOM/plugins (git clones, not tracked here). fzf-tab must
+# come before the other two, since they wrap widgets it also hooks.
+plugins=(git fzf-tab zsh-autosuggestions fast-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
+
+# Autosuggestions: → accepts the next word, Ctrl-Space accepts all.
+# → still moves one char when the cursor is mid-line or nothing is suggested.
+_autosuggest_accept_word_or_forward_char() {
+	if [[ -n $POSTDISPLAY && $CURSOR -eq ${#BUFFER} ]]; then
+		zle forward-word
+	else
+		zle forward-char
+	fi
+}
+zle -N _autosuggest_accept_word_or_forward_char
+# Otherwise autosuggestions wraps the widget and hides $POSTDISPLAY from it
+ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=(_autosuggest_accept_word_or_forward_char)
+bindkey '^[[C' _autosuggest_accept_word_or_forward_char
+bindkey '^[OC' _autosuggest_accept_word_or_forward_char
+bindkey '^ ' autosuggest-accept
+
+# fzf-tab: let fzf handle the menu, preview directories on cd
+zstyle ':completion:*' menu no
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
 
 # ---------------------------------------------------------------------
 # Tab / window title = git repo name (falls back to the folder name).
