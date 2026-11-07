@@ -28,15 +28,31 @@ vim.lsp.buf.signature_help = function(config)
   }))
 end
 
--- LSP server to use for TypeScript. Forcing vtsls: tsgo (TS native preview)
--- still lacks the add-missing-import code action (typescript-go #3318), so
--- <leader>ca couldn't auto-import. vtsls is slower/heavier but has full code
--- actions. To go back to auto-picking tsgo when a project ships it locally,
--- delete the last line and restore the three commented ones.
--- local pkg = vim.fs.find("package.json", { upward = true, path = vim.fn.getcwd(), type = "file" })[1]
--- local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
--- vim.g.lazyvim_ts_lsp = vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 and "tsgo" or "vtsls"
-vim.g.lazyvim_ts_lsp = "vtsls"
+-- LSP server to use for TypeScript: the native `tsc` server when the project
+-- has TypeScript 7 (or the tsgo native preview), else vtsls. Decided once at
+-- startup from the cwd, since there is one nvim per project.
+-- Override per project with `vim.g.lazyvim_ts_lsp = "vtsls"` in an exrc.
+local function project_has_ts7()
+  local pkg = vim.fs.find("package.json", { upward = true, path = vim.fn.getcwd(), type = "file" })[1]
+  local root = pkg and vim.fs.dirname(pkg) or vim.fn.getcwd()
+  if vim.fn.executable(root .. "/node_modules/.bin/tsgo") == 1 then
+    return true
+  end
+  local ok, lines = pcall(vim.fn.readfile, root .. "/node_modules/typescript/package.json")
+  local major = ok and tonumber(table.concat(lines):match('"version"%s*:%s*"(%d+)') or "")
+  return type(major) == "number" and major >= 7
+end
+vim.g.lazyvim_ts_lsp = project_has_ts7() and "tsc" or "vtsls"
+
+-- Tab-indented projects (FramerStudio's .editorconfig sets indent_style = tab
+-- with no indent_size) fall back to LazyVim's tabstop=2, which cramps nested
+-- JSX. 4 matches how VS Code shows the same files.
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 0 -- follow tabstop
+
+-- LazyVim's prettier extra otherwise runs Prettier everywhere, before oxfmt
+-- in oxfmt projects like FramerStudio.
+vim.g.lazyvim_prettier_needs_config = true
 
 -- Always show the buffer line, even with a single buffer. We own `showtabline`
 -- here (bufferline's own toggle is disabled in lua/plugins/bufferline.lua) so

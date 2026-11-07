@@ -26,3 +26,6 @@ config/emacs/tramp
 *.bak.*
 Untitled
 .DS_Store
+
+# Renderer copied out of the Claude Code binary: keep it local, never push it.
+claude/mods/mermaid-terminal/hooks/mermaid.mjs

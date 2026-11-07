@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# rex-open-in-nvim — open a file in the Neovim that runs in the same Rex session
+# and worktree, at the right line, and focus its pane. The Rex port of
+# scripts/tmux-open-in-nvim; agents call it to show you a file.
+#
+#   rex-open-in-nvim path[:line[:col]] ...
+#
+# nvim opens the server socket at startup (config/nvim/lua/config/autocmds.lua).
+# The socket name MUST match the one built there:
+#   /tmp/nvim-rex-<sha256(REX_SESSION ":" worktree_root)[:16]>.sock
+# nvim records its own Rex block at the sibling ".block" path so we can focus it.
+
+set -euo pipefail
+
+session="${REX_SESSION:-}"
+[ -n "$session" ] || { echo "rex-open-in-nvim: not in a Rex pane (REX_SESSION unset)" >&2; exit 1; }
+[ $# -gt 0 ] || { echo "usage: rex-open-in-nvim path[:line[:col]] ..." >&2; exit 2; }
+
+root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+key=$(printf '%s' "$session:$root" | shasum -a 256 | cut -c1-16)
+sock="/tmp/nvim-rex-$key.sock"
+[ -S "$sock" ] || { echo "rex-open-in-nvim: no nvim for $root in this Rex session" >&2; exit 1; }
+
+for word in "$@"; do
+  # Split off a trailing :line[:col].
+  file="${word%%:*}"
+  rest="${word#"$file"}"
+  line="${rest#:}"; line="${line%%:*}"
+  case "$line" in ''|*[!0-9]*) line="" ;; esac
+
+  abs=""
+  for base in "$PWD" "$root"; do
+    case "$file" in /*) cand="$file" ;; *) cand="$base/$file" ;; esac
+    if [ -f "$cand" ]; then abs="$cand"; break; fi
+  done
+  [ -n "$abs" ] || { echo "rex-open-in-nvim: no such file: $file" >&2; continue; }
+
+  # Literal file argument via --remote-silent (not :edit), so paths such as
+  # app/(marketing)/[id]/page.tsx are not read as glob patterns. It ignores a
+  # leading "+line", so the jump is a separate --remote-send.
+  nvim --server "$sock" --remote-silent "$abs"
+  if [ -n "$line" ]; then
+    nvim --server "$sock" --remote-send "<C-\\><C-n>:${line}<CR>"
+  fi
+done
+
+block_file="/tmp/nvim-rex-$key.block"
+if [ -s "$block_file" ]; then
+  rex focus -s "$session" "$(cat "$block_file")" >/dev/null 2>&1 || true
+fi

@@ -221,6 +221,12 @@ type = "plugin_action"
 command = "herdr-splits.resize-right"
 description = "resize right (nvim/herdr)"
 
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "dev.volpestyle.mermaid-preview.open"
+description = "open Mermaid preview"
+
 # >>> theme block — written by `theme fesper|gruvbox` (scripts/theme) from themes/<name>.toml
 # Fesper — the palette of config/zed/themes/fesper.json, matching Ghostty
 # themes/Fesper and nvim colors/fesper.lua. Every token is set, so the base
@@ -246,9 +252,9 @@ accent = "#ffc799"
 red = "#ff8080"
 green = "#99ffe4"         # success / created
 yellow = "#ffc799"
-blue = "#aca1cf"
-mauve = "#e29eca"
-peach = "#ffb47a"         # syntax type
+blue = "#82aad9"
+mauve = "#c39ad8"
+peach = "#e5c07b"         # syntax type
 teal = "#8cd9b2"          # syntax string
 # <<< theme block
 
@@ -259,6 +265,8 @@ directory = "~/Projects/worktrees"
 
 [experimental]
 pane_history = false
+# Mermaid Preview plugin draws diagram PNGs through the Kitty graphics protocol.
+kitty_graphics = true
 switch_ascii_input_source_in_prefix = false
 
 [ui]
@@ -285,6 +293,7 @@ pane_gaps = false
 pane_scrollbars = false
 
 # >>> herdr-radar sidebar block
+status_indicators = "symbols"
 [ui.sidebar.agents]
 # logo glyphs: font
 rows = [[{ token = "$group_parent", fg = "#8b8e9c", bold = true, dim = false }], [{ token = "$group", fg = "#a8abbd", bold = true, dim = false }, { token = "$group_stale", fg = "#8b8e9c", bold = true, dim = false }], [{ token = "$split_mark", fg = "#8b8e9c", bold = false, dim = false }, { token = "$logo", fg = "#e9e9f0", bold = false, dim = false, rules = [{ contains = "", fg = "#d97757" }, { contains = "", fg = "#4285f4" }, { contains = "", fg = "#1783ff" }, { contains = "", fg = "#4d6bfe" }, { contains = "", fg = "#615ced" }, { contains = "", fg = "#9046ff" }, { contains = "", fg = "#586876" }, { contains = "", fg = "#9a9808" }, { contains = "", fg = "#ff521d" }, { contains = "", fg = "#0082fb" }, { contains = "", fg = "#ff388b" }] }, { token = "$logo_working", fg = "#e9e9f0", bold = false, dim = false, rules = [{ contains = "", fg = "#d97757" }, { contains = "", fg = "#4285f4" }, { contains = "", fg = "#1783ff" }, { contains = "", fg = "#4d6bfe" }, { contains = "", fg = "#615ced" }, { contains = "", fg = "#9046ff" }, { contains = "", fg = "#586876" }, { contains = "", fg = "#9a9808" }, { contains = "", fg = "#ff521d" }, { contains = "", fg = "#0082fb" }, { contains = "", fg = "#ff388b" }] }, { token = "$logo_stale", fg = "#8b8e9c", bold = false, dim = false }, { token = "$title_working", fg = "#c78a1f", bold = true, dim = false }, { token = "$title_done", fg = "#4c9a5a", bold = false, dim = false }, { token = "$title_blocked", fg = "#c04a4a", bold = false, dim = false }, { token = "$title_idle_fresh", fg = "#95bba2", bold = false, dim = false }, { token = "$title_idle", fg = "#a99e92", bold = false, dim = false }, { token = "$title_idle_stale", fg = "#8b8e9c", bold = false, dim = false }, { token = "$title_unknown", fg = "#907aa9", bold = false, dim = false }], ["$gap"]]
@@ -311,3 +320,6 @@ rows = [["state_icon", "workspace",
   { token = "$pr_stale", fg = "#928374" },
 ]]
 # <<< herdr-radar sidebar block
+
+[ui.toast]
+delivery = "system"

@@ -81,9 +81,24 @@ os = "darwin"
 source = "config/opencode/opencode.json"
 target = "~/.config/opencode/opencode.json"
 
+[opencode-themes]
+source = "config/opencode/themes"
+target = "~/.config/opencode/themes"
+
 [tmux]
 source = "config/tmux/tmux.conf"
 target = "~/.config/tmux/tmux.conf"
+
+# Only init.lua is tracked: ~/.config/rex also holds runtime files that
+# `rex terminfo setup` writes (ssh_config, terminfo-hosts).
+# One-time setup per machine: rex terminfo setup && rex skill setup
+[rex]
+source = "config/rex/init.lua"
+target = "~/.config/rex/init.lua"
+
+[rex_open_in_nvim]
+source = "scripts/rex-open-in-nvim"
+target = "~/.local/bin/rex-open-in-nvim"
 
 # Only config.toml is tracked — the rest of ~/.config/herdr (logs, sockets,
 # session.json, installed plugins) is runtime state, not dotfiles.

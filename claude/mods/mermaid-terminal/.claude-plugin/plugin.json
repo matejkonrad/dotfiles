@@ -1,0 +1,1 @@
+{ "name": "mermaid-terminal", "version": "0.1.0", "description": "Draws mermaid code fences in Claude's replies as box-drawing diagrams in the terminal" }

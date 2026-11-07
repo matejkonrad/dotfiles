@@ -2,8 +2,9 @@ return {
   "christoomey/vim-tmux-navigator",
   enabled = true,
   -- Only under tmux — inside a herdr pane, herdr-nvim-nav owns <C-h/j/k/l>
-  -- (see herdr-nvim-nav.lua). Prevents the two navigators from clashing.
-  cond = vim.env.HERDR_ENV ~= "1",
+  -- (see herdr-nvim-nav.lua), inside a Rex pane rex-nav.lua does. Prevents
+  -- the navigators from clashing.
+  cond = vim.env.HERDR_ENV ~= "1" and require("config.rex").session() == nil,
   init = function()
     vim.g.tmux_navigator_disable_when_zoomed = 1
   end,

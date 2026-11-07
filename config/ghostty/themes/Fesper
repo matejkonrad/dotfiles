@@ -12,19 +12,22 @@ cursor-text = #1a1a1a
 selection-background = #514438
 selection-foreground = cell-foreground
 
+# The Zed palette puts red, yellow, magenta and cyan all in one pink-peach
+# range, so tools that color by ANSI slot (opencode "system", git, ls) blur
+# together. Each slot below has its own hue, kept soft to match Vesper.
 palette = 0=#101010
-palette = 1=#f5a191
+palette = 1=#e67e80
 palette = 2=#90b99f
-palette = 3=#e6b99d
-palette = 4=#aca1cf
-palette = 5=#e29eca
-palette = 6=#ea83a5
+palette = 3=#e5c07b
+palette = 4=#82aad9
+palette = 5=#c39ad8
+palette = 6=#7fc8c2
 palette = 7=#a0a0a0
 palette = 8=#7e7e7e
 palette = 9=#ff8080
-palette = 10=#99ffe4
+palette = 10=#a8d8a0
 palette = 11=#ffc799
-palette = 12=#b9aeda
-palette = 13=#ecaad6
-palette = 14=#f591b2
+palette = 12=#9cc0ec
+palette = 13=#d6b3ea
+palette = 14=#99ffe4
 palette = 15=#ffffff

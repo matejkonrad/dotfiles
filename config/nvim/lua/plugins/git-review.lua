@@ -83,11 +83,14 @@ local function open_tuicr(args)
   Snacks.terminal.open(vim.list_extend({ "tuicr" }, args), { win = full_float("tuicr") })
 end
 
--- Stage text into a herdr agent's prompt (herdr-nvim's agent lookup, not
--- submitted). Outside herdr the text goes to the clipboard instead.
+-- Stage text into a herdr or Rex agent's prompt (not submitted). Outside both
+-- the text goes to the clipboard instead.
 ---@param payload string
 ---@param what string
 local function send_to_agent(payload, what)
+  if require("config.rex").session() then
+    return require("config.rex").send(payload, what)
+  end
   if vim.env.HERDR_PANE_ID and vim.env.HERDR_PANE_ID ~= "" then
     local ok, err = pcall(function()
       local agents = require("herdr-nvim.agents")
@@ -244,7 +247,7 @@ return {
       },
       explorer = {
         position = "left",
-        width = 35,
+        width = 50,
         view_mode = "tree",
         flatten_dirs = true,
         indent_markers = true,

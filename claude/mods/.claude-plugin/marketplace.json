@@ -1,6 +1,8 @@
 {
   "name": "matej-mods",
-  "owner": { "name": "Matej Konrad" },
+  "owner": {
+    "name": "Matej Konrad"
+  },
   "plugins": [
     {
       "name": "pr-watch",
@@ -11,6 +13,11 @@
       "name": "herdr-fork",
       "source": "./herdr-fork",
       "description": "Inside herdr, /fork and /clone fork the session once and open it in a new tab."
+    },
+    {
+      "name": "mermaid-terminal",
+      "source": "./mermaid-terminal",
+      "description": "Draws mermaid code fences in Claude's replies as box-drawing diagrams, and tells Claude to use them."
     }
   ]
 }

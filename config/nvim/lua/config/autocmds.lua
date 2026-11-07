@@ -81,6 +81,18 @@ local function open_in_nvim_register()
     -- Record this nvim's herdr pane id so the handler can focus it after opening.
     pcall(vim.fn.writefile, { vim.env.HERDR_PANE_ID }, ("/tmp/nvim-herdr-%s.pane"):format(key))
   end
+
+  -- Rex: agents (or any pane) run `rex-open-in-nvim path[:line]` to open a file
+  -- here (scripts/rex-open-in-nvim). Keyed by REX_SESSION + worktree.
+  -- Socket + .block sidecar names MUST match that script.
+  if require("config.rex").session() then
+    local key = vim.fn.sha256(vim.env.REX_SESSION .. ":" .. root):sub(1, 16)
+    local ok, sock = pcall(vim.fn.serverstart, ("/tmp/nvim-rex-%s.sock"):format(key))
+    if ok then
+      table.insert(open_in_nvim_socks, sock)
+    end
+    pcall(vim.fn.writefile, { vim.env.REX_BLOCK }, ("/tmp/nvim-rex-%s.block"):format(key))
+  end
 end
 
 open_in_nvim_register()

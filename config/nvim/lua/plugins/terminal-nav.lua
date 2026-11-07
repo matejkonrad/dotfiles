@@ -47,6 +47,8 @@ local function mux_focus(dir)
       herdr = "herdr"
     end
     vim.system({ herdr, "pane", "focus", "--direction", MUX_DIR[dir], "--current" })
+  elseif require("config.rex").session() then
+    require("config.rex").focus(dir)
   elseif vim.env.TMUX and vim.env.TMUX ~= "" then
     vim.system({ "tmux", "select-pane", TMUX_FLAG[dir] })
   end

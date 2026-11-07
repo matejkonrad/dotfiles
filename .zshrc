@@ -30,6 +30,9 @@ zstyle ':completion:*' menu no
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
 
+# Rex (superlogical) CLI completion
+(( $+commands[rex] )) && source <(rex completion zsh)
+
 # ---------------------------------------------------------------------
 # Tab / window title = git repo name (falls back to the folder name).
 # Re-asserted on every prompt AND before every command, so it overrides
@@ -78,6 +81,17 @@ function y() {
 	IFS= read -r -d '' cwd < "$tmp"
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
+}
+
+# Lazygit wrapper — after switching repo or worktree inside lazygit, quitting
+# cds the shell there. Lazygit writes the new dir to LAZYGIT_NEW_DIR_FILE.
+function lg() {
+	export LAZYGIT_NEW_DIR_FILE="$HOME/.lazygit/newdir"
+	command lazygit "$@"
+	if [ -f "$LAZYGIT_NEW_DIR_FILE" ]; then
+		builtin cd -- "$(cat "$LAZYGIT_NEW_DIR_FILE")"
+		rm -f -- "$LAZYGIT_NEW_DIR_FILE"
+	fi
 }
 
 # Go
