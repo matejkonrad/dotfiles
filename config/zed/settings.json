@@ -73,7 +73,8 @@
 		"dock": "left",
 	},
 	"git_panel": {
-		"tree_view": true,
+		"group_by": "staging",
+  "tree_view": true,
 		"dock": "left",
 	},
 	"agent": {

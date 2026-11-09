@@ -187,3 +187,28 @@ target = "~/.config/doom"
 [claude_mods]
 source = "claude/mods"
 target = "~/.claude/mods"
+
+# Herdr desktop app guide for every agent: one skill, one shared AGENTS.md pointer.
+[herdr_app_skill_claude]
+source = "agents/skills/herdr-app"
+target = "~/.claude/skills/herdr-app"
+
+[herdr_app_skill_agents]
+source = "agents/skills/herdr-app"
+target = "~/.agents/skills/herdr-app"
+
+[herdr_app_skill_pi]
+source = "agents/skills/herdr-app"
+target = "~/.pi/agent/skills/herdr-app"
+
+[agents_md_codex]
+source = "agents/AGENTS.md"
+target = "~/.codex/AGENTS.md"
+
+[agents_md_pi]
+source = "agents/AGENTS.md"
+target = "~/.pi/agent/AGENTS.md"
+
+[agents_md_opencode]
+source = "agents/AGENTS.md"
+target = "~/.config/opencode/AGENTS.md"

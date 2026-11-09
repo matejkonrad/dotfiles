@@ -12,7 +12,7 @@
 -- Only loads inside a herdr pane (HERDR_ENV=1).
 return {
   "lmilojevicc/herdr-splits.nvim",
-  cond = vim.env.HERDR_ENV == "1",
+  cond = vim.env.HERDR_ENV == "1" and not vim.g.herdr_app,
   event = "VeryLazy",
   opts = {
     at_edge = "wrap",

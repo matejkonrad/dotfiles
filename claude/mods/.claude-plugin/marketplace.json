@@ -12,7 +12,7 @@
     {
       "name": "herdr-fork",
       "source": "./herdr-fork",
-      "description": "Inside herdr, /fork and /clone fork the session once and open it in a new tab."
+      "description": "Inside herdr (TUI or desktop app), /fork and /clone fork the session once and open it in a new tab."
     },
     {
       "name": "mermaid-terminal",

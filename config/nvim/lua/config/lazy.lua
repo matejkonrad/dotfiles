@@ -7,6 +7,18 @@ if vim.g.herdr_nvim_daemon then
   vim.env.HERDR_ENV = "1"
 end
 
+-- Herdr desktop app: its terminals run under herdr-core (HC_TERMINAL_ID) and
+-- its herdr-nvim daemon sets HERDR_NVIM_HOST=app. The TUI's pane plugins
+-- (herdr-nvim-nav, herdr-splits) talk to the TUI socket, so they stay off here
+-- and config/keymaps.lua maps <C-h/j/k/l> for the app instead.
+-- tmux or Rex inside an app terminal owns <C-h/j/k/l> there, so those stay off.
+vim.g.herdr_app = (
+  vim.env.HERDR_NVIM_HOST == "app"
+  or (vim.env.HC_TERMINAL_ID ~= nil and vim.env.HERDR_PANE_ID == nil)
+)
+  and vim.env.TMUX == nil
+  and vim.env.REX_SESSION == nil
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"

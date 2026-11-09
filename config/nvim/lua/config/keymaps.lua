@@ -77,3 +77,24 @@ end, { desc = "Lazygit (cwd)" })
 -- Cycle tabpages with bracket pairs (]/[ = next/prev, matching other nav maps).
 vim.keymap.set("n", "]<Tab>", "<cmd>tabnext<cr>", { desc = "Next tab" })
 vim.keymap.set("n", "[<Tab>", "<cmd>tabprevious<cr>", { desc = "Prev tab" })
+
+-- Herdr desktop app (vim.g.herdr_app, set in config/lazy.lua): <C-h/j/k/l>
+-- moves between nvim splits and, at an edge, asks the app to move pane focus.
+-- The app's `nav` mod (~/.config/herdr-app/mods/nav) hands these keys to a
+-- focused nvim. Set here, after LazyVim's own <C-h/j/k/l> window maps.
+local herdr_app_bin = vim.g.herdr_app and vim.fn.exepath("herdr-app") or ""
+if vim.g.herdr_app and herdr_app_bin == "" then
+  local fallback = vim.fn.expand("~/.local/bin/herdr-app")
+  herdr_app_bin = vim.fn.executable(fallback) == 1 and fallback or ""
+end
+if herdr_app_bin ~= "" then
+  for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+    vim.keymap.set("n", "<C-" .. key .. ">", function()
+      local before = vim.api.nvim_get_current_win()
+      vim.cmd.wincmd(key)
+      if vim.api.nvim_get_current_win() == before then
+        pcall(vim.system, { herdr_app_bin, "do", "pane.go", vim.json.encode({ direction = direction }) })
+      end
+    end, { desc = "Window " .. direction .. " (nvim/Herdr app)" })
+  end
+end

@@ -21,7 +21,7 @@
 -- and the plugin only maps <Plug> targets they point at.
 return {
   "aimdevlee/herdr-nvim-nav",
-  cond = vim.env.HERDR_ENV == "1",
+  cond = vim.env.HERDR_ENV == "1" and not vim.g.herdr_app,
   -- Not lazy: the pane marker must exist before the first <C-h/j/k/l> press,
   -- otherwise herdr moves pane focus instead of handing the key to nvim.
   lazy = false,

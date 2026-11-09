@@ -7,8 +7,8 @@
 --   ctrl+h/j/k/l ....... NAVIGATE  seamless across nvim splits and Rex panes
 --   ctrl+arrows ........ focus the adjacent Rex pane (not nvim-aware)
 --   alt+h/j/k/l ........ RESIZE    nvim splits when nvim is focused, else Rex pane
---   ctrl+alt+h/l ....... previous / next TAB      (also ctrl+alt+left/right)
---   ctrl+alt+j/k ....... next / previous SESSION  (also ctrl+alt+down/up)
+--   ctrl+alt+h/l ....... previous / next SESSION  (arrows: ctrl+alt+left/right = TAB)
+--   ctrl+alt+j/k ....... next / previous TAB      (arrows: ctrl+alt+down/up = SESSION)
 --   ctrl+alt+shift ..... MOVE  tab (h/l) or pane (arrows)
 --   ctrl+alt+s / t ..... session switcher / new tab
 --   alt + .............. pane ops (split / zoom / close)
@@ -82,13 +82,13 @@ rex.bind("alt+l", "smart_resize", { direction = "right" })
 ---------------------------------------------------------------------------
 -- TABS and SESSIONS: ctrl+alt. Rex sessions play the role of herdr workspaces.
 ---------------------------------------------------------------------------
-rex.bind("ctrl+alt+h", "client.tab.previous")
-rex.bind("ctrl+alt+l", "client.tab.next")
+rex.bind("ctrl+alt+h", "session.previous")
+rex.bind("ctrl+alt+l", "session.next")
 rex.bind("ctrl+alt+left", "client.tab.previous")
 rex.bind("ctrl+alt+right", "client.tab.next")
 
-rex.bind("ctrl+alt+j", "session.next")
-rex.bind("ctrl+alt+k", "session.previous")
+rex.bind("ctrl+alt+j", "client.tab.next")
+rex.bind("ctrl+alt+k", "client.tab.previous")
 rex.bind("ctrl+alt+down", "session.next")
 rex.bind("ctrl+alt+up", "session.previous")
 
@@ -155,3 +155,18 @@ end
 
 -- Press ctrl+b twice to send one ctrl+b to the terminal.
 rex.bind("ctrl+b>ctrl+b", "pane.send_key", { key = "ctrl+b" })
+
+---------------------------------------------------------------------------
+-- SIMULATOR: rex-sim (github.com/wobsoriano/rex-sim), cloned to
+-- ~/.local/share/rex-sim. Local patch pins serve-sim@0.1.48 because npm
+-- min-release-age=7 blocks 0.1.49 until 2026-11-10.
+---------------------------------------------------------------------------
+local REX_SIM = os.getenv("HOME") .. "/.local/share/rex-sim/lua/rex-sim/init.lua"
+local f = io.open(REX_SIM, "r")
+if f then
+  f:close()
+  dofile(REX_SIM).setup({
+    node = os.getenv("HOME") .. "/.local/share/mise/installs/node/24/bin/node",
+    keys = { toggle = "cmd+shift+s" },
+  })
+end
