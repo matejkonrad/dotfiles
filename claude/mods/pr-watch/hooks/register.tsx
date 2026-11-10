@@ -782,7 +782,6 @@ export const register: Register = on => {
     await pruneStore($, await currentScope($))
     $.clock.every(POLL_MS, () => void refresh($))
     void refresh($)
-    if ((await watched($)).length > 0) void openPane($)
     return next(e)
   })
 

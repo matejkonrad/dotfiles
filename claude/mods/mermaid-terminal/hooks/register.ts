@@ -5,8 +5,6 @@ import { mermaidFence, remember, withDiagrams } from './mermaid.mjs'
 const DEFAULT_COLUMNS = 80
 
 const GUIDANCE = {
-  id: 'mermaid-terminal:guidance',
-  scope: 'session',
   text: [
     '# Diagrams',
     'This terminal draws ```mermaid code fences in your replies as box-drawing diagrams.',
@@ -20,9 +18,17 @@ export const register: Register = on => {
   // Rendering is pure but not free, so cache by width + text.
   const cache = new Map<string, string>()
 
-  on('prompt.compose', async ($, e, next) => {
-    const { sections } = await next(e)
-    return { sections: [...sections, GUIDANCE] }
+  // The org security plugin holds prompt.compose past the user tier, so the
+  // guidance rides along as prompt context once per session id (/clear makes a new one).
+  let guidedSession: string | undefined
+
+  on('prompt.submit', async ($, e, next) => {
+    const session = await $.session.id()
+    if (session === guidedSession) {
+      return next(e)
+    }
+    guidedSession = session
+    return next({ ...e, context: [...(e.context ?? []), GUIDANCE.text] })
   })
 
   on(
