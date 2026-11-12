@@ -199,10 +199,15 @@ bind("k", function()
 	cycleWindows(-1)
 end) -- previous window
 
--- Disable Cmd+H (hide window): swallow the keystroke before any app sees it.
+-- Disable Cmd+H (hide window): swallow the keystroke before any app sees it,
+-- except in Rune, which binds Cmd+H itself (its Hide menu item is remapped).
 disableCmdH = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(e)
 	local f = e:getFlags()
 	if f.cmd and not (f.alt or f.ctrl or f.shift or f.fn) and e:getKeyCode() == hs.keycodes.map.h then
+		local front = hs.application.frontmostApplication()
+		if front and front:bundleID() == "dev.rune" then
+			return false -- let Rune receive Cmd+H
+		end
 		return true -- consume the event
 	end
 	return false

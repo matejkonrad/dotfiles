@@ -27,3 +27,5 @@ export GOOGLE_CLOUD_PROJECT=framer-gemini-cli
 
 # op-env — 1Password-backed env name → ID map
 export OP_ENV_REF="op://Employee/op-env-map/notesPlain"
+# A service account cannot read the Employee vault, so keep the cached map for a year.
+export OP_ENV_CACHE_TTL=31536000

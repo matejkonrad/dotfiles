@@ -206,7 +206,7 @@
   },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "skipWorkflowUsageWarning": false,
+  "skipWorkflowUsageWarning": true,
   "theme": "custom:gruvbox",
   "editorMode": "vim",
   "preferredNotifChannel": "terminal_bell",

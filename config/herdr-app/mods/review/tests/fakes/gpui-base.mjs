@@ -1,0 +1,12 @@
+import { el, textarea } from "./state.mjs";
+export const v_flex = el;
+export const h_flex = el;
+export const Textarea = { new: el };
+export const TextareaState = { new: textarea };
+export const InputState = { new: textarea };
+export const Input = { new: el };
+export const TextView = { markdown: el, html: el };
+export const Popover = { new: el };
+export const Scrollbar = { vertical: el };
+export const VirtualListScrollHandle = { new: () => ({ scroll_to_item() {} }) };
+export const v_virtual_list = el;
