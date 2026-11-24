@@ -157,6 +157,14 @@ end
 rex.bind("ctrl+b>ctrl+b", "pane.send_key", { key = "ctrl+b" })
 
 ---------------------------------------------------------------------------
+-- AGENTS: ctrl+alt+a (or ctrl+b a) lists every coding agent in every session,
+-- working ones first, and jumps to the chosen pane. See agents.lua.
+---------------------------------------------------------------------------
+require("agents")
+rex.bind("ctrl+alt+a", "agents_pick")
+rex.bind("ctrl+b>a", "agents_pick")
+
+---------------------------------------------------------------------------
 -- SIMULATOR: rex-sim (github.com/wobsoriano/rex-sim), cloned to
 -- ~/.local/share/rex-sim. Local patch pins serve-sim@0.1.48 because npm
 -- min-release-age=7 blocks 0.1.49 until 2026-11-10.

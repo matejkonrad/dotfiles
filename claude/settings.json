@@ -64,6 +64,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -75,6 +84,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -84,6 +102,14 @@
             "type": "command",
             "command": "bash '/Users/matejkonrad/.claude/hooks/herdr-app-status.sh' stop-session",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
           }
         ]
       }
@@ -116,6 +142,14 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -136,6 +170,14 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -145,6 +187,66 @@
             "type": "command",
             "command": "bash '/Users/matejkonrad/.claude/hooks/herdr-app-status.sh' working",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && SUPERSET_HOOK_HARNESS=claude \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Artifact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/artifact-guard.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/artifact-guard.sh\" || true"
           }
         ]
       }
@@ -243,11 +345,25 @@
       "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment; note the active \"Production environment ruleset\" on this repo's protected branches",
       "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: Not queryable via gh (remote host github-personal is a custom SSH alias, not resolvable to owner/repo). Remote is github.com/matejkonrad/dotfiles — treat as the user's personal repo; visibility unconfirmed, no public/private evidence gathered",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: None configured — default branch unknown (origin/HEAD unset), no protected branches or rulesets data available",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine or CI runner with open internet",
+      "**Source control**: The trusted repo (matejkonrad/dotfiles on github.com, via github-personal remote alias) and its remote(s) only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
       "**Primary use of Claude Code**: software development",
       "**Trusted repo**: /Users/matejkonrad/Project/framer/FramerStudio, remote origin https://github.com/framer/FramerStudio.git (private) — confidential material (non-secret) is fine to commit/push here; secrets and personal/regulated data are never cleared by visibility alone",
       "**Org-specific CLIs**: stratus (heavily used in-project and in shell history); gt, gco, gl, gpf, ga, gp, grbom (git/graphite workflow helpers); op-env, dotenvx (secrets/env tooling); worktree, cdfc, cdfs, cdfcc, cfg, tuicr, herdr, pi (project navigation/helper scripts)",
-      "routine under /Users/matejkonrad/Project/framer/FramerStudio/ prefix"
+      "routine under /Users/matejkonrad/Project/framer/FramerStudio/ prefix",
+      "**Trusted repo**: /Users/matejkonrad/Project/self/dotfiles, remote personal (github-personal:matejkonrad/dotfiles) — visibility unconfirmed; treat as possibly public since unverified — scope commits/pushes to this repo's own work only",
+      "**Org-specific CLIs**: None configured for this repo (no org-specific CLI usage evidence tied to dotfiles; herdr, rex, op-env, dotenvx, gt/gco/gl/gpf/ga/gp/grbom etc. appear in shell history and another project's transcripts but are not corroborated as specific to this repo)",
+      "routine under /Users/matejkonrad/Project/self/dotfiles/ prefix"
     ]
   }
 }

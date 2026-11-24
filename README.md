@@ -89,5 +89,16 @@ hostname = "mymachine"
 | claude | `~/.claude/settings.json` | all |
 | cursor | `~/.cursor/mcp.json` | all |
 | pi | `~/.pi/agent/settings.json` | all |
+| T3 Code | `~/.t3/userdata/{settings,client-settings,keybindings}.json` | all |
 | hypr | `~/.config/hypr` | linux |
 | qmk_udev | `/etc/udev/rules.d/50-qmk.rules` | linux |
+
+### T3 Code
+
+On a new machine, launch T3 Code once so it creates `~/.t3/userdata`, then run
+`./dotfiles.sh install` and choose the repo versions of the three T3 Code files.
+
+T3 Code writes changes to these three files through the symlinks into `config/t3`.
+Review changes before committing, especially browser profiles and audio device selections,
+which can contain machine-specific values. Window layout, sign-ins, and conversation
+history stay in T3 Code's local data directory.

@@ -42,6 +42,18 @@ target = "~/.cursor/mcp.json"
 source = "pi/settings.json"
 target = "~/.pi/agent/settings.json"
 
+[t3_server]
+source = "config/t3/settings.json"
+target = "~/.t3/userdata/settings.json"
+
+[t3_client]
+source = "config/t3/client-settings.json"
+target = "~/.t3/userdata/client-settings.json"
+
+[t3_keybindings]
+source = "config/t3/keybindings.json"
+target = "~/.t3/userdata/keybindings.json"
+
 [zshrc_linux]
 source = ".zshrc.linux"
 target = "~/.zshrc.linux"
@@ -81,7 +93,7 @@ os = "darwin"
 source = "config/opencode/opencode.json"
 target = "~/.config/opencode/opencode.json"
 
-[opencode-themes]
+[opencode_themes]
 source = "config/opencode/themes"
 target = "~/.config/opencode/themes"
 
@@ -95,6 +107,10 @@ target = "~/.config/tmux/tmux.conf"
 [rex]
 source = "config/rex/init.lua"
 target = "~/.config/rex/init.lua"
+
+[rex_agents]
+source = "config/rex/agents.lua"
+target = "~/.config/rex/agents.lua"
 
 [rex_open_in_nvim]
 source = "scripts/rex-open-in-nvim"
@@ -212,3 +228,17 @@ target = "~/.pi/agent/AGENTS.md"
 [agents_md_opencode]
 source = "agents/AGENTS.md"
 target = "~/.config/opencode/AGENTS.md"
+
+# Agent forks into a new herdr/Rex/Herdr-app tab. fork-tab opens the tab; agent-fork-hook
+# is the Codex/Cursor prompt hook (`>fork [label]`); pi gets a /clone extension.
+[fork_tab]
+source = "scripts/fork-tab"
+target = "~/.local/bin/fork-tab"
+
+[agent_fork_hook]
+source = "scripts/agent-fork-hook"
+target = "~/.local/bin/agent-fork-hook"
+
+[pi_fork_tab_extension]
+source = "pi/extensions/fork-tab.ts"
+target = "~/.pi/agent/extensions/fork-tab.ts"

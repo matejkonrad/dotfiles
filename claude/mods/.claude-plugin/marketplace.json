@@ -12,7 +12,12 @@
     {
       "name": "herdr-fork",
       "source": "./herdr-fork",
-      "description": "Inside herdr (TUI or desktop app), /fork and /clone fork the session once and open it in a new tab."
+      "description": "Inside herdr (TUI or desktop app) or Rex, /fork and /clone fork the session once and open it in a new tab."
+    },
+    {
+      "name": "nvim-open",
+      "source": "./nvim-open",
+      "description": "A button row above the prompt that opens each worktree this session works in with Neovim, in a Rex or herdr tab."
     },
     {
       "name": "mermaid-terminal",

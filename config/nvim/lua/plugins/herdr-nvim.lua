@@ -12,13 +12,13 @@
 -- dispatch.send) are swapped for config/rex.lua, so the same comment UI sends
 -- to agent blocks in this Rex session.
 --
--- Default keymaps (prefix <leader>a). Comments live in memory per nvim.
+-- Keymaps (prefix <leader>a), set here with host-neutral names instead of the
+-- plugin's "herdr-nvim: ..." ones. Comments live in memory per nvim.
 --   <leader>ac  comment line / selection
 --   <leader>al  list comments (hover to jump, ⏎ edit, d delete)
 --   <leader>as  paste all comments into the agent input (you press Enter)
 --   <leader>aS  send all comments to the agent (submits)
 --   <leader>ai  reference line / selection at the agent cursor
--- Added here:
 --   <leader>aa  pick the target agent; later sends go to it until you pick again
 --   <leader>ad  (Rex) stage the dev server's last 80 lines at the agent
 --
@@ -41,6 +41,13 @@ local function use_rex(agents, dispatch)
     if not list then
       return nil, "rex: " .. tostring(err)
     end
+    -- Tab labels tell two agents in the same repo apart in the picker.
+    local labels = {}
+    local wres = vim.system({ "rex", "window", "ls", "-s", session, "--json" }, { text = true }):wait()
+    local wok, wins = pcall(vim.json.decode, wres.stdout or "")
+    for _, w in ipairs(wok and wins.windows or {}) do
+      labels[w.window_id] = w.label
+    end
     local out = {}
     for _, a in ipairs(list) do
       table.insert(out, {
@@ -49,10 +56,15 @@ local function use_rex(agents, dispatch)
         kind = a.name,
         status = "unknown",
         cwd = a.cwd or "",
-        title = a.name,
+        title = labels[a.window_id] or a.name,
       })
     end
     return out
+  end
+
+  -- Rex has no agent status, so show the tab label in its place.
+  agents.display = function(agent)
+    return string.format("%s · %s · %s", agent.kind, agent.title, vim.fn.fnamemodify(agent.cwd, ":t"))
   end
 
   -- Rex tab (window) of this nvim block, for the "lone agent in this tab" rule.
@@ -98,7 +110,8 @@ return {
   end,
   -- Not lazy: setup() must run before the daemon's own VimEnter setup().
   lazy = false,
-  opts = {},
+  -- Own keymaps below. keymaps = false survives the daemon's second setup().
+  opts = { keymaps = false },
   config = function(_, opts)
     local agents = require("herdr-nvim.agents")
     local dispatch = require("herdr-nvim.dispatch")
@@ -134,14 +147,27 @@ return {
       pinned = nil
       return upstream_resolve(list)
     end
-    vim.keymap.set("n", "<leader>aa", function()
+    local hn = require("herdr-nvim")
+    vim.keymap.set("n", "<leader>ac", hn.comment_line, { desc = "Comment line" })
+    vim.keymap.set("x", "<leader>ac", hn.comment_selection, { desc = "Comment selection" })
+    vim.keymap.set("n", "<leader>al", hn.list_comments, { desc = "List comments" })
+    vim.keymap.set("n", "<leader>as", function()
+      hn.send_all({ submit = false })
+    end, { desc = "Paste comments to agent" })
+    vim.keymap.set("n", "<leader>aS", function()
+      hn.send_all({ submit = true })
+    end, { desc = "Send comments to agent" })
+    vim.keymap.set("n", "<leader>ai", hn.ref_line, { desc = "Reference line at agent" })
+    vim.keymap.set("x", "<leader>ai", hn.ref_selection, { desc = "Reference selection at agent" })
+
+    vim.keymap.set({ "n", "x" }, "<leader>aa", function()
       local list, err = agents.list()
       if not list then
         return vim.notify("herdr-nvim: " .. err, vim.log.levels.ERROR)
       end
       require("herdr-nvim.ui").pick_agent(list, function(agent)
         pinned = agent.pane_id
-        vim.notify("herdr-nvim: sending to " .. agents.display(agent))
+        vim.notify("Sending to " .. agents.display(agent))
       end)
     end, { desc = "Pick target agent" })
 

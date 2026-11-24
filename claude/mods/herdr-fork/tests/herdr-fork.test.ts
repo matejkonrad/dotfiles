@@ -1,7 +1,7 @@
 import { expect, mock, test } from 'claude-code/testing'
 import type { On } from 'claude-code'
 
-import { hasTab, readHerdr, readPaneId, readSpaceId } from '../hooks/register'
+import { hasTab, readHost, readPaneId, readSpaceId } from '../hooks/register'
 
 test('reads the new pane id from herdr tab create', async () => {
   expect(readPaneId('{"result":{"root_pane":{"pane_id":"p12"}}}')).toBe('p12')
@@ -12,10 +12,11 @@ test('gives no pane id for output herdr did not mean as a tab', async () => {
   expect(readPaneId('{"result":{}}')).toBeNull()
 })
 
-test('the herdr TUI wins over the app, and plain terminals are neither', async () => {
-  expect(readHerdr('1|w3|t7')).toEqual({ kind: 'tui', workspaceId: 'w3' })
-  expect(readHerdr('||t7')).toEqual({ kind: 'app', terminalId: 't7' })
-  expect(readHerdr('||')).toBeNull()
+test('the herdr TUI wins, then Rex, then the app, and plain terminals are none', async () => {
+  expect(readHost('1|w3|session:r1|t7')).toEqual({ kind: 'tui', workspaceId: 'w3' })
+  expect(readHost('||session:r1|t7')).toEqual({ kind: 'rex', session: 'session:r1' })
+  expect(readHost('|||t7')).toEqual({ kind: 'app', terminalId: 't7' })
+  expect(readHost('|||')).toBeNull()
 })
 
 test('reads the Herdr space from hc get', async () => {
@@ -74,7 +75,7 @@ const run = (command: string, args: string) =>
   ({ command, args, origin: { kind: 'composer' }, presentation: { isFullscreen: true, columns: 120 } }) as const
 
 test('in the Herdr app, /fork opens a connected tab in this space', async ($, on) => {
-  const { runs } = recordRuns(on, '||t1')
+  const { runs } = recordRuns(on, '|||t1')
   const result = await $.command.run(run('fork', 'try b'))
   expect(result).toEqual({ text: 'Forked this session into Herdr tab "try b".' })
   expect(runs).toEqual([
@@ -89,7 +90,7 @@ test('in the Herdr app, /fork opens a connected tab in this space', async ($, on
 })
 
 test('in the Herdr app, /fork waits for the tab, then reports when it never shows up', async ($, on) => {
-  const { runs, clock } = recordRuns(on, '||t1', { lsTabs: [] })
+  const { runs, clock } = recordRuns(on, '|||t1', { lsTabs: [] })
   const pending = $.command.run(run('fork', 'late'))
   for (let i = 0; i < 10; i++) await clock.advance(300)
   const result = await pending
@@ -101,7 +102,7 @@ test('in the Herdr app, /fork waits for the tab, then reports when it never show
 })
 
 test('in the Herdr app, /fork reports a failed rename', async ($, on) => {
-  const { runs } = recordRuns(on, '||t1', {
+  const { runs } = recordRuns(on, '|||t1', {
     answer: argv => (argv[2] === 'tab.rename' ? { exitCode: 1, stdout: '{"error":"no tab"}' } : undefined),
   })
   const result = await $.command.run(run('fork', 'x'))
@@ -112,7 +113,7 @@ test('in the Herdr app, /fork reports a failed rename', async ($, on) => {
 })
 
 test('in the herdr TUI, /clone keeps the herdr tab path', async ($, on) => {
-  const { runs } = recordRuns(on, '1|w3|t1')
+  const { runs } = recordRuns(on, '1|w3||t1')
   const result = await $.command.run(run('clone', ''))
   expect(result).toEqual({ text: 'Forked this session into herdr tab "clone" (pane p12).' })
   expect(runs).toEqual([
@@ -121,8 +122,26 @@ test('in the herdr TUI, /clone keeps the herdr tab path', async ($, on) => {
   ])
 })
 
+test('in Rex, /fork opens a new Rex tab that runs the fork', async ($, on) => {
+  const { runs } = recordRuns(on, '||session:r1|t1')
+  const result = await $.command.run(run('fork', 'try b'))
+  expect(result).toEqual({ text: 'Forked this session into Rex tab "try b".' })
+  expect(runs).toEqual([
+    ['rex', 'window', 'new', '-s', 'session:r1', 'try b', '-c', '/src/app', '--json', '--',
+      'claude', '--resume', 'sess-1', '--fork-session', '--model', 'opus'],
+  ])
+})
+
+test('in Rex, /fork reports a failed rex command', async ($, on) => {
+  recordRuns(on, '||session:r1|', {
+    answer: argv => (argv[0] === 'rex' ? { exitCode: 1, stdout: '', stderr: 'session not found' } : undefined),
+  })
+  const result = await $.command.run(run('fork', ''))
+  expect(result).toEqual({ text: 'Could not open a Rex tab for the fork: session not found' })
+})
+
 test('outside herdr, /fork runs no herdr commands', async ($, on) => {
-  const { runs } = recordRuns(on, '||')
+  const { runs } = recordRuns(on, '|||')
   on('command.run', async () => ({ text: 'built-in fork' }))
   const result = await $.command.run(run('fork', ''))
   expect(result).toEqual({ text: 'built-in fork' })

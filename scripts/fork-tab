@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Opens a new tab that runs COMMAND, in whichever terminal host this shell runs in.
+# Used by the agent fork hooks (Codex, Cursor Agent, pi). Claude Code has its own mod
+# (claude/mods/herdr-fork) that does the same thing in-process.
+#
+#   fork-tab <label> <cwd> -- <command...>
+#
+# Host order: herdr TUI, then Rex, then the Herdr app. Rex wins over the app because
+# HC_TERMINAL_ID leaks into a Rex shell that was started from a Herdr app terminal.
+# Exit 0: opened (message on stdout). Exit 2: no host. Exit 1: the host refused (message on stdout).
+set -uo pipefail
+
+label=${1:?label}
+cwd=${2:?cwd}
+shift 2
+[[ ${1-} == -- ]] && shift
+(($#)) || { echo "fork-tab: no command" >&2; exit 1; }
+
+if [[ ${HERDR_ENV-} == 1 && -n ${HERDR_WORKSPACE_ID-} ]]; then
+  tab=$(herdr tab create --workspace "$HERDR_WORKSPACE_ID" --cwd "$cwd" --label "$label" --focus 2>&1)
+  pane=$(jq -r '.result.root_pane.pane_id // empty' <<<"$tab" 2>/dev/null)
+  [[ -n $pane ]] || { echo "Could not open a herdr tab: $tab"; exit 1; }
+  out=$(herdr pane run "$pane" "$@" 2>&1) || {
+    echo "Opened herdr tab \"$label\" (pane $pane), but could not start the fork: $out"; exit 1; }
+  echo "Forked into herdr tab \"$label\" (pane $pane)."
+  exit 0
+fi
+
+if [[ -n ${REX_SESSION-} ]]; then
+  out=$(rex window new -s "$REX_SESSION" "$label" -c "$cwd" --json -- "$@" 2>&1) || {
+    echo "Could not open a Rex tab for the fork: $out"; exit 1; }
+  echo "Forked into Rex tab \"$label\"."
+  exit 0
+fi
+
+if [[ -n ${HC_TERMINAL_ID-} ]]; then
+  space=$(hc get "$HC_TERMINAL_ID" 2>/dev/null | jq -r '.labels["herdr.space"] // empty' 2>/dev/null)
+  [[ -n $space ]] || { echo "Could not find this terminal's Herdr space."; exit 1; }
+  # An unknown herdr.tab id makes Herdr open a new tab.
+  tab_id="tbfork$(date +%s)"
+  out=$(hc run --bg --no-notify --outlive-parent --keep --cwd "$cwd" \
+    --label "herdr.space=$space" --label "herdr.tab=$tab_id" -- "$@" 2>&1) || {
+    echo "Could not start the fork in Herdr: $out"; exit 1; }
+  # Herdr opens the tab a moment after hc run returns; rename and select fail until then.
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    herdr-app ls 2>/dev/null | jq -e --arg id "$tab_id" 'any(.spaces[].tabs[]; .id == $id)' >/dev/null 2>&1 && break
+    sleep 0.3
+  done
+  herdr-app do tab.rename --id "$tab_id" --name "$label" >/dev/null 2>&1
+  herdr-app do tab.select --id "$tab_id" >/dev/null 2>&1
+  echo "Forked into Herdr tab \"$label\"."
+  exit 0
+fi
+
+echo "Not inside herdr or Rex, so there is no tab to open."
+exit 2

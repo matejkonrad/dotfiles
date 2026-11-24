@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Prompt hook for Codex (UserPromptSubmit) and Cursor Agent (beforeSubmitPrompt).
+# Neither agent lets code register a slash command, so this hook catches a typed
+# `>fork [label]` or `>clone [label]`, opens the fork in a new tab with fork-tab,
+# and stops the prompt from reaching the model. Every other prompt passes through.
+#
+#   agent-fork-hook codex   < hook input JSON
+#   agent-fork-hook cursor  < hook input JSON
+#
+# Codex forks a real copy (`codex fork <session_id>`). Cursor Agent has no fork, so the
+# new tab resumes the SAME chat (`cursor-agent --resume <chat id>`): both tabs write to it.
+set -uo pipefail
+
+agent=${1:?agent}
+input=$(cat)
+
+pass() {
+  [[ $agent == cursor ]] && echo '{"continue":true}'
+  exit 0
+}
+
+prompt=$(jq -r '.prompt // empty' <<<"$input" 2>/dev/null)
+[[ $prompt =~ ^[[:space:]]*\>(fork|clone)([[:space:]]+(.*))?[[:space:]]*$ ]] || pass
+label=${BASH_REMATCH[3]:-${BASH_REMATCH[1]}}
+
+case $agent in
+  codex)
+    id=$(jq -r '.session_id // empty' <<<"$input")
+    cwd=$(jq -r '.cwd // empty' <<<"$input")
+    cmd=(codex fork "$id")
+    ;;
+  cursor)
+    id=$(jq -r '.conversation_id // empty' <<<"$input")
+    cwd=$(jq -r '.workspace_roots[0] // .cwd // empty' <<<"$input")
+    cmd=(cursor-agent --resume "$id")
+    ;;
+  *) echo "agent-fork-hook: unknown agent $agent" >&2; pass ;;
+esac
+[[ -n $id ]] || pass
+[[ -n $cwd ]] || cwd=$PWD
+
+msg=$("$(dirname "$(readlink -f "$0")")/fork-tab" "$label" "$cwd" -- "${cmd[@]}" 2>&1)
+
+case $agent in
+  codex) jq -nc --arg m "$msg" '{decision: "block", reason: $m}' ;;
+  cursor) jq -nc --arg m "$msg" '{continue: false, user_message: $m}' ;;
+esac

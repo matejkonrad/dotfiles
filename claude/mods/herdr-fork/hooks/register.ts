@@ -2,16 +2,22 @@ import type { EngineInterface, Register } from 'claude-code'
 
 const FORK_COMMANDS = ['fork', 'clone'] as const
 
-/** Where this session runs: the herdr TUI, the Herdr desktop app, or neither. */
-export type Herdr =
+/** Where this session runs: the herdr TUI, Rex, the Herdr desktop app, or none of them. */
+export type Host =
   | { kind: 'tui'; workspaceId: string }
+  | { kind: 'rex'; session: string }
   | { kind: 'app'; terminalId: string }
   | null
 
-/** Reads `HERDR_ENV|HERDR_WORKSPACE_ID|HC_TERMINAL_ID`. The TUI wins when both are set. */
-export function readHerdr(envLine: string): Herdr {
-  const [herdrEnv = '', workspaceId = '', terminalId = ''] = envLine.split('|')
+/**
+ * Reads `HERDR_ENV|HERDR_WORKSPACE_ID|REX_SESSION|HC_TERMINAL_ID`.
+ * Order: herdr TUI, then Rex, then the Herdr app. Rex wins over the app because
+ * HC_TERMINAL_ID leaks into a Rex shell that was started from a Herdr app terminal.
+ */
+export function readHost(envLine: string): Host {
+  const [herdrEnv = '', workspaceId = '', rexSession = '', terminalId = ''] = envLine.split('|')
   if (herdrEnv === '1' && workspaceId) return { kind: 'tui', workspaceId }
+  if (rexSession) return { kind: 'rex', session: rexSession }
   if (terminalId) return { kind: 'app', terminalId }
   return null
 }
@@ -47,9 +53,11 @@ export function readSpaceId(hcGetOutput: string): string | null {
   }
 }
 
-async function findHerdr($: EngineInterface): Promise<Herdr> {
-  const run = await $.process.run(['sh', '-c', 'printf "%s|%s|%s" "$HERDR_ENV" "$HERDR_WORKSPACE_ID" "$HC_TERMINAL_ID"'])
-  return readHerdr(run.stdout)
+async function findHost($: EngineInterface): Promise<Host> {
+  const run = await $.process.run([
+    'sh', '-c', 'printf "%s|%s|%s|%s" "$HERDR_ENV" "$HERDR_WORKSPACE_ID" "$REX_SESSION" "$HC_TERMINAL_ID"',
+  ])
+  return readHost(run.stdout)
 }
 
 async function forkArgv($: EngineInterface): Promise<string[]> {
@@ -73,6 +81,18 @@ async function openForkInHerdrTab($: EngineInterface, workspaceId: string, label
   }
 
   return `Forked this session into herdr tab "${label}" (pane ${paneId}).`
+}
+
+async function openForkInRexWindow($: EngineInterface, session: string, label: string): Promise<string> {
+  // A Rex window is a tab. It runs the fork as its command and becomes the active window.
+  const started = await $.process.run([
+    'rex', 'window', 'new', '-s', session, label, '-c', await $.session.cwd(), '--json', '--',
+    ...(await forkArgv($)),
+  ])
+  if (started.exitCode !== 0) {
+    return `Could not open a Rex tab for the fork: ${failure(started)}`
+  }
+  return `Forked this session into Rex tab "${label}".`
 }
 
 async function openForkInAppTab($: EngineInterface, terminalId: string, label: string): Promise<string> {
@@ -146,21 +166,24 @@ export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     const existing = new Set((await $.command.list()).map(command => command.name))
     if (!existing.has('clone')) {
-      await $.command.register({ name: 'clone', description: 'Fork this session into a new herdr tab' })
+      await $.command.register({ name: 'clone', description: 'Fork this session into a new tab' })
     }
     return next(e)
   })
 
   for (const command of FORK_COMMANDS) {
     on('command.run', { command }, async ($, e, next) => {
-      const herdr = await findHerdr($)
-      if (!herdr) return next(e)
+      const host = await findHost($)
+      if (!host) return next(e)
 
       const label = e.args.trim() || command
-      return {
-        text: herdr.kind === 'tui'
-          ? await openForkInHerdrTab($, herdr.workspaceId, label)
-          : await openForkInAppTab($, herdr.terminalId, label),
+      switch (host.kind) {
+        case 'tui':
+          return { text: await openForkInHerdrTab($, host.workspaceId, label) }
+        case 'rex':
+          return { text: await openForkInRexWindow($, host.session, label) }
+        case 'app':
+          return { text: await openForkInAppTab($, host.terminalId, label) }
       }
     })
   }

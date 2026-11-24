@@ -135,6 +135,9 @@ if command -v wt >/dev/null 2>&1; then
   }
 fi
 
+# Rex terminals inherit a PATH that starts with the mise shims. With the shims first, `node` resolves to the shim
+# even after activation, and FramerStudio's `make bootstrap` refuses to run. Drop them so activation wins.
+path=(${path:#$HOME/.local/share/mise/shims})
 eval "$(/Users/matejkonrad/.local/bin/mise activate zsh)"
 
 # Added by cua-driver-rs installer — see https://github.com/trycua/cua

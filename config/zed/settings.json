@@ -7,6 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+ "tabs": {
+  "git_status": false
+ },
+ "status_bar": {
+  "line_endings_button": false
+ },
+ "text_rendering_mode": "platform_default",
  "buffer_font_family": "JetBrains Mono",
  "git": {
   "hunk_style": "staged_hollow"
@@ -24,9 +31,9 @@
 	"diff_view_style": "split",
 	"terminal": {
 		"font_size": 13.0,
-		"shell": {
-			"program": "/Users/matejkonrad/.cargo/bin/codemux",
-		},
+		// "shell": {
+		// 	"program": "/Users/matejkonrad/.cargo/bin/codemux",
+		// },
 		"show_count_badge": true,
 		"env": {
 			"EDITOR": "zed --wait",

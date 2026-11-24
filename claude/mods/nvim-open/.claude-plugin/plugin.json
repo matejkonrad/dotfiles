@@ -1,0 +1,6 @@
+{
+  "name": "nvim-open",
+  "version": "0.1.0",
+  "description": "A button row above the prompt that opens each worktree this session works in with Neovim, in a Rex or herdr tab.",
+  "types": "./types/index.d.ts"
+}

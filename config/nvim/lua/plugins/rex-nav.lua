@@ -22,6 +22,6 @@ return {
     { "<C-j>", function() require("config.rex").navigate("j") end, desc = "Navigate down (nvim/rex)" },
     { "<C-k>", function() require("config.rex").navigate("k") end, desc = "Navigate up (nvim/rex)" },
     { "<C-l>", function() require("config.rex").navigate("l") end, desc = "Navigate right (nvim/rex)" },
-    { "<leader>af", function() require("config.rex").reference() end, desc = "Reference file at agent" },
+    { "<leader>af", function() require("config.rex").reference() end, mode = { "n", "x" }, desc = "Reference file at agent" },
   },
 }
