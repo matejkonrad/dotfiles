@@ -124,16 +124,29 @@ return {
 
     -- Host-neutral names: the plugin's messages say "agent:" instead of
     -- "herdr-nvim:", and :Agent does what :Herdr does.
-    if not vim.g.agent_notify_wrapped then
-      vim.g.agent_notify_wrapped = true
-      local notify = vim.notify
-      vim.notify = function(msg, ...)
+    -- Noice replaces vim.notify on VeryLazy, so wrap again after it.
+    local wrapped
+    local function rename_messages()
+      if vim.notify == wrapped then
+        return
+      end
+      local inner = vim.notify
+      wrapped = function(msg, ...)
         if type(msg) == "string" then
           msg = msg:gsub("^herdr%-nvim: ", "agent: "):gsub("no herdr agents", "no agents")
         end
-        return notify(msg, ...)
+        return inner(msg, ...)
       end
+      vim.notify = wrapped
     end
+    rename_messages()
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "VeryLazy",
+      once = true,
+      callback = function()
+        vim.schedule(rename_messages)
+      end,
+    })
     local commands = require("herdr-nvim.commands")
     vim.api.nvim_create_user_command("Agent", commands.run, {
       nargs = "*",
