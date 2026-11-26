@@ -122,6 +122,28 @@ return {
 
     require("herdr-nvim").setup(opts)
 
+    -- Host-neutral names: the plugin's messages say "agent:" instead of
+    -- "herdr-nvim:", and :Agent does what :Herdr does.
+    if not vim.g.agent_notify_wrapped then
+      vim.g.agent_notify_wrapped = true
+      local notify = vim.notify
+      vim.notify = function(msg, ...)
+        if type(msg) == "string" then
+          msg = msg:gsub("^herdr%-nvim: ", "agent: "):gsub("no herdr agents", "no agents")
+        end
+        return notify(msg, ...)
+      end
+    end
+    local commands = require("herdr-nvim.commands")
+    vim.api.nvim_create_user_command("Agent", commands.run, {
+      nargs = "*",
+      range = true,
+      desc = "Comment, list, send, or submit code annotations; reference a line range",
+      complete = function(lead, line)
+        return commands.complete(lead, (line:gsub("^(.-)Agent", "%1Herdr")))
+      end,
+    })
+
     -- A nvim you start yourself in a Herdr desktop app terminal: list and
     -- send to agents through the app's herdr-nvim binary (app-agents,
     -- app-send), like the app's own tab nvim. Switched on after setup(), so
@@ -163,7 +185,7 @@ return {
     vim.keymap.set({ "n", "x" }, "<leader>aa", function()
       local list, err = agents.list()
       if not list then
-        return vim.notify("herdr-nvim: " .. err, vim.log.levels.ERROR)
+        return vim.notify("agent: " .. err, vim.log.levels.ERROR)
       end
       require("herdr-nvim.ui").pick_agent(list, function(agent)
         pinned = agent.pane_id
@@ -182,12 +204,12 @@ return {
         local payload = "Dev server output (last 80 lines):\n```\n" .. log .. "\n```\n"
         local list, lerr = agents.list()
         if not list then
-          return vim.notify("herdr-nvim: " .. lerr, vim.log.levels.ERROR)
+          return vim.notify("agent: " .. lerr, vim.log.levels.ERROR)
         end
         local function deliver(agent)
           local ok, serr = dispatch.send(agent.pane_id, payload, { submit = false })
           if not ok then
-            vim.notify("herdr-nvim: " .. serr, vim.log.levels.ERROR)
+            vim.notify("agent: " .. serr, vim.log.levels.ERROR)
           end
         end
         local agent = agents.resolve(list)

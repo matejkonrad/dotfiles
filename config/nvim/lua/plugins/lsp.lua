@@ -50,11 +50,12 @@ return {
             },
           },
         },
-        -- TypeScript 7 native server. lspconfig runs the project's own
-        -- node_modules/.bin/tsc, so Mason has nothing to install.
+        -- TypeScript 7 native server. options.lua picks the project's own
+        -- binary (tsgo wrapper, tsrs or tsc), so Mason has nothing to install.
         tsc = {
           mason = false,
           enabled = vim.g.lazyvim_ts_lsp == "tsc",
+          cmd = vim.g.lazyvim_ts7_cmd,
         },
         -- WGSL language server
         wgsl_analyzer = {},

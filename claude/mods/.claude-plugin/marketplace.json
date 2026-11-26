@@ -10,8 +10,8 @@
       "description": "Watches PRs across repos: CI, review threads, merge state, and per-PR auto-fix."
     },
     {
-      "name": "herdr-fork",
-      "source": "./herdr-fork",
+      "name": "fork",
+      "source": "./fork",
       "description": "Inside herdr (TUI or desktop app) or Rex, /fork and /clone fork the session once and open it in a new tab."
     },
     {

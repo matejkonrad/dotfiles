@@ -1,0 +1,2 @@
+# Optional machine setup lives in mise.<module>.toml.
+# Select a module with `mise -E <module> bootstrap`.

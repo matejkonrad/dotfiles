@@ -1,0 +1,30 @@
+[bootstrap.packages]
+"brew:neovim" = { os = "macos" }
+"brew:ripgrep" = { os = "macos" }
+"brew:fd" = { os = "macos" }
+"brew:tree-sitter-cli" = { os = "macos" }
+"brew:node" = { os = "macos" }
+
+"pacman:neovim" = "latest"
+"pacman:ripgrep" = "latest"
+"pacman:fd" = "latest"
+"pacman:tree-sitter-cli" = "latest"
+"pacman:base-devel" = "latest"
+"pacman:git" = "latest"
+"pacman:curl" = "latest"
+"pacman:unzip" = "latest"
+"pacman:nodejs" = "latest"
+"pacman:npm" = "latest"
+
+[dotfiles]
+"~/.config/nvim" = { source = "config/nvim", mode = "symlink" }
+
+[tasks.bootstrap]
+description = "Restore Neovim plugins from lazy-lock.json"
+run = '''
+if [ "$(uname -s)" = Darwin ]; then
+  export PATH="{{ system_brew_prefix }}/bin:$PATH"
+fi
+XDG_CONFIG_HOME="$HOME/.config" NVIM_APPNAME=nvim \
+  nvim --headless -i NONE "+Lazy! restore" +qa </dev/null
+'''

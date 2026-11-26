@@ -133,19 +133,8 @@
       "space f p": "projects::OpenRecent",
       // Open AI chat
       "space a a": "agent::ToggleFocus",
-      // FFF GUI, refer https://github.com/th0jensen/fff-gpui#configuration
-      "space f f": [
-        "task::Spawn",
-        {
-          "task_name": "fff-gpui: Files",
-        },
-      ],
-      "space f g": [
-        "task::Spawn",
-        {
-          "task_name": "fff-gpui: Grep",
-        },
-      ],
+      "space f f": "file_finder::Toggle",
+      "space f g": "pane::DeploySearch",
       // Git status
       "space g s": "git_panel::ToggleFocus",
     },
@@ -304,19 +293,8 @@
     "context": "(VimControl && !menu)",
     "bindings": {
       "space": null, // Disable the default action vim::WrappingRight
-      // FFF GUI, refer https://github.com/th0jensen/fff-gpui#configuration
-      "space f f": [
-        "task::Spawn",
-        {
-          "task_name": "fff-gpui: Files",
-        },
-      ],
-      "space f g": [
-        "task::Spawn",
-        {
-          "task_name": "fff-gpui: Grep",
-        },
-      ],
+      "space f f": "file_finder::Toggle",
+      "space f g": "pane::DeploySearch",
     },
   },
   // Subword motion is not working really nice with `ciw`, disable for now

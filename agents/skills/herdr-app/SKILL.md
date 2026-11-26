@@ -101,7 +101,7 @@ for i in 1 2 3 4 5 6 7 8 9 10; do herdr-app ls | grep -q "\"$tab\"" && break; sl
 herdr-app do tab.rename --id "$tab" --name fork || echo "fork tab $tab did not show up"
 ```
 
-In Claude Code, `/fork` and `/clone` do this for you (the `herdr-fork` mod).
+In Claude Code, `/fork` and `/clone` do this for you (the `fork` mod).
 New spaces and tabs show at once. If the user did not ask for one, do not create it.
 
 ## 6. Pull requests

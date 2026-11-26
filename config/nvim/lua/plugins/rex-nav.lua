@@ -23,5 +23,19 @@ return {
     { "<C-k>", function() require("config.rex").navigate("k") end, desc = "Navigate up (nvim/rex)" },
     { "<C-l>", function() require("config.rex").navigate("l") end, desc = "Navigate right (nvim/rex)" },
     { "<leader>af", function() require("config.rex").reference() end, mode = { "n", "x" }, desc = "Reference file at agent" },
+    {
+      "<leader>an",
+      function()
+        local range
+        if vim.fn.mode():find("[vV\22]") then
+          local a, b = vim.fn.line("v"), vim.fn.line(".")
+          range = { math.min(a, b), math.max(a, b) }
+          vim.cmd("normal! \27")
+        end
+        require("config.rex").new_agent(range)
+      end,
+      mode = { "n", "x" },
+      desc = "New Claude pane with this file/selection",
+    },
   },
 }

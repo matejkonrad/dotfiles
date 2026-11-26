@@ -19,7 +19,7 @@ type Host =
 
 /**
  * Reads `HERDR_ENV|HERDR_WORKSPACE_ID|HERDR_PANE_ID|REX_SESSION|REX_BLOCK|HC_TERMINAL_ID`.
- * Same order as herdr-fork: herdr TUI, then Rex, then the Herdr app.
+ * Same order as fork: herdr TUI, then Rex, then the Herdr app.
  */
 export function readHost(envLine: string): Host {
   const [herdrEnv = '', workspaceId = '', paneId = '', rexSession = '', rexBlock = '', terminalId = ''] =

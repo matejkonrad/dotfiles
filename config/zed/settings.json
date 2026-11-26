@@ -110,7 +110,7 @@
 			"effort": "medium",
 			"enable_thinking": true,
 			"provider": "openai-subscribed",
-			"model": "gpt-6-sol",
+			"model": "gpt-6.2-sol",
 		},
 		"model_parameters": [],
 	},

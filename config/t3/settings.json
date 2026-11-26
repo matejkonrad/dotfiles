@@ -24,6 +24,14 @@
     "instanceId": "codex",
     "model": "gpt-6.1-sol"
   },
+  "projectSettingsOverrides": {
+    "35f32129-68ea-4b0c-bcec-272c7eabe71b": {
+      "defaultModelSelection": {
+        "instanceId": "claudeAgent",
+        "model": "claude-opus-5-5"
+      }
+    }
+  },
   "projectSettingsFolded": true,
   "enableAgentDeviceAccess": true,
   "enableDeviceSupport": true,
@@ -46,6 +54,21 @@
   "branchNamingMode": "semantic",
   "branchNamePrefix": "feat/",
   "removeAgentCreditsOnMerge": true,
+  "reviewGuidesEnabled": true,
+  "reviewGuideModelSelection": {
+    "instanceId": "codex",
+    "model": "gpt-6-luna",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "low"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ]
+  },
   "providerInstances": {
     "cursor": {
       "driver": "cursor",

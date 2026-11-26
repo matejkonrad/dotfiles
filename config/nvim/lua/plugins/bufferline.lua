@@ -8,7 +8,7 @@ return {
       -- show — otherwise it overrides snacks.nvim's dashboard, which sets
       -- showtabline=0 while the start screen is up.
       always_show_bufferline = false,
-      auto_toggle_bufferline = true,
+      auto_toggle_bufferline = false,
     },
   },
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Opens a new tab that runs COMMAND, in whichever terminal host this shell runs in.
 # Used by the agent fork hooks (Codex, Cursor Agent, pi). Claude Code has its own mod
-# (claude/mods/herdr-fork) that does the same thing in-process.
+# (claude/mods/fork) that does the same thing in-process.
 #
 #   fork-tab <label> <cwd> -- <command...>
 #

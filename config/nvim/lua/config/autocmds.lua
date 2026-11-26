@@ -119,3 +119,6 @@ vim.api.nvim_create_autocmd("BufHidden", {
     end)
   end,
 })
+
+-- Reload buffers when an agent (or anything else) changes their file on disk.
+require("config.autoreload").setup()

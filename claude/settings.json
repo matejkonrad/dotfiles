@@ -262,7 +262,7 @@
     "simple-english@simple-english": true,
     "gopls-lsp@claude-plugins-official": true,
     "pr-watch@matej-mods": true,
-    "herdr-fork@matej-mods": true,
+    "fork@matej-mods": true,
     "1password@1password": true,
     "mermaid-terminal@matej-mods": true,
     "rune@unstablebuild": true

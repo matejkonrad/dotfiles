@@ -4,6 +4,27 @@ Symlink-based dotfiles manager with OS and hostname filtering. One branch, multi
 
 ## Setup
 
+### Install just Neovim
+
+With a recent mise that supports `bootstrap --from`, run this on macOS or
+Arch Linux:
+
+```bash
+mise -E nvim bootstrap --from git@github.com:matejkonrad/dotfiles.git
+```
+
+From an existing checkout, run `mise -E nvim bootstrap` instead. The module
+installs Neovim, its search and build dependencies, and Node.js for Mason tools.
+It links `~/.config/nvim` and restores plugins from `config/nvim/lazy-lock.json`.
+Mason manages language servers and formatters when Neovim starts.
+
+On macOS, Git and the compiler come from the Xcode Command Line Tools. Keep
+Homebrew's `bin` directory on your shell's `PATH` so you can run `nvim` after
+setup. If a config already exists at `~/.config/nvim`, resolve any conflict
+reported by mise before continuing.
+
+### Install all dotfiles
+
 ```bash
 git clone <repo-url> ~/Projects/self/dotfiles
 cd ~/Projects/self/dotfiles

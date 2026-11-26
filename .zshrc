@@ -60,6 +60,11 @@ add-zsh-hook preexec _tab_title
 # Stop Claude Code from overriding the tab title with "claude code".
 export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
 
+# Rex draws kitty graphics (it is built on libghostty), but Claude Code only
+# allows images when XTVERSION names kitty or ghostty. This lets Claude Code
+# draw images in Rex, such as the mermaid-terminal mod's diagrams.
+[[ $TERM_PROGRAM == rex && -z $TMUX ]] && export CLAUDE_CODE_FORCE_TERMINAL_IMAGES=1
+
 
 # CFG_PATH is exported from .zshenv (per-OS) so non-interactive shells see it too.
 
@@ -154,3 +159,8 @@ if [[ "$HERDR_ENV" == "1" ]]; then
   done
   unset _f
 fi
+
+
+# ANDROID_HOME
+export ANDROID_HOME="$(brew --prefix)/share/android-commandlinetools"
+export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH"

@@ -227,4 +227,71 @@ function M.reference(range)
   end)
 end
 
+local SESSIONS = vim.fs.normalize("~/.claude/sessions")
+
+---Call `cb` once a Claude Code session started after `since` (ms) in `cwd`
+---reports idle, i.e. its prompt takes input. Claude writes
+---~/.claude/sessions/<pid>.json; that beats scraping the pane's screen.
+---@param cwd string
+---@param since integer
+---@param cb fun()
+local function when_claude_ready(cwd, since, cb)
+  local deadline = vim.uv.now() + 30000
+  local timer = assert(vim.uv.new_timer())
+  timer:start(300, 300, vim.schedule_wrap(function()
+    for name, kind in vim.fs.dir(SESSIONS) do
+      if kind == "file" and name:match("^%d+%.json$") then
+        local f = io.open(SESSIONS .. "/" .. name)
+        local ok, s = pcall(vim.json.decode, f and f:read("*a") or "")
+        if f then
+          f:close()
+        end
+        if ok and type(s) == "table" and s.cwd == cwd and (s.startedAt or 0) >= since and s.status == "idle" then
+          timer:close()
+          return cb()
+        end
+      end
+    end
+    if vim.uv.now() > deadline then
+      timer:close()
+      vim.notify("New Claude pane did not get ready in 30s", vim.log.levels.WARN, { title = "rex" })
+    end
+  end))
+end
+
+---Open Claude Code in a new pane to the right, in nvim's cwd, and stage a
+---reference to the current file (and line range) at its prompt.
+---@param range? { [1]: integer, [2]: integer }
+function M.new_agent(range)
+  local cwd = vim.fn.getcwd()
+  local file = vim.bo.buftype == "" and vim.api.nvim_buf_get_name(0) or ""
+  local ref
+  if file ~= "" then
+    ref = "@" .. (vim.fs.relpath(cwd, file) or file)
+    if range then
+      ref = ref .. (range[1] == range[2] and "#L%d" or "#L%d-%d"):format(range[1], range[2])
+    end
+  end
+
+  local since = os.time() * 1000 - 1000
+  local cmd = { "rex", "split", "-s", M.session(), "--split=right", "-c", cwd, "--json" }
+  if vim.env.REX_BLOCK then
+    vim.list_extend(cmd, { "-b", vim.env.REX_BLOCK })
+  end
+  vim.list_extend(cmd, { "--", "claude" })
+  vim.system(cmd, { text = true }, vim.schedule_wrap(function(res)
+    if res.code ~= 0 then
+      vim.notify("rex split: " .. vim.trim(res.stderr or ""), vim.log.levels.ERROR, { title = "rex" })
+      return
+    end
+    local block = (vim.json.decode(res.stdout).block_ids or {})[1]
+    if not (block and ref) then
+      return
+    end
+    when_claude_ready(cwd, since, function()
+      M.send(ref .. " ", ref, { block_id = block, window_id = "", name = "claude", cwd = cwd })
+    end)
+  end))
+end
+
 return M

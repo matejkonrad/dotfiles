@@ -22,6 +22,7 @@ brew "herdr"
 brew "jq"
 brew "lazygit"
 brew "libpq"
+brew "mermaid-cli" # mermaid-terminal mod: renders mermaid diagrams to PNG
 brew "mkcert"
 brew "neovim"
 brew "nss"
